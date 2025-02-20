@@ -28,6 +28,7 @@ export default class MenuScene extends Phaser.Scene {
 			this.scene.start('default', this.data);
 		});
 		this.menu.addItem("Historia", ()=>{
+			this.menu.setVisible(false); // Evitar pulsaciones
 			this.botonAyuda.setVisible(false);
 			
 			this.tituloBanda.setAlpha(0.5);
@@ -42,6 +43,7 @@ export default class MenuScene extends Phaser.Scene {
 					duration: 50,
 					onComplete: ()=>{this.bandaTextTween.restart();}
 				});
+				this.menu.setVisible(true);
 			});
 			
 		});
