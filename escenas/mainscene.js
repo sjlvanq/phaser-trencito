@@ -82,16 +82,18 @@ export default class MainScene extends Phaser.Scene {
             x: 5,
             y: 260
         });
-				
+		
 		this.camionetas = this.add.group();
         for (let i = 0; i < 6; i++) {
-            const camioneta = new Camioneta(this, 0, 0);
+            const camioneta = new Camioneta(this, 0, 0, i*2800);
             camioneta.scale = 0.31;
             if(this.gameOptions.shadows){
 				camioneta.postFX.addShadow(0,1,0.03,2);
             }
             this.camionetas.add(camioneta);
         }
+        this.camionetas.shuffle();
+        console.log(this.ordenDisparos);
         Phaser.Actions.GridAlign(this.camionetas.getChildren(), {
             width: 3,
             cellWidth: 200,

@@ -2,7 +2,7 @@ import FullAnimatedSprite from '../clases/fullanimatedsprite.js';
 
 export default class Camioneta extends Phaser.GameObjects.Container
         {
-            constructor (scene, x, y)
+            constructor (scene, x, y, ventanillaTweenDelay=0)
             {
                 super(scene, x, y);
                 scene.add.existing(this);
@@ -48,9 +48,10 @@ export default class Camioneta extends Phaser.GameObjects.Container
 					repeat: -1,
 				});
 				
+				this.ventanillaTweenDelay = ventanillaTweenDelay;
 				this.ventanillaTween = scene.tweens.add({
 					targets: this.vidrios[1],
-					delay: Phaser.Math.Between(1000, 2000),
+					delay: this.ventanillaTweenDelay,
 					y: '+=30',
 					duration: 1500,
 					repeat: -1,

@@ -10,7 +10,8 @@ export default class MenuScene extends Phaser.Scene {
 	 }
 	 init(data){
 		//console.log(data);
-        this.data = data;
+		this.data = data;
+		this.gameOptions = data.gameOptions;
 	 }
     create() {
 		const layer = createTilemap(this);
@@ -48,7 +49,8 @@ export default class MenuScene extends Phaser.Scene {
 			
 		});
 		
-		if(this.data.primeraPartida){
+		// if !omitePresentacion para contemplar undefined
+		if(this.data.primeraPartida && !this.gameOptions.omitePresentacion){
 			this.menu.setVisible(false); // Evitar pulsaciones
 			this.animacion = new Animacion(this, 10, 220, ()=>{
 			//this.animacion = new Animacion(this, 10, 270, ()=>{
