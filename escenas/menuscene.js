@@ -22,14 +22,14 @@ export default class MenuScene extends Phaser.Scene {
 		this.tituloBandaText = this.add.text(190,240,"Versión ALPHA-0.2", {color: "#000", fontSize:"9px", fontFamily: "monospace", align:'right'});
 		this.tituloBandaText.setAlpha(0.5);
 		
-		this.menu = new Menu(this, 65, 300, 'dot', {
+		this.menu = new Menu(this, 65, 300, 'dotmenu', {
 			fontFamily: "monaco", color: "#000", fontSize:"38px"
 		});
 		this.menu.addItem("INICIAR JUEGO", ()=>{
 			this.scene.start('default', this.data);
 		});
 		this.menu.addItem("Historia", ()=>{
-			this.menu.setVisible(false); // Evitar pulsaciones
+			this.menu.setVisible(false);
 			this.botonAyuda.setVisible(false);
 			
 			this.tituloBanda.setAlpha(0.5);
@@ -48,7 +48,7 @@ export default class MenuScene extends Phaser.Scene {
 			});
 			
 		});
-		
+
 		// if !omitePresentacion para contemplar undefined
 		if(this.data.primeraPartida && !this.gameOptions.omitePresentacion){
 			this.menu.setVisible(false); // Evitar pulsaciones

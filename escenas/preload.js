@@ -35,7 +35,7 @@ export default class Preload extends Phaser.Scene {
 		this.load.image('titulo', 'assets/imagenes/titulo.png');
 		this.load.image('titulo_banda', 'assets/imagenes/titulo_banda.png');
         this.load.image('gameover', 'assets/imagenes/gameover.png');
-		this.load.image('dot', 'assets/imagenes/menudot.png');
+		this.load.spritesheet('dotmenu', 'assets/imagenes/dotmenu.png', {frameWidth: 32, frameHeight:32});
 		this.load.image('dotayuda', 'assets/imagenes/dotayuda.png');
         this.load.spritesheet('icons', 'assets/imagenes/statusbaricons.png', {frameWidth: 24});
 		
@@ -62,6 +62,7 @@ export default class Preload extends Phaser.Scene {
         this.load.audio('botella_snd', 'assets/sonidos/160420__relenzo2__icespell.wav');
         this.load.audio('gameover_snd', 'assets/sonidos/38469__marvman__sliding-note-2.wav');
         this.load.audio('herido_snd', 'assets/sonidos/432875__xtrgamr__lfs_vox8.wav');
+        this.load.audio('menu_snd', 'assets/sonidos/653382__krokulator__select.wav');
     }
     
     create() {
