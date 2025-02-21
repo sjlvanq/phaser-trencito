@@ -15,7 +15,6 @@ const config = {
     type: Phaser.AUTO,
     width: 320,
     height: 480,
-    //scene: [Preload, MenuScene, Pagina1, Pagina2, Pagina3, Pagina4, Pagina5, Pagina6, MainScene, GameOver],
     scene: [Preload, MenuScene, MainScene, GameOver],
     backgroundColor: '#94c364',
 };
