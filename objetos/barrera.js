@@ -5,7 +5,7 @@ export default class Barrera extends Phaser.GameObjects.Group
 		super(scene);
 		this.scene = scene;
 
-		for(let i = 0; i<4; i++){
+		for(let i = 0; i<numeroColumnas; i++){
 			const barrera = new BarreraColumna(this.scene, 0, 0, 'barrera', ()=>{
 						// Callback de pointerdown
 						this.scene.gomas = false;
@@ -46,9 +46,9 @@ export default class Barrera extends Phaser.GameObjects.Group
 	glowColumnas() {
 		this.children.iterate((barrera) => {barrera.glow();});		
 	}
-	update(miraX) {
+	update(miraX, restituible) {
 		this.children.iterate(barrera => {
-			barrera.update(miraX);
+			barrera.update(miraX, restituible);
 		});
 	}
 }
