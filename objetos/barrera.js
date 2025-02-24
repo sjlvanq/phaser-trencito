@@ -1,61 +1,54 @@
-export default class Barrera extends Phaser.GameObjects.Sprite {
-            constructor(scene, x, y, texture, handleOnPointerDown) {
-                super(scene, x, y, texture);
-				this.scene = scene;
-				this.scene.add.existing(this);
-				this.handleOnPointerDown = handleOnPointerDown;
-				this.glowOffSet = 0;
-				
-				this.on('animationcomplete',()=>{
-					this.setFrame(this.frame.name % 3);
-				});
-				
-				this.on('pointerdown', () => {
-					const frameBase = this.frame.name % 3;
-					if(frameBase>0){ 
-						this.setFrame(frameBase-1);
-						this.handleOnPointerDown();
-					}
-				});
-			}
+import BarreraColumna from '../objetos/barreracolumna.js';
+export default class Barrera extends Phaser.GameObjects.Group
+{
+	constructor(scene, x, y, numeroColumnas = 4, shadows = false) {
+		super(scene);
+		this.scene = scene;
 
-			static crearAnimaciones(scene) {
-				if (!scene.anims.exists('glow_0')) {
-					for (let i = 0; i < 3; i++) {
-						scene.anims.create({
-							key: `glow_${i}`,
-							frames: scene.anims.generateFrameNumbers('barrera', { frames: [i, i + 3] }),
-							frameRate: 5,
-							repeat: -1
+		for(let i = 0; i<4; i++){
+			const barrera = new BarreraColumna(this.scene, 0, 0, 'barrera', ()=>{
+						// Callback de pointerdown
+						this.scene.gomas = false;
+						this.children.iterate( barrera => {
+								barrera.disableInteractive(); // Se ha seleccionado una
+								barrera.stop(); // Detiene contorno parpadeante
 						});
 					}
-				}
-			}
-			stop() {
-				super.stop();
-				const frameBase = this.frame.name % 3;
-				this.setFrame(frameBase);
-			}	
-			glow()
-			{
-				const frameBase = this.frame.name % 3; // Determina si está en 0, 1 o 2
-				if(frameBase>0){
-					this.play(`glow_${frameBase}`);
-					this.setInteractive();
-					}
+				);
+			barrera.scale = 0.6
+			
+			if(shadows){
+				barrera.postFX.addShadow(0,2,0.02,0.5);
 			}
 			
-            update(time, delta, miraX)
-            {
-				this.scene.marca.x = miraX;
-				if(miraX > this.x - this.displayWidth/2 && 
-					miraX < this.x + this.displayWidth/2 + 10 && 
-					this.frame.name % 3 < 2)
-				{
-					//this.setFrame((this.frame.name + 1) % 3 + this.glowOffSet);
-					this.setFrame((this.frame.name + 1) % 3);
-					if(this.scene.gomas > 0){this.glow();}
-					this.scene.balaParada = true;
-				}
-            }
-        }
+			// Se agrega a este grupo
+			this.add(barrera);
+		}
+
+		Phaser.Actions.GridAlign(this.getChildren(), {
+            width: numeroColumnas, cellWidth: this.scene.cameras.main.width / numeroColumnas,
+            x: x, y: y
+        });
+
+		this.crearAnimaciones();
+	}
+	crearAnimaciones() {
+		// Número de cuadros alternables 3
+		for (let i = 0; i < 3; i++) {
+			this.scene.anims.create({
+				key: `glow_${i}`,
+				frames: this.scene.anims.generateFrameNumbers('barrera', { frames: [i, i + 3] }),
+				frameRate: 5,
+				repeat: -1
+			});
+		}
+	}
+	glowColumnas() {
+		this.children.iterate((barrera) => {barrera.glow();});		
+	}
+	update(miraX) {
+		this.children.iterate(barrera => {
+			barrera.update(miraX);
+		});
+	}
+}

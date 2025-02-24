@@ -49,40 +49,9 @@ export default class MainScene extends Phaser.Scene {
 		this.botella.setScale(0.55);
 		this.botella.setDepth(1);
 		
-		this.marca = this.add.line(0,0, 0,0, 0, 480,  0x333, 0.3).setOrigin(0);
-		this.marca.setLineWidth(5);
-		this.marca.visible = false;
 		this.balaParada = false;
 		
-		this.barreras = this.add.group();
-		Barrera.crearAnimaciones(this);
-		for(let i = 0; i<4; i++){
-			const barrera = new Barrera(this,0,0,'barrera',()=>{
-						this.gomas = false;
-						this.barreras.children.iterate( barrera => {
-								barrera.disableInteractive();
-								barrera.stop();
-								//this.statusBar.hideGomas();
-						});
-					}
-				);
-			barrera.scale = 0.6
-			
-			
-			if(this.gameOptions.shadows){
-				barrera.postFX.addShadow(0,2,0.02,0.5);
-			}
-			
-			this.barreras.add(barrera);
-		}
-		
-        Phaser.Actions.GridAlign(this.barreras.getChildren(), {
-            width: 4,
-            cellWidth: 80,
-            x: 5,
-            y: 260
-        });
-		
+		this.barreras = new Barrera(this, 5, 260, 4, this.gameOptions.shadows);
 		this.camionetas = this.add.group();
         for (let i = 0; i < 6; i++) {
             const camioneta = new Camioneta(this, 0, 0, i*2800);
@@ -123,9 +92,9 @@ export default class MainScene extends Phaser.Scene {
 					this.sound.play('disparo_snd');
 					camioneta.isDisparando = false;
 					this.balaParada = false;
-					this.barreras.children.iterate(barrera => {
-						barrera.update(time, delta, camioneta.miraX);
-					});
+					
+					this.barreras.update(camioneta.miraX);
+
 					if (!this.balaParada && !this.jugador.isHerido) {
 						this.sound.play('herido_snd');
 						this.vidas -= 1;
@@ -139,7 +108,7 @@ export default class MainScene extends Phaser.Scene {
 							this.sound.play('gameover_snd');
 							this.scene.pause();
 							
-							//setTimeout y no time.delayCall
+							//setTimeout y no time.delayCall. Revisar
 							setTimeout(() => {
 								this.data.puntaje = this.puntaje;
 								this.scene.start('GameOver', 
@@ -174,6 +143,7 @@ export default class MainScene extends Phaser.Scene {
 	    if(Phaser.Geom.Intersects.RectangleToRectangle(this.botella.getBounds(), this.jugador.getBounds())
 			&& !this.botella.isCollected){
 			this.botella.recoger();
+			
 			// Avanza nivel
 			if(!(this.puntaje % this.gameOptions.botellasxnivel)){
 				this.nivel += 1;
@@ -196,13 +166,9 @@ export default class MainScene extends Phaser.Scene {
 					alpha: 1,
 				});
 				
-				//this.statusBar.showGomas();
 				this.gomas = true;
-				
-				const barreras = this.barreras.getChildren();
-				barreras.forEach((barrera, index) => {
-					barrera.glow();
-				});
+				//this.statusBar.showGomas();
+				this.barreras.glowColumnas();
 			}
 		}
     }
