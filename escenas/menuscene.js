@@ -9,7 +9,6 @@ export default class MenuScene extends Phaser.Scene {
 		super('MenuScene');
 	 }
 	 init(data){
-		//console.log(data);
 		this.data = data;
 		this.gameOptions = data.gameOptions;
 	 }
@@ -53,7 +52,6 @@ export default class MenuScene extends Phaser.Scene {
 		if(this.data.primeraPartida && !this.gameOptions.omitePresentacion){
 			this.menu.setVisible(false); // Evitar pulsaciones
 			this.animacion = new Animacion(this, 10, 220, ()=>{
-			//this.animacion = new Animacion(this, 10, 270, ()=>{
 				this.menu.setVisible(true);
 			});
 		}

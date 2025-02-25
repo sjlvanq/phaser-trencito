@@ -1,83 +1,5 @@
 const w = 15;
 const MapData = Array();
-/*
-const MapData = {
-    MenuScene: [
-        Array(w).fill(0),
-        Array(w).fill(0),
-        Array(w).fill(0),
-        Array(w).fill(8),
-        Array(w).fill(16),
-        Array(w).fill(24),
-        Array(w).fill(32),
-        Array(w).fill(32),
-        Array(w).fill(32),
-        Array(w).fill(40),
-        Array(w).fill(48),
-        Array(w).fill(0),
-        Array(w).fill(0),
-        Array(w).fill(0),
-        Array(w).fill(0),
-        Array(w).fill(0),
-        Array(w).fill([36, 37]),
-        Array(w).fill([44, 45]),
-        Array(w).fill(26),
-        Array(w).fill(26),
-        Array(w).fill(26),
-        Array(w).fill(26),
-        Array(w).fill(26),
-    ],
-    GameOver: [
-        Array(w).fill(0),
-        Array(w).fill(0),
-        Array(w).fill(0),
-        Array(w).fill(8),
-        Array(w).fill(16),
-        Array(w).fill(24),
-        Array(w).fill(32),
-        Array(w).fill(32),
-        Array(w).fill(32),
-        Array(w).fill(40),
-        Array(w).fill(48),
-        Array(w).fill(0),
-        Array(w).fill(0),
-        Array(w).fill(0),
-        Array(w).fill(0),
-        Array(w).fill(0),
-        Array(w).fill([36, 37]),
-        Array(w).fill([44, 45]),
-        Array(w).fill(26),
-        Array(w).fill(26),
-        Array(w).fill(26),
-        Array(w).fill(26),
-        Array(w).fill(26),
-    ],
-    default: [
-        Array(w).fill(0),
-        Array(w).fill(0),
-        Array(w).fill(0),
-        Array(w).fill(0),
-        Array(w).fill(8),
-        Array(w).fill(16),
-        Array(w).fill(24),
-        Array(w).fill(32),
-        Array(w).fill(32),
-        Array(w).fill(32),
-        Array(w).fill(40),
-        Array(w).fill(48),
-        Array(w).fill(0),
-        Array(w).fill(0),
-        Array(w).fill(0),
-        Array(w).fill([36, 37]),
-        Array(w).fill([44, 45]),
-        Array(w).fill(26),
-        Array(w).fill(26),
-        Array(w).fill(26),
-        Array(w).fill(26),
-        Array(w).fill(26),
-    ],
-};
-*/
 
 MapData['MenuScene'] = [
 	Array(w).fill(0),
@@ -198,7 +120,6 @@ MapData['default'][3].splice(10,2,41,42);
 
 
 export default function createTilemap(scene) {
-	//console.log(scene);
 	const map = scene.make.tilemap({ data: MapData[scene.scene.key], tileWidth: 48, tileHeight: 48 });
 	const tiles = map.addTilesetImage("bgtiles");
 	return map.createLayer(0, tiles, 0, 0);

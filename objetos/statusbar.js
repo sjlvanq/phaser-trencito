@@ -12,16 +12,12 @@ export default class StatusBar extends Phaser.GameObjects.Container
 			.setOrigin(0)
 			.setAlpha(0.60);
 		
-		//this.statusVidasIco = scene.add.sprite(260, 18, 'vidas');
 		this.statusVidasIco = scene.add.sprite(260, 18, 'icons', 2);
 		this.statusVidasText = scene.add.text(280, 13, "x " + vidas, statusTextOptions);
-		//this.statusPuntosIco = scene.add.sprite(200, 15, 'botella', 0).setScale(0.5);
 		this.statusPuntosIco = scene.add.sprite(200, 18, 'icons', 0);
 		this.statusPuntosText = scene.add.text(220, 13, puntaje, statusTextOptions);
 		this.statusNivelText = scene.add.text(15, 8, "Nivel "+nivel, statusTextOptions);
-		//this.statusGomasIco = scene.add.image(100, 18, 'neumatico16');
 		this.statusGomasIco = scene.add.sprite(100, 18, 'icons',1);
-		//this.statusGomasIco.setScale(0.6);
 		this.statusGomasIco.setVisible(false);
 		scene.tweens.add({
 			targets: this.statusGomasIco,

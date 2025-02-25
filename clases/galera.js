@@ -1,18 +1,3 @@
- 
-//Galera de mago
-//Argumentos: 
-//... escena
-//... xinicial, yinicial, textura_galera, textura_objetos 
-//... (rango) distancia_en_x_mínima, distancia_en_x_máxima
-//... (rango) distancia_en_y_mínima, distancia_en_y_máxima 
-//... tiempo_entre_objetos, duración_ensuelo
-//... 
-
-//Bucle
-//- Coge textura aleatoriamente
-//- Crea sprite y anima
-//- Pasado duracion_ensuelo elimina el sprite
-
 export default class Galera {
 	constructor( escena, x, y, 
 		texturaObjetos,

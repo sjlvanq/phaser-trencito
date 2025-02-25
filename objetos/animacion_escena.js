@@ -10,9 +10,7 @@ export default class AnimacionEscena extends Phaser.GameObjects.Container {
 		
 		this.disparando = false;
 		
-		
 		// Máscara para margen izquierdo
-		
 		const mascaraRect = this.scene.make.graphics();
 		mascaraRect.fillStyle(0xffffff);
 		mascaraRect.fillRect(
@@ -53,22 +51,18 @@ export default class AnimacionEscena extends Phaser.GameObjects.Container {
         this.disparos = [];
         for (let i = 0; i < 5; i++) {
             const camioneta = new FullAnimatedSprite(this.scene, 0, 0, 'movil');
-            //camioneta.setMask(mascara);
             this.pxcamionetas.add(camioneta);
             this.add(camioneta);
             camioneta.setScale(0.9);
             camioneta.setOrigin(0,0.5);
 			camioneta.x = 500;
             camioneta.play();
-            //camioneta.setMask(mascaraMargenIzq);
-            // Camionetas a escena
+
 			this.scene.tweens.add({
 				targets: camioneta,
 				x: '-=315',
 				duration: 4000,
 				onUpdate: ()=>{
-					/**/
-					//console.log(camioneta.x, this.scene.cameras.main.width);
 					if(camioneta.x + camioneta.displayWidth > mascaraX1 &&
 						camioneta.x < this.scene.cameras.main.width){
 									camioneta.setMask(mascara);
@@ -78,7 +72,6 @@ export default class AnimacionEscena extends Phaser.GameObjects.Container {
 				},
 				onComplete: ()=>{
 					const disparo = this.scene.add.image(camioneta.x+camioneta.displayWidth/2, camioneta.y, 'explosion').setScale(0.2).setOrigin(0.7,0.5);
-					//disparo.setMask(mascara);
 					this.add(disparo);
 					
 					//Disparos
@@ -101,7 +94,6 @@ export default class AnimacionEscena extends Phaser.GameObjects.Container {
 									targets:pj,
 									delay: 700,
 									x:350,
-									//duration:2000,
 									duration:2000,
 									onActive: ()=>{pj.stop();},
 									onStart: ()=>{pj.play('walk'); pj.setFlipX(false);},

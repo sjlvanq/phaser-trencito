@@ -13,7 +13,6 @@ export default class Animacion extends Phaser.GameObjects.Container {
 		this.add([this.fondo]);
 		const bounds = this.getBounds();
 		this.animacion = new AnimacionEscena(this.scene, 5, 25, bounds, ()=>{
-		//this.animacion = new AnimacionEscena(this.scene, 5, 10, bounds, ()=>{
 			this.scene.tweens.add({
 				targets: [this.animacion.layer, this],
 				alpha: 0,

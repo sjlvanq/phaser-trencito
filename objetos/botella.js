@@ -17,7 +17,6 @@ export default class Botella extends Phaser.GameObjects.Sprite {
 					alpha: 0,
 					paused: true,
 					onComplete: () => {
-						//console.log("recogerTween completed");
 						this.onRecogerComplete();
 						this.recogerTween.restart();
 						this.recogerTween.pause()

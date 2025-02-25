@@ -23,7 +23,6 @@ export default class FromToAnimatedSprite extends Phaser.GameObjects.Sprite {
 
 			}
 			play(){
-				//console.log("play "+this.key);
 				super.play(this.key);
 			}
 		}

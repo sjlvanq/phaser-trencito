@@ -19,8 +19,6 @@ export default class Camioneta extends Phaser.GameObjects.Container
 				this.isDisparando = false;
 				this.buscandoObjetivo = false;
 				
-				//this.cabeza = scene.add.sprite(20, -48, 'cabeza', Phaser.Math.Between(0,1));
-				//this.cabeza.setScale(0.1); //Cabezas pixeladas
 				this.cabeza = scene.add.sprite(20, -48, 'cabeza');
 				this.cabeza.setScale(1.15);
 				this.cabeza.setDepth(1);
@@ -64,7 +62,6 @@ export default class Camioneta extends Phaser.GameObjects.Container
 						this.cabezaTween = scene.tweens.add({
 							targets: this.cabeza,
 							scale: '+=0.45',
-							//scale: 0.8, //Cabezas pixeladas
 							y: '-=10',
 							duration: 300,
 							yoyo: true,
@@ -72,7 +69,6 @@ export default class Camioneta extends Phaser.GameObjects.Container
 								this.cabezaTween.pause();
 								this.buscandoObjetivo = true;
 								scene.time.delayedCall(1000, () => {
-									//console.log("scene.time.delayedCall");
 									this.explosion.visible = false;
 									this.isDisparando = false;
 									this.buscandoObjetivo = false;
@@ -80,7 +76,6 @@ export default class Camioneta extends Phaser.GameObjects.Container
 								});
 							},
 							onComplete: () => {
-								//console.log("onComplete");
 								this.cabeza.visible = false;
 								this.ventanillaTween.resume();
 							},
