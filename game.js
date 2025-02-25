@@ -15,7 +15,7 @@ const config = {
     type: Phaser.AUTO,
     width: 320,
     height: 480,
-    fps: {target: 25},
+    fps: {target: 20},
     scene: [Preload, MenuScene, MainScene, GameOver],
     backgroundColor: '#94c364',
 };

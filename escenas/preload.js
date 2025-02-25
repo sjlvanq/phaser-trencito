@@ -38,6 +38,7 @@ export default class Preload extends Phaser.Scene {
 		this.load.spritesheet('dotmenu', 'assets/imagenes/dotmenu.png', {frameWidth: 32, frameHeight:32});
 		this.load.image('dotayuda', 'assets/imagenes/dotayuda.png');
         this.load.spritesheet('icons', 'assets/imagenes/statusbaricons.png', {frameWidth: 24});
+		this.load.spritesheet('sorpresa', 'assets/imagenes/sorpresas.png', {frameWidth: 24});
 		
 		this.load.spritesheet('jugador', 'assets/imagenes/jugador.png', {frameWidth: 32, frameHeight: 80});
         this.load.spritesheet('botella', 'assets/imagenes/botellas.png', {frameWidth: 30, frameHeight: 55});

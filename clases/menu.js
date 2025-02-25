@@ -7,13 +7,16 @@ export default class Menu extends Phaser.GameObjects.Container {
 		this.itemStyle = itemStyle;
 		this.nextY = 0;
 		this.vSpacing = vSpacing;
-		const anim = {
-			key: 'parpadea',
-			frames: this.dotTexture,
-			frameRate: 10,
-			repeat: 3,
+		
+		if (!this.scene.anims.exists('parpadea')) {
+			const anim = {
+				key: 'parpadea',
+				frames: this.dotTexture,
+				frameRate: 10,
+				repeat: 3,
+			}
+			this.scene.anims.create(anim);
 		}
-		this.scene.anims.create(anim);
 		this.enabled = true;
 	}
 

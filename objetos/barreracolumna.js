@@ -1,21 +1,25 @@
 export default class BarreraColumna extends Phaser.GameObjects.Sprite {
-            constructor(scene, x, y, texture, onPointerDown) {
+            constructor(scene, x, y, texture, onPointerDown, index) {
                 super(scene, x, y, texture);
 				this.scene = scene;
 				this.scene.add.existing(this);
 				this.on('pointerdown', () => {
+					this.scene.restituible = false;
 					const frameBase = this.frame.name % 3;
 					if(frameBase>0){ 
 						this.setFrame(frameBase-1);
 						onPointerDown();
 					}
 				});
+				this.index = index;
 			}
+			
 			stop() {
 				super.stop();
 				const frameBase = this.frame.name % 3;
 				this.setFrame(frameBase);
 			}
+			
 			glow()
 			{
 				const frameBase = this.frame.name % 3; // Determina si está en 0, 1 o 2
@@ -34,6 +38,8 @@ export default class BarreraColumna extends Phaser.GameObjects.Sprite {
 					
 					this.setFrame((this.frame.name + 1) % 3); // Reduce columna
 					if(restituible){this.glow();}
+					
+					this.scene.events.emit('columnaGolpeada', this.index);
 					this.scene.balaParada = true;
 				}
             }
