@@ -4,7 +4,6 @@ export default class BarreraColumna extends Phaser.GameObjects.Sprite {
 				this.scene = scene;
 				this.scene.add.existing(this);
 				this.on('pointerdown', () => {
-					this.scene.restituible = false;
 					const frameBase = this.frame.name % 3;
 					if(frameBase>0){ 
 						this.setFrame(frameBase-1);

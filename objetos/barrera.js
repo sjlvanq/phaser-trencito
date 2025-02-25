@@ -8,7 +8,7 @@ export default class Barrera extends Phaser.GameObjects.Group
 		for(let i = 0; i<numeroColumnas; i++){
 			const barrera = new BarreraColumna(this.scene, 0, 0, 'barrera', ()=>{
 						// Callback de pointerdown
-						this.scene.gomas = false;
+						this.restituible = false;
 						this.children.iterate( barrera => {
 								barrera.disableInteractive(); // Se ha seleccionado una
 								barrera.stop(); // Detiene contorno parpadeante
@@ -31,7 +31,9 @@ export default class Barrera extends Phaser.GameObjects.Group
         });
 
 		this.crearAnimaciones();
+		this.restituible = false; // Estado de restitución de neumáticos en columnas
 	}
+	
 	crearAnimaciones() {
 		// Número de cuadros alternables 3
 		for (let i = 0; i < 3; i++) {
@@ -43,12 +45,14 @@ export default class Barrera extends Phaser.GameObjects.Group
 			});
 		}
 	}
+	
 	glowColumnas() {
 		this.children.iterate((barrera) => {barrera.glow();});		
 	}
-	update(miraX, restituible) {
+	
+	update(miraX) {
 		this.children.iterate(barrera => {
-			barrera.update(miraX, restituible);
+			barrera.update(miraX, this.restituible);
 		});
 	}
 }
