@@ -10,6 +10,7 @@ export default class BarreraColumna extends Phaser.GameObjects.Sprite {
 						onPointerDown();
 					}
 				});
+				this.setOrigin(0.5, 1); // Para tween en update
 			}
 			stop() {
 				super.stop();
@@ -33,6 +34,14 @@ export default class BarreraColumna extends Phaser.GameObjects.Sprite {
 				{
 					
 					this.setFrame((this.frame.name + 1) % 3); // Reduce columna
+					this.scene.tweens.add({
+						targets: this,
+						displayHeight: '+=2',
+						displayWidth: '+=2',
+						yoyo: true,
+						ease: 'Power1.easeIn',
+						duration: 100
+					});
 					if(restituible){this.glow();}
 					this.scene.balaParada = true;
 				}

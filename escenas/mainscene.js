@@ -51,7 +51,7 @@ export default class MainScene extends Phaser.Scene {
 		
 		this.balaParada = false;
 		
-		this.barrera = new Barrera(this, 0, 260, 4, this.gameOptions.shadows);
+		this.barrera = new Barrera(this, 0, 250, 4, this.gameOptions.shadows);
 		this.camionetas = this.add.group();
         for (let i = 0; i < 6; i++) {
             const camioneta = new Camioneta(this, 0, 0, i*2800);
