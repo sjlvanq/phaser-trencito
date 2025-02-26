@@ -37,12 +37,14 @@ export default class Barrera extends Phaser.GameObjects.Group
 	crearAnimaciones() {
 		// Número de cuadros alternables 3
 		for (let i = 0; i < 3; i++) {
-			this.scene.anims.create({
-				key: `glow_${i}`,
-				frames: this.scene.anims.generateFrameNumbers('barrera', { frames: [i, i + 3] }),
-				frameRate: 5,
-				repeat: -1
-			});
+			if(!this.scene.anims.get(`glow_${i}`)){
+				this.scene.anims.create({
+					key: `glow_${i}`,
+					frames: this.scene.anims.generateFrameNumbers('barrera', { frames: [i, i + 3] }),
+					frameRate: 5,
+					repeat: -1
+				});
+			}
 		}
 	}
 	

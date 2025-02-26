@@ -13,7 +13,9 @@ export default class Menu extends Phaser.GameObjects.Container {
 			frameRate: 10,
 			repeat: 3,
 		}
-		this.scene.anims.create(anim);
+		if(!this.scene.anims.get(anim.key)) {
+			this.scene.anims.create(anim);
+		}
 		this.enabled = true;
 	}
 
