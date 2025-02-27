@@ -151,21 +151,15 @@ export default class MainScene extends Phaser.Scene {
 				this.nivelTexto.setText("Nivel "+this.nivel);
 				this.tweens.add({
 					targets: this.nivelTexto,
-					duration: 1000,
-					scale: 2,
+					props: {
+						scale: {value: 2, duration: 1200, ease: 'Power1.in'},
+						alpha: {value: 1, yoyo: true, ease: 'Expo.out', duration: 700}
+					},
 					onComplete: ()=> {
 						this.nivelTexto.setAlpha(0);
 						this.nivelTexto.setScale(0);
 					},
 				});
-				this.tweens.add({
-					targets: this.nivelTexto,
-					duration: 1000,
-					yoyo: true,
-					ease: 'Expo.out',
-					alpha: 1,
-				});
-				
 				this.barrera.restituible = true;
 				this.barrera.glowColumnas();
 				//this.statusBar.showGomas();
