@@ -15,7 +15,7 @@ const paginas = [
 	[
 	'Entonces el mandatario, que',
 	'no tenía paciencia para estas',
-	'cosas, resolvió que salieran',
+	'cosas, dispuso que salieran',
 	'todos juntos, en filita,',
 	'como un "trencito".',
 	],
