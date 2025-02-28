@@ -7,6 +7,10 @@ export default class Camioneta extends Phaser.GameObjects.Container
                 super(scene, x, y);
                 scene.add.existing(this);
                 
+                this.isDisparando = false;
+                this.buscandoObjetivo = false;
+                this.velocidad = 80; 
+                
                 this.camionetaSprite = scene.add.sprite(0, 0, 'camioneta').setDepth(1);
 				this.vidrios = [
 					scene.add.rectangle(-42, -25, 50, 50, 0x3333bb),
@@ -14,15 +18,13 @@ export default class Camioneta extends Phaser.GameObjects.Container
 				];
 				
 				this.explosion = scene.add.sprite(-10,-15, 'explosion').setDepth(1);
-				this.explosion.scale = 0.7;
-				this.explosion.visible = false;
-				this.isDisparando = false;
-				this.buscandoObjetivo = false;
+				this.explosion.setScale(0.7);
+				this.explosion.setVisible(false);
 				
 				this.cabeza = scene.add.sprite(20, -48, 'cabeza');
 				this.cabeza.setScale(1.15);
 				this.cabeza.setDepth(1);
-				this.cabeza.visible = false;
+				this.cabeza.setVisible(false);
 				
 				this.rueda = [
 					new FullAnimatedSprite(scene, -143, 47, 'rueda', 25).setScale(1.1),
@@ -33,11 +35,7 @@ export default class Camioneta extends Phaser.GameObjects.Container
 
 
 				this.add([...this.vidrios, this.camionetaSprite, this.rueda[0], this.rueda[1], this.cabeza, this.explosion]);
-				
-				this.velocidad = 80; 
-				this.enLaMira = false;
-				this.miraX = 0;
-				
+								
 				this.camionetaTween = scene.tweens.add({
 					targets: this.camionetaSprite,
 					rotation: 0.01,
@@ -57,7 +55,7 @@ export default class Camioneta extends Phaser.GameObjects.Container
 					ease: 'Expo.in',
 					onYoyo: () => {
 						this.ventanillaTween.pause();
-						this.cabeza.visible = true;
+						this.cabeza.setVisible(true);
 
 						this.cabezaTween = scene.tweens.add({
 							targets: this.cabeza,
@@ -69,14 +67,14 @@ export default class Camioneta extends Phaser.GameObjects.Container
 								this.cabezaTween.pause();
 								this.buscandoObjetivo = true;
 								scene.time.delayedCall(1000, () => {
-									this.explosion.visible = false;
+									this.explosion.setVisible(false);
 									this.isDisparando = false;
 									this.buscandoObjetivo = false;
 									this.cabezaTween.resume();
 								});
 							},
 							onComplete: () => {
-								this.cabeza.visible = false;
+								this.cabeza.setVisible(false);
 								this.ventanillaTween.resume();
 							},
 						});
@@ -93,17 +91,12 @@ export default class Camioneta extends Phaser.GameObjects.Container
 
 				this.x -= this.velocidad * deltaSeconds;
 				
-				this.miraX = this.x;
-				
-				if(this.miraX > playerX - playerWidth / 2 && this.miraX < playerX + playerWidth / 2) {
-					this.enLaMira = true;
+				if(this.x > playerX - playerWidth / 2 && this.x < playerX + playerWidth / 2) {
 					if(this.buscandoObjetivo){
-						this.explosion.visible = true;
+						this.explosion.setVisible(true);
 						this.isDisparando = true;
 						this.buscandoObjetivo = false;
 					}
-				} else {
-					this.enLaMira = false;	
 				}
 				
 				//Ancho de camioneta escalada: 123

@@ -91,7 +91,7 @@ export default class MainScene extends Phaser.Scene {
 					camioneta.isDisparando = false;
 					this.balaParada = false;
 					
-					this.barrera.update(camioneta.miraX);
+					this.barrera.update(camioneta.x);
 					
 					if (!this.balaParada && !this.jugador.isHerido) {
 						this.sound.play('herido_snd');
