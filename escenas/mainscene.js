@@ -153,6 +153,10 @@ export default class MainScene extends Phaser.Scene {
 						this.nivelTexto.setScale(0);
 					},
 				});
+			}
+			// else if (cuando avanzar nivel restituya la barrera completa)
+			// Puede restituir un neumático a la barrera
+			if(!(this.puntaje % this.gameOptions.botellasxneumatico)){
 				this.barrera.restituible = true;
 				this.barrera.glowColumnas();
 				//this.statusBar.showGomas();

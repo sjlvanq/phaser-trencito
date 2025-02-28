@@ -1,6 +1,7 @@
 {
 	"shadows": false,
 	"vidas": 3,
-	"botellasxnivel": 7,
+	"botellasxnivel": 15,
+	"botellasxneumatico": 7,
 	"omitePresentacion": false
 }
