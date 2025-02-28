@@ -82,6 +82,8 @@ export default class Camioneta extends Phaser.GameObjects.Container
 						});
 					},
 				});
+				this.setScale(0.31);
+				this.width = this.getBounds().width;
 			}
 			
             update (time, delta, playerX)
@@ -104,8 +106,13 @@ export default class Camioneta extends Phaser.GameObjects.Container
 					this.enLaMira = false;	
 				}
 				
-				if (this.x < -180) { 
-					this.x = 420; 
-				}
+				//Ancho de camioneta escalada: 123
+				//Ancho de celda en grid: 200
+				//Propiedad originX: 0.5
+				// (200 - 123) / 2 = 38.5
+				
+				if (this.x < this.width * -1) {
+					this.x = this.scene.cameras.main.width + this.width + 38.5;
+				}				
             }
         }

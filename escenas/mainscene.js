@@ -55,19 +55,17 @@ export default class MainScene extends Phaser.Scene {
 		this.camionetas = this.add.group();
         for (let i = 0; i < 6; i++) {
             const camioneta = new Camioneta(this, 0, 0, i*2800);
-            camioneta.scale = 0.31;
             if(this.gameOptions.shadows){
 				camioneta.postFX.addShadow(0,1,0.03,2);
             }
             this.camionetas.add(camioneta);
         }
         this.camionetas.shuffle();
-        console.log(this.ordenDisparos);
         Phaser.Actions.GridAlign(this.camionetas.getChildren(), {
             width: 3,
             cellWidth: 200,
             cellHeight: 80,
-            x: 100,
+            x: 420,
             y: 130
         });
         // Desplazar y aumentar la velocidad en la segunda fila
