@@ -123,18 +123,13 @@ export default class MainScene extends Phaser.Scene {
 		// Movimiento del jugador
 		
 		if (this.controles.rightIsPressed) {
-			this.jugador.anims.play('walk', true);
-			this.jugador.setFlipX(false);
-			if(this.jugador.x + this.jugador.displayWidth / 2 <= 320) {this.jugador.x += 3}
+			this.jugador.avanzar(time, delta, 'derecha');
 		}
 		else if (this.controles.leftIsPressed) {
-			this.jugador.anims.play('walk', true);
-			this.jugador.setFlipX(true);
-			if(this.jugador.x - this.jugador.displayWidth / 2 >= 0) {this.jugador.x -= 3}
+			this.jugador.avanzar(time, delta, 'izquierda');
 		} 
 		else {
-			this.jugador.anims.stop();
-			this.jugador.setFrame(4);
+			this.jugador.detenerse();
 		}
 		
 		// Recoge botellas

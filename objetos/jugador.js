@@ -3,7 +3,8 @@ export default class Jugador extends Phaser.GameObjects.Sprite {
 				super(scene, x, y,texture);
 				this.scene = scene;
 				this.scene.add.existing(this);
-				this.isHerido = false;
+				this.velocidad = 90;
+				this.isHerido = false; 
 				
 				this.heridoTween = scene.tweens.add({
 					targets: this,
@@ -34,5 +35,27 @@ export default class Jugador extends Phaser.GameObjects.Sprite {
 						repeat: -1
 					});
 				}
+			}
+			avanzar(time, delta, direccion) {
+				const deltaSeconds = delta / 1000;
+				this.anims.play('walk', true);
+				switch(direccion) {
+					case 'derecha':
+						this.setFlipX(false);
+						if(this.x + this.displayWidth / 2 <= 320) {
+							this.x += this.velocidad * deltaSeconds;
+						}
+						break;
+					case 'izquierda':
+						this.setFlipX(true);
+						if(this.x + this.displayWidth / 2 >= 0) {
+							this.x -= this.velocidad * deltaSeconds;
+						}
+						break;
+				}
+			}
+			detenerse() {
+				this.anims.stop();
+				this.setFrame(4);
 			}
 		}
