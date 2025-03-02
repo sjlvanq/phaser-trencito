@@ -5,16 +5,15 @@ export default class Barrera extends Phaser.GameObjects.Group
 		super(scene);
 		this.scene = scene;
 
+		this.restituible = false; // Estado de restitución de neumáticos en columnas
+
 		for(let i = 0; i<numeroColumnas; i++){
 			const barrera = new BarreraColumna(this.scene, 0, 0, 'barrera', ()=>{
-						// Callback de pointerdown
-						this.restituible = false;
-						this.children.iterate( barrera => {
-								barrera.disableInteractive(); // Se ha seleccionado una
-								barrera.stop(); // Detiene contorno parpadeante
-						});
-					}
-				);
+					// Callback de pointerdown
+					this.restituible = false;
+					this.children.iterate( columna => {columna.stop();});
+				}
+			);
 			barrera.scale = 0.6
 			
 			if(shadows){
@@ -31,7 +30,6 @@ export default class Barrera extends Phaser.GameObjects.Group
         });
 
 		this.crearAnimaciones();
-		this.restituible = false; // Estado de restitución de neumáticos en columnas
 	}
 	
 	crearAnimaciones() {
@@ -49,8 +47,14 @@ export default class Barrera extends Phaser.GameObjects.Group
 	}
 	
 	glowColumnas() {
-		this.children.iterate((barrera) => {barrera.glow();});		
+		this.children.iterate((columna) => {columna.glow();});
 	}
+	
+	repararColumnas() {
+		this.children.iterate((columna) => {columna.reparar(true);});
+	}
+	
+	setRestituible(value){this.restituible = value;}
 	
 	update(miraX) {
 		this.children.iterate(barrera => {
