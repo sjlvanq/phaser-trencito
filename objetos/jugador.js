@@ -1,19 +1,18 @@
-import JUGADOR from './jugadorConfig.js';
 export default class Jugador extends Phaser.GameObjects.Sprite {
             constructor (scene, x, y, texture) {
 				super(scene, x, y,texture);
 				this.scene = scene;
 				this.scene.add.existing(this);
-				this.velocidad = JUGADOR.VELOCIDAD;
+				this.velocidad = 90;
 				this.isHerido = false; 
 				
 				this.heridoTween = scene.tweens.add({
 					targets: this,
 					paused: true,
 					alpha: 0.1,
-					duration: JUGADOR.TWEENS.HERIDO.DURACION,
+					duration: 100,
 					yoyo: true,
-					repeat: JUGADOR.TWEENS.HERIDO.REPETICIONES,
+					repeat: 3,
 					onStart: ()=>{
 						this.isHerido = true;
 					},
@@ -32,7 +31,7 @@ export default class Jugador extends Phaser.GameObjects.Sprite {
 					this.anims.create({
 						key: 'walk',
 						frames: this.anims.generateFrameNumbers('jugador', { start: 0, end: 3 }),
-						frameRate: JUGADOR.ANIMACIONES.CAMINAR.FRAMERATE,
+						frameRate: 10,
 						repeat: -1
 					});
 				}
@@ -43,7 +42,7 @@ export default class Jugador extends Phaser.GameObjects.Sprite {
 				switch(direccion) {
 					case 'derecha':
 						this.setFlipX(false);
-						if(this.x + this.displayWidth / 2 <= this.scene.cameras.main.width) {
+						if(this.x + this.displayWidth / 2 <= 320) {
 							this.x += this.velocidad * deltaSeconds;
 						}
 						break;
