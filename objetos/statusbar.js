@@ -2,7 +2,6 @@ export default class StatusBar extends Phaser.GameObjects.Container
 {
 	constructor (scene, nivel, puntaje, vidas)
 	{
-		
 		super(scene, 0, 0);
 		scene.add.existing(this);
 		

@@ -47,16 +47,16 @@ export default class AnimacionEscena extends Phaser.GameObjects.Container {
 			onComplete: ()=>{pj.stop();}
 		});
 		
-        this.pxcamionetas = this.scene.add.group();
-        this.disparos = [];
-        for (let i = 0; i < 5; i++) {
-            const camioneta = new FullAnimatedSprite(this.scene, 0, 0, 'movil');
-            this.pxcamionetas.add(camioneta);
-            this.add(camioneta);
-            camioneta.setScale(0.9);
-            camioneta.setOrigin(0,0.5);
+		this.pxcamionetas = this.scene.add.group();
+		this.disparos = [];
+		for (let i = 0; i < 5; i++) {
+			const camioneta = new FullAnimatedSprite(this.scene, 0, 0, 'movil');
+			this.pxcamionetas.add(camioneta);
+			this.add(camioneta);
+			camioneta.setScale(0.9);
+			camioneta.setOrigin(0,0.5);
 			camioneta.x = 500;
-            camioneta.play();
+			camioneta.play();
 
 			this.scene.tweens.add({
 				targets: camioneta,
@@ -118,8 +118,8 @@ export default class AnimacionEscena extends Phaser.GameObjects.Container {
 				});
 			}
 		Phaser.Actions.GridAlign(this.pxcamionetas.getChildren(), {
-            width: 5, cellWidth: 80, y: 20, x: 320,
-        });
+			width: 5, cellWidth: 80, y: 20, x: 320,
+		});
 	}
 	update(){
 	}

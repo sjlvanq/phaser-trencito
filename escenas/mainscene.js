@@ -13,15 +13,14 @@ import Botella 		from '../objetos/botella.js';
 import createTilemap from '../tilemaps.js';
 
 export default class MainScene extends Phaser.Scene {
-    preload() {
 	
-    }
-    init(data){
+	init(data){
 		this.data = data;
 		this.gameOptions = data.gameOptions;
 		this.ranking = data.ranking;
 	}
-    create() {
+	
+	create() {
 		const layer = createTilemap(this);
 		layer.y -= 16;
 		layer.setScale(0.5);
@@ -53,37 +52,37 @@ export default class MainScene extends Phaser.Scene {
 		
 		this.barrera = new Barrera(this, 0, 250, 4, this.gameOptions.shadows);
 		this.camionetas = this.add.group();
-        for (let i = 0; i < 6; i++) {
-            const camioneta = new Camioneta(this, 0, 0, i*2800);
-            if(this.gameOptions.shadows){
+		for (let i = 0; i < 6; i++) {
+			const camioneta = new Camioneta(this, 0, 0, i*2800);
+			if(this.gameOptions.shadows){
 				camioneta.postFX.addShadow(0,1,0.03,2);
-            }
-            this.camionetas.add(camioneta);
-        }
-        this.camionetas.shuffle();
-        Phaser.Actions.GridAlign(this.camionetas.getChildren(), {
-            width: 3,
-            cellWidth: 200,
-            cellHeight: 80,
-            x: 420,
-            y: 130
-        });
-        // Desplazar y aumentar la velocidad en la segunda fila
-        const camionetas = this.camionetas.getChildren();
-        camionetas.forEach((camioneta, index) => {
-            if (index >= 3) { 
-                camioneta.x += 110;
-                camioneta.velocidad += 20;
-            }
-        });
-        this.controles = new Controles(this, 410);
-        this.controles.alpha = 0.7;
-        
-        this.jugador = new Jugador(this, 160, 320, 'jugador').setDepth(3);
-        this.jugador.scale = 0.85; //1.05; //0.90; //32
-    }
+			}
+			this.camionetas.add(camioneta);
+		}
+		this.camionetas.shuffle();
+		Phaser.Actions.GridAlign(this.camionetas.getChildren(), {
+			width: 3,
+			cellWidth: 200,
+			cellHeight: 80,
+			x: 420,
+			y: 130
+		});
+		// Desplazar y aumentar la velocidad en la segunda fila
+		const camionetas = this.camionetas.getChildren();
+		camionetas.forEach((camioneta, index) => {
+			if (index >= 3) { 
+				camioneta.x += 110;
+				camioneta.velocidad += 20;
+			}
+		});
+		this.controles = new Controles(this, 410);
+		this.controles.alpha = 0.7;
+		
+		this.jugador = new Jugador(this, 160, 320, 'jugador').setDepth(3);
+		this.jugador.scale = 0.85; //1.05; //0.90; //32
+	}
 
-    update(time, delta) {
+	update(time, delta) {
 		this.camionetas.children.iterate(camioneta => {
 				camioneta.update(time, delta, this.jugador.x);
 				if(camioneta.isDisparando){
@@ -133,7 +132,7 @@ export default class MainScene extends Phaser.Scene {
 		}
 		
 		// Recoge botellas
-	    if(Phaser.Geom.Intersects.RectangleToRectangle(this.botella.getBounds(), this.jugador.getBounds())
+		if(Phaser.Geom.Intersects.RectangleToRectangle(this.botella.getBounds(), this.jugador.getBounds())
 			&& !this.botella.isCollected){
 			this.botella.recoger();
 			
@@ -163,6 +162,6 @@ export default class MainScene extends Phaser.Scene {
 				//this.statusBar.showGomas();
 			}
 		}
-    }
+	}
 }
 

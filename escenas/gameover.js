@@ -6,6 +6,7 @@ export default class GameOver extends Phaser.Scene {
 	constructor() {
 		super('GameOver');
 	 }
+	 
 	 init(data){
 		this.data = data;
 		this.isRecord = false;
@@ -14,10 +15,8 @@ export default class GameOver extends Phaser.Scene {
 			this.isRecord = true;
 		}
 	 }
-	 preload() {
-		
-	}
-    create() {
+
+	create() {
 		const layer = createTilemap(this);
 		layer.setScale(0.5);
 
@@ -73,8 +72,9 @@ export default class GameOver extends Phaser.Scene {
 			this.actualizarData();
 			this.scene.start('MenuScene', this.data);
 		});
-    }
-    actualizarData(){
+	}
+	
+	actualizarData(){
 		this.data.ranking.anterior = this.data.puntaje;
 		if(this.isRecord || this.data.primeraPartida){
 			this.data.primeraPartida = false;

@@ -25,9 +25,9 @@ export default class Barrera extends Phaser.GameObjects.Group
 		}
 
 		Phaser.Actions.GridAlign(this.getChildren(), {
-            width: numeroColumnas, cellWidth: this.scene.cameras.main.width / numeroColumnas,
-            x: x, y: y
-        });
+			width: numeroColumnas, cellWidth: this.scene.cameras.main.width / numeroColumnas,
+			x: x, y: y
+		});
 
 		this.crearAnimaciones();
 	}

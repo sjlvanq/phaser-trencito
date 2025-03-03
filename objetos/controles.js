@@ -1,10 +1,11 @@
-export default class Controles extends Phaser.GameObjects.Container {
-    constructor(scene, y) {
+export default class Controles extends Phaser.GameObjects.Container 
+{
+	constructor(scene, y) {
 		const centerX = scene.scale.width / 2;
-        super(scene, centerX, y);
-        scene.add.existing(this);
+		super(scene, centerX, y);
+		scene.add.existing(this);
 
-        // Crear un grupo de botones usando la escena
+		// Crear un grupo de botones usando la escena
 		this.rightIsPressed = false;
 		this.leftIsPressed = false;
 				
@@ -22,15 +23,15 @@ export default class Controles extends Phaser.GameObjects.Container {
 		this.add(buttonLeft);
 		this.add(buttonRight);
 		
-        // Alinearlos en una cuadrícula
-        Phaser.Actions.GridAlign(this.list, {
-            width: 2,
-            height: 1,
-            cellWidth: buttonLeft.width + 15,
-            cellHeight: buttonLeft.height + 10,
-            x: -buttonLeft.width - 15,
-            y: 0
-        });
+		// Alinearlos en una cuadrícula
+		Phaser.Actions.GridAlign(this.list, {
+			width: 2,
+			height: 1,
+			cellWidth: buttonLeft.width + 15,
+			cellHeight: buttonLeft.height + 10,
+			x: -buttonLeft.width - 15,
+			y: 0
+		});
 
-    }
+	}
 }

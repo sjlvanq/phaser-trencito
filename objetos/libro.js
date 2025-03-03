@@ -1,8 +1,8 @@
 import RowAnimatedSprite from '../clases/rowanimatedsprite.js';
 import colores from '../data/paleta.js';
 
-export default class Libro extends Phaser.GameObjects.Container {
-	
+export default class Libro extends Phaser.GameObjects.Container 
+{	
 	static TEXTO = {
 		X: 35, 
 		Y: 25,
@@ -41,24 +41,24 @@ export default class Libro extends Phaser.GameObjects.Container {
 		this.add(this.siguiente);
 		this.fadeIn();
 	}
-    siguientePagina() {
-        if (this.cursor < this.paginas.length - 1) {
-            this.siguiente.disableInteractive(); //Evita spam
-            this.cursor++;
-            this.texto.setAlpha(0);
-            this.texto.setText(this.paginas[this.cursor]);
-            this.scene.tweens.add({
+	siguientePagina() {
+		if (this.cursor < this.paginas.length - 1) {
+			this.siguiente.disableInteractive(); //Evita spam
+			this.cursor++;
+			this.texto.setAlpha(0);
+			this.texto.setText(this.paginas[this.cursor]);
+			this.scene.tweens.add({
 				targets: this.texto,
 				alpha: 1,
 				duration: Libro.TEXTO.FADEIN
 			})
-            this.scene.time.delayedCall(Libro.SIGUIENTE.SETINTERACTIVE_DELAY, () => {
+			this.scene.time.delayedCall(Libro.SIGUIENTE.SETINTERACTIVE_DELAY, () => {
 				this.siguiente.setInteractive();
 			});
-        } else {
+		} else {
 			this.fadeOut(true);
 		}
-    }
+	}
 	fadeIn() {
 		this.setAlpha(0);
 		this.scene.tweens.add({
@@ -77,7 +77,7 @@ export default class Libro extends Phaser.GameObjects.Container {
 				if (destroyAfter) {
 					this.destroy();
 				}
-            },
+			},
 		});
 	}
 }

@@ -12,7 +12,7 @@ export default class MenuScene extends Phaser.Scene {
 		this.data = data;
 		this.gameOptions = data.gameOptions;
 	 }
-    create() {
+	create() {
 		const layer = createTilemap(this);
 		layer.setScale(0.5);
 
@@ -81,5 +81,5 @@ export default class MenuScene extends Phaser.Scene {
 			persist: true
 		});
 		
-    }
+	}
 }
