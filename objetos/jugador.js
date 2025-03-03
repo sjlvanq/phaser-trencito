@@ -48,7 +48,7 @@ export default class Jugador extends Phaser.GameObjects.Sprite {
 						break;
 					case 'izquierda':
 						this.setFlipX(true);
-						if(this.x + this.displayWidth / 2 >= 0) {
+						if(this.x - this.displayWidth / 2 >= 0) {
 							this.x -= this.velocidad * deltaSeconds;
 						}
 						break;
