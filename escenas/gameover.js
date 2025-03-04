@@ -1,4 +1,4 @@
-import Camioneta from '../objetos/camioneta.js';
+import Camioneta from '../objetos/trencitocamioneta.js';
 import RowAnimatedSprite from '../clases/rowanimatedsprite.js';
 import createTilemap from '../tilemaps.js';
 

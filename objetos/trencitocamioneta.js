@@ -1,4 +1,4 @@
-import CAMIONETA from './camionetaConfig.js';
+import CAMIONETA from './trencitocamionetaConfig.js';
 import FullAnimatedSprite from '../clases/fullanimatedsprite.js';
 
 export default class Camioneta extends Phaser.GameObjects.Container

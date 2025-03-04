@@ -5,9 +5,9 @@ import FullAnimatedSprite from '../clases/fullanimatedsprite.js';
 import Jugador 		from '../objetos/jugador.js';
 import Controles 	from '../objetos/controles.js';
 import StatusBar	from '../objetos/statusbar.js';
-import Camioneta 	from '../objetos/camioneta.js';
 import Barrera 		from '../objetos/barrera.js';
 import Botella 		from '../objetos/botella.js';
+import Camioneta 	from '../objetos/trencitocamioneta.js';
 
 // Helpers
 import createTilemap from '../tilemaps.js';
