@@ -3,7 +3,7 @@ import FullAnimatedSprite from '../clases/fullanimatedsprite.js';
 
 export default class Camioneta extends Phaser.GameObjects.Container
 {
-	constructor (scene, x, y, ventanillaTweenDelay=0, celdaGridAncho=200)
+	constructor (scene, x, y, ventanillaTweenDelay=0)
 	{
 		super(scene, x, y);
 		scene.add.existing(this);
@@ -11,9 +11,7 @@ export default class Camioneta extends Phaser.GameObjects.Container
 		this.isDisparando = false;
 		this.buscandoObjetivo = false;
 		this.velocidad = CAMIONETA.VELOCIDAD_INICIAL;
-		
-		this.celdaGridAncho = celdaGridAncho;
-		
+				
 		this.chasis = scene.add.sprite(0, 0, 'camioneta').setDepth(1);
 		this.vidrios = [
 			scene.add.rectangle(CAMIONETA.VIDRIOS.OFFSETS_X[0], CAMIONETA.VIDRIOS.OFFSET_Y, CAMIONETA.VIDRIOS.ANCHO, CAMIONETA.VIDRIOS.ALTO, CAMIONETA.VIDRIOS.COLOR),
@@ -115,13 +113,7 @@ export default class Camioneta extends Phaser.GameObjects.Container
 		this.explosion.setVisible(true);
 	}
 	
-	reiniciarPosicion ()
-	{
-		const offsetReinicio = (this.celdaGridAncho - this.width) / 2;
-		this.x = this.scene.cameras.main.width + this.width + offsetReinicio; //38.5;				
-	}
-	
-	update (time, delta, playerX)
+	update (time, delta, playerX, cellWidth)
 	{
 		const deltaSeconds = delta / 1000;
 		const playerWidth = this.scene.jugador.displayWidth 
@@ -133,8 +125,11 @@ export default class Camioneta extends Phaser.GameObjects.Container
 			this.disparar();
 		}
 		
-		if (this.x < this.width * -1) {
-			this.reiniciarPosicion();
-		}				
+		//if (this.x < this.width * -1) {
+		if (this.x + this.width < 0) {
+			const ultimaCamioneta = this.scene.trencito.getChildren()
+				.reduce((max, c) => (c.x > max.x && c.y == this.y ? c : max), this);
+			this.x = ultimaCamioneta.x + cellWidth;
+		}
 	}
 }

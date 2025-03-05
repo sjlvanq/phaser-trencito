@@ -8,6 +8,7 @@ import StatusBar	from '../objetos/statusbar.js';
 import Barrera 		from '../objetos/barrera.js';
 import Botella 		from '../objetos/botella.js';
 import Camioneta 	from '../objetos/trencitocamioneta.js';
+import Trencito 	from '../objetos/trencito.js';
 
 // Helpers
 import createTilemap from '../tilemaps.js';
@@ -29,6 +30,7 @@ export default class MainScene extends Phaser.Scene {
 		this.puntaje = 0;
 		this.vidas = this.gameOptions.vidas?this.gameOptions.vidas:1;
 		this.restituible = false;
+		this.balaParada = false;
 		
 		this.statusBar = new StatusBar(this, this.nivel, this.puntaje, this.vidas);
 		this.statusBar.setAlpha(0.5);
@@ -48,76 +50,53 @@ export default class MainScene extends Phaser.Scene {
 		this.botella.setScale(0.55);
 		this.botella.setDepth(1);
 		
-		this.balaParada = false;
-		
 		this.barrera = new Barrera(this, 0, 250, 4, this.gameOptions.shadows);
-		this.camionetas = this.add.group();
-		for (let i = 0; i < 6; i++) {
-			const camioneta = new Camioneta(this, 0, 0, i*2800);
-			if(this.gameOptions.shadows){
-				camioneta.postFX.addShadow(0,1,0.03,2);
-			}
-			this.camionetas.add(camioneta);
-		}
-		this.camionetas.shuffle();
-		Phaser.Actions.GridAlign(this.camionetas.getChildren(), {
-			width: 3,
-			cellWidth: 200,
-			cellHeight: 80,
-			x: 420,
-			y: 130
-		});
-		// Desplazar y aumentar la velocidad en la segunda fila
-		const camionetas = this.camionetas.getChildren();
-		camionetas.forEach((camioneta, index) => {
-			if (index >= 3) { 
-				camioneta.x += 110;
-				camioneta.velocidad += 20;
-			}
-		});
+		
+		this.trencito = new Trencito(this, 420, 130);
+		
 		this.controles = new Controles(this, 410);
 		this.controles.alpha = 0.7;
 		
 		this.jugador = new Jugador(this, 160, 320, 'jugador').setDepth(3);
 		this.jugador.scale = 0.85; //1.05; //0.90; //32
+		
+		this.events.on('camionetaDispara', (camionetaX)=>this.onCamionetaDispara(camionetaX));
 	}
-
+	
+	onCamionetaDispara(camionetaX) {
+		this.balaParada = false; //Retorno de barrera.update
+		this.barrera.update(camionetaX);
+		
+		//Herir al jugador
+		if (!this.balaParada && !this.jugador.isHerido) {
+			this.sound.play('herido_snd');
+			this.vidas -= 1;
+			
+			//Matar al jugador
+			if(this.vidas<=0) {
+				this.controles.visible = false;						
+				if(this.botella.recogerTween.isPlaying()){this.botella.setVisible(false);}
+				this.nivelTexto.setVisible(false);
+				
+				this.sound.play('gameover_snd');
+				this.scene.pause();
+				
+				setTimeout(() => {
+					this.data.puntaje = this.puntaje;
+					this.scene.start('GameOver', 
+						this.data);
+				}, 1000);
+				
+			};
+			
+			this.statusBar.putVidas(this.vidas);
+			this.jugador.heridoTween.play();
+		}
+	}
+	
 	update(time, delta) {
-		this.camionetas.children.iterate(camioneta => {
-				camioneta.update(time, delta, this.jugador.x);
-				if(camioneta.isDisparando){
-					this.sound.play('disparo_snd');
-					camioneta.isDisparando = false;
-					this.balaParada = false;
-					
-					this.barrera.update(camioneta.x);
-					
-					if (!this.balaParada && !this.jugador.isHerido) {
-						this.sound.play('herido_snd');
-						this.vidas -= 1;
-						if(this.vidas<=0) {
-							camioneta.explosion.setScale(camioneta.explosion.scale+=0.1);
-							
-							this.controles.visible = false;						
-							if(this.botella.recogerTween.isPlaying()){this.botella.setVisible(false);}
-							this.nivelTexto.setVisible(false);
-							
-							this.sound.play('gameover_snd');
-							this.scene.pause();
-							
-							//setTimeout y no time.delayCall. Revisar
-							setTimeout(() => {
-								this.data.puntaje = this.puntaje;
-								this.scene.start('GameOver', 
-									this.data);
-							}, 1000);
-						};
-						
-						this.statusBar.putVidas(this.vidas);
-						this.jugador.heridoTween.play();
-					}
-				}
-		});
+		
+		this.trencito.update(time, delta, this.jugador.x);
 		
 		// Movimiento del jugador
 		
@@ -164,4 +143,3 @@ export default class MainScene extends Phaser.Scene {
 		}
 	}
 }
-
