@@ -113,23 +113,30 @@ export default class Camioneta extends Phaser.GameObjects.Container
 		this.explosion.setVisible(true);
 	}
 	
-	update (time, delta, playerX, cellWidth)
+	update (time, delta, playerX, cellWidth, direccion)
 	{
 		const deltaSeconds = delta / 1000;
-		const playerWidth = this.scene.jugador.displayWidth 
+		const playerWidth = this.scene.jugador.displayWidth;
+		const haSalidoIzquierda = this.x + this.width < 0;
+		const haSalidoDerecha = this.x - this.width > this.scene.cameras.main.width;
 
-		this.x -= this.velocidad * deltaSeconds;
+		this.x -= this.velocidad * deltaSeconds * direccion;
 		
+		// Verificar si la camioneta está dentro del rango de colisión con el jugador
 		//if(this.x > playerX - playerWidth / 2 && this.x < playerX + playerWidth / 2 && this.buscandoObjetivo) {
 		if (Math.abs(this.x - playerX) < playerWidth / 2 && this.buscandoObjetivo) {
 			this.disparar();
 		}
 		
-		//if (this.x < this.width * -1) {
-		if (this.x + this.width < 0) {
+		const haSalido = direccion > 0 ? haSalidoIzquierda : haSalidoDerecha;
+		
+		if (haSalido) {
 			const ultimaCamioneta = this.scene.trencito.getChildren()
-				.reduce((max, c) => (c.x > max.x && c.y == this.y ? c : max), this);
-			this.x = ultimaCamioneta.x + cellWidth;
+				.reduce((max, c) => (
+					(direccion > 0 ? c.x > max.x : c.x < max.x) && c.y == this.y ? c : max
+				), this);
+			
+			this.x = ultimaCamioneta.x + cellWidth * direccion;
 		}
 	}
 }
