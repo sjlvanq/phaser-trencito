@@ -83,6 +83,7 @@ export default class MainScene extends Phaser.Scene {
 				
 				setTimeout(() => {
 					this.data.puntaje = this.puntaje;
+					this.events.off('camionetaDispara');
 					this.scene.start('GameOver', 
 						this.data);
 				}, 1000);
