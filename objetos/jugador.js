@@ -29,12 +29,11 @@ export default class Jugador extends Phaser.GameObjects.Sprite
 			duration: Jugador.TWEENS.HERIDO.DURACION,
 			yoyo: true,
 			repeat: Jugador.TWEENS.HERIDO.REPETICIONES,
+			persist: true,
 			onStart: ()=>{
 				this.isHerido = true;
 			},
 			onComplete: ()=>{
-				this.heridoTween.restart();
-				this.heridoTween.pause();
 				this.isHerido = false;
 				this.setAlpha(1);
 			}
