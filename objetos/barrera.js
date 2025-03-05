@@ -57,8 +57,8 @@ export default class Barrera extends Phaser.GameObjects.Group
 	setRestituible(value){this.restituible = value;}
 	
 	update(miraX) {
-		this.children.iterate(barrera => {
-			barrera.update(miraX, this.restituible);
+		this.children.iterate(columna => {
+			columna.update(miraX, this.restituible);
 		});
 	}
 }
