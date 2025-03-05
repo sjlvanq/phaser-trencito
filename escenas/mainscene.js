@@ -52,7 +52,7 @@ export default class MainScene extends Phaser.Scene {
 		
 		this.barrera = new Barrera(this, 0, 250, 4, this.gameOptions.shadows);
 		
-		this.trencito = new Trencito(this, 420, 130);
+		this.trencito = new Trencito(this, 420, 140);
 		
 		this.controles = new Controles(this, 410);
 		this.controles.alpha = 0.7;
