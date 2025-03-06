@@ -15,7 +15,7 @@ export default class Trencito extends Phaser.GameObjects.Group
 		
 		this.direccion = 1; //1 o -1
 		for (let i = 0; i < Trencito.CANTIDAD_CAMIONETAS; i++) {
-			const camioneta = new Camioneta(this.scene, 0, 0, i*Trencito.INTERVALO_ORDEN_DISPAROS, Trencito.CELL_WIDTH);
+			const camioneta = new Camioneta(this.scene, 0, 0, i*Trencito.INTERVALO_ORDEN_DISPAROS, this.direccion);
 			if(shadows){ // Pasar de gameOptions
 				camioneta.postFX.addShadow(0,1,0.03,2);
 			}
@@ -26,15 +26,15 @@ export default class Trencito extends Phaser.GameObjects.Group
 		this.distribuirCamionetas(y, this.direccion);
 	}
 
-	flipCamionetas(value){
+	voltearCamionetas(direccion){
 		this.getChildren().forEach((camioneta)=>{
-			camioneta.scaleX *= value;
+			camioneta.voltear(direccion);
 		});
 	}
 	
 	distribuirCamionetas(y, direccion){	
 		this.direccion = direccion;
-		this.flipCamionetas(direccion);
+		this.voltearCamionetas(direccion);
 		
 		const gridX = direccion === -1 ?
 			-(Trencito.CANTIDAD_CAMIONETAS / Trencito.FILAS * Trencito.CELL_WIDTH) :

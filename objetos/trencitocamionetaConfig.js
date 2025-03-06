@@ -5,13 +5,13 @@ export default {
 	
 	EXPLOSION: {
 		ESCALA: 1,
-		OFFSET_X: -10,
+		OFFSETS_X: [-20,-10],
 		OFFSET_Y: -15,
 	},
 	
 	CABEZA: {
 		ESCALA: 1.15,
-		OFFSET_X: 20,
+		OFFSETS_X: [-40, 20],
 		OFFSET_Y: -48,
 	},
 	
@@ -20,7 +20,7 @@ export default {
 		ALTO: 50,
 		OFFSET_Y: -25,
 		COLOR: 0x3333bb,
-		OFFSETS_X: [-42,20],
+		OFFSETS_X: [-42, 20],
 	},
 	
 	RUEDAS: {

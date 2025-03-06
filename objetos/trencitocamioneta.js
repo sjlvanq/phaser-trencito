@@ -3,7 +3,7 @@ import FullAnimatedSprite from '../clases/fullanimatedsprite.js';
 
 export default class Camioneta extends Phaser.GameObjects.Container
 {
-	constructor (scene, x, y, ventanillaTweenDelay=0)
+	constructor (scene, x, y, ventanillaTweenDelay=0, direccion=1)
 	{
 		super(scene, x, y);
 		scene.add.existing(this);
@@ -18,11 +18,11 @@ export default class Camioneta extends Phaser.GameObjects.Container
 			scene.add.rectangle(CAMIONETA.VIDRIOS.OFFSETS_X[1], CAMIONETA.VIDRIOS.OFFSET_Y, CAMIONETA.VIDRIOS.ANCHO, CAMIONETA.VIDRIOS.ALTO, CAMIONETA.VIDRIOS.COLOR),
 		];
 		
-		this.explosion = scene.add.sprite(CAMIONETA.EXPLOSION.OFFSET_X, CAMIONETA.EXPLOSION.OFFSET_Y, 'explosion').setDepth(1);
+		this.explosion = scene.add.sprite(CAMIONETA.EXPLOSION.OFFSETS_X[direccion<0?0:1], CAMIONETA.EXPLOSION.OFFSET_Y, 'explosion').setDepth(1);
 		this.explosion.setScale(CAMIONETA.EXPLOSION.ESCALA);
 		this.explosion.setVisible(false);
 		
-		this.cabeza = scene.add.sprite(CAMIONETA.CABEZA.OFFSET_X, CAMIONETA.CABEZA.OFFSET_Y, 'cabeza');
+		this.cabeza = scene.add.sprite(CAMIONETA.CABEZA.OFFSETS_X[direccion<0?0:1], CAMIONETA.CABEZA.OFFSET_Y, 'cabeza');
 		this.cabeza.setScale(CAMIONETA.CABEZA.ESCALA);
 		this.cabeza.setDepth(1);
 		this.cabeza.setVisible(false);
@@ -36,15 +36,15 @@ export default class Camioneta extends Phaser.GameObjects.Container
 		this.add([...this.vidrios, this.chasis, ...this.ruedas, this.cabeza, this.explosion]);
 		this.setScale(CAMIONETA.ESCALA);
 		
-		this.crearTweens(ventanillaTweenDelay);
+		this.crearTweens(ventanillaTweenDelay, direccion);
 		
 		this.width = this.getBounds().width;
 	}
 	
-	crearTweens(ventanillaTweenDelay)
+	crearTweens(ventanillaTweenDelay, direccion)
 	{
 		this.animarChasis();
-		this.animarVentanilla(ventanillaTweenDelay);
+		this.animarVentanilla(ventanillaTweenDelay, direccion);
 
 	}
 	
@@ -59,10 +59,10 @@ export default class Camioneta extends Phaser.GameObjects.Container
 		});
 	}
 	
-	animarVentanilla(ventanillaTweenDelay)
+	animarVentanilla(ventanillaTweenDelay, direccion)
 	{
 		this.ventanillaTween = this.scene.tweens.add({
-			targets: this.vidrios[1],
+			targets: this.vidrios[direccion<0?0:1],
 			delay: ventanillaTweenDelay,
 			y: CAMIONETA.TWEENS.VENTANILLA.PROP_Y,
 			duration: CAMIONETA.TWEENS.VENTANILLA.DURACION,
@@ -111,6 +111,12 @@ export default class Camioneta extends Phaser.GameObjects.Container
 		this.isDisparando = true;
 		this.buscandoObjetivo = false;
 		this.explosion.setVisible(true);
+	}
+	
+	voltear (direccion) {
+		this.cabeza.setX(CAMIONETA.CABEZA.OFFSETS_X[direccion<0?0:1]);
+		this.explosion.setX(CAMIONETA.EXPLOSION.OFFSETS_X[direccion<0?0:1]);
+		this.scaleX *= direccion; //dirección 1 o -1
 	}
 	
 	update (time, delta, playerX, cellWidth, direccion)
