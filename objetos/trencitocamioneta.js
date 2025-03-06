@@ -12,6 +12,7 @@ export default class Camioneta extends Phaser.GameObjects.Container
 		this.buscandoObjetivo = false;
 		this.velocidad = CAMIONETA.VELOCIDAD_INICIAL;
 		this.enRetirada = false;
+		this.ventanillaTweenDelay = ventanillaTweenDelay;
 				
 		this.chasis = scene.add.sprite(0, 0, 'camioneta').setDepth(1);
 		this.vidrios = [
@@ -42,10 +43,10 @@ export default class Camioneta extends Phaser.GameObjects.Container
 		this.width = this.getBounds().width;
 	}
 	
-	crearTweens(ventanillaTweenDelay, direccion)
+	crearTweens(direccion)
 	{
 		this.animarChasis();
-		this.animarVentanilla(ventanillaTweenDelay, direccion);
+		this.animarVentanilla(direccion);
 
 	}
 	
@@ -60,12 +61,13 @@ export default class Camioneta extends Phaser.GameObjects.Container
 		});
 	}
 	
-	animarVentanilla(ventanillaTweenDelay, direccion)
+	animarVentanilla(direccion)
 	{
-		// FIXME: El objetivo del tween debe actualizarse al cambiar la direccion
+		this.vidrios.forEach((vidrio, index) => {vidrio.setY(CAMIONETA.VIDRIOS.OFFSET_Y);});
+		if(this.ventanillaTween){this.ventanillaTween.remove();}
 		this.ventanillaTween = this.scene.tweens.add({
 			targets: this.vidrios[direccion<0?0:1],
-			delay: ventanillaTweenDelay,
+			delay: this.ventanillaTweenDelay,
 			y: CAMIONETA.TWEENS.VENTANILLA.PROP_Y,
 			duration: CAMIONETA.TWEENS.VENTANILLA.DURACION,
 			repeat: -1,
@@ -77,6 +79,7 @@ export default class Camioneta extends Phaser.GameObjects.Container
 	
 	mostrarCabeza()
 	{
+		if(this.cabezaTween){this.cabezaTween.remove();}
 		this.cabezaTween = this.scene.tweens.add({
 			targets: this.cabeza,
 			scale: CAMIONETA.TWEENS.CABEZA.PROP_SCALE,
@@ -87,13 +90,18 @@ export default class Camioneta extends Phaser.GameObjects.Container
 				this.cabeza.setVisible(true);
 			},
 			yoyo: true,
-			onYoyo: () => {this.iniciarBusquedaObjetivo();},
-			onComplete: () => {this.ocultarCabeza();},
+			onYoyo: () => {
+				this.cabezaTween.pause();
+				this.iniciarBusquedaObjetivo();
+			},
+			onComplete: () => {
+				this.ocultarCabeza();
+				this.cabezaTween.remove();
+			},
 		});
 	}
 	
 	iniciarBusquedaObjetivo(){
-		this.cabezaTween.pause();
 		this.buscandoObjetivo = true;
 		this.scene.time.delayedCall(CAMIONETA.TWEENS.CABEZA.ESPERA, () => {
 			this.buscandoObjetivo = false;
@@ -120,6 +128,7 @@ export default class Camioneta extends Phaser.GameObjects.Container
 		this.explosion.setX(CAMIONETA.EXPLOSION.OFFSETS_X[direccion<0?0:1]);
 		this.scaleX = Math.abs(this.scaleX) * direccion;
 		//this.scaleX *= -1; // alterna valor
+		this.animarVentanilla(direccion);
 	}
 	
 	update (time, delta, playerX, cellWidth, direccion)
