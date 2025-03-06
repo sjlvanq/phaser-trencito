@@ -134,6 +134,10 @@ export default class MainScene extends Phaser.Scene {
 				});
 				this.barrera.setRestituible(false);
 				this.barrera.repararColumnas();
+				this.trencito.retirarCamionetas();
+				this.time.delayedCall(4000, ()=>{
+					this.trencito.ingresarCamionetas();
+				});
 			}
 			// Puede restituir un neumático a la barrera
 			else if(!(this.puntaje % this.gameOptions.botellasxneumatico)){

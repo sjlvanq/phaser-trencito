@@ -11,6 +11,7 @@ export default class Camioneta extends Phaser.GameObjects.Container
 		this.isDisparando = false;
 		this.buscandoObjetivo = false;
 		this.velocidad = CAMIONETA.VELOCIDAD_INICIAL;
+		this.enRetirada = false;
 				
 		this.chasis = scene.add.sprite(0, 0, 'camioneta').setDepth(1);
 		this.vidrios = [
@@ -61,6 +62,7 @@ export default class Camioneta extends Phaser.GameObjects.Container
 	
 	animarVentanilla(ventanillaTweenDelay, direccion)
 	{
+		// FIXME: El objetivo del tween debe actualizarse al cambiar la direccion
 		this.ventanillaTween = this.scene.tweens.add({
 			targets: this.vidrios[direccion<0?0:1],
 			delay: ventanillaTweenDelay,
@@ -116,7 +118,8 @@ export default class Camioneta extends Phaser.GameObjects.Container
 	voltear (direccion) {
 		this.cabeza.setX(CAMIONETA.CABEZA.OFFSETS_X[direccion<0?0:1]);
 		this.explosion.setX(CAMIONETA.EXPLOSION.OFFSETS_X[direccion<0?0:1]);
-		this.scaleX *= direccion; //dirección 1 o -1
+		this.scaleX = Math.abs(this.scaleX) * direccion;
+		//this.scaleX *= -1; // alterna valor
 	}
 	
 	update (time, delta, playerX, cellWidth, direccion)
@@ -135,8 +138,8 @@ export default class Camioneta extends Phaser.GameObjects.Container
 		}
 		
 		const haSalido = direccion > 0 ? haSalidoIzquierda : haSalidoDerecha;
-		
-		if (haSalido) {
+		// Obtiene x de la camioneta más a la deracha o más a la izquierda según dirección
+		if (haSalido && !this.enRetirada) {
 			const ultimaCamioneta = this.scene.trencito.getChildren()
 				.reduce((max, c) => (
 					(direccion > 0 ? c.x > max.x : c.x < max.x) && c.y == this.y ? c : max

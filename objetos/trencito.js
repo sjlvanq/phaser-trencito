@@ -1,4 +1,5 @@
 import Camioneta from '../objetos/trencitocamioneta.js';
+import CAMIONETA from '../objetos/trencitocamionetaConfig.js';
 export default class Trencito extends Phaser.GameObjects.Group
 {
 	static CANTIDAD_CAMIONETAS = 6;
@@ -12,7 +13,7 @@ export default class Trencito extends Phaser.GameObjects.Group
 	constructor(scene, x, y, shadows = false) {
 		super(scene);
 		this.scene = scene;
-		
+		this.y = y;
 		this.direccion = 1; //1 o -1
 		for (let i = 0; i < Trencito.CANTIDAD_CAMIONETAS; i++) {
 			const camioneta = new Camioneta(this.scene, 0, 0, i*Trencito.INTERVALO_ORDEN_DISPAROS, this.direccion);
@@ -27,6 +28,7 @@ export default class Trencito extends Phaser.GameObjects.Group
 	}
 
 	voltearCamionetas(direccion){
+		this.direccion = direccion;
 		this.getChildren().forEach((camioneta)=>{
 			camioneta.voltear(direccion);
 		});
@@ -52,9 +54,17 @@ export default class Trencito extends Phaser.GameObjects.Group
 		this.getChildren().forEach((camioneta, index) => {
 			let fila = Math.ceil((index+1) / Math.floor(Trencito.CANTIDAD_CAMIONETAS / Trencito.FILAS));
 			camioneta.x += (Trencito.OFFSET_X_FILA * fila) * direccion;
-			camioneta.velocidad += Trencito.OFFSET_VELOCIDAD_FILA * fila;
-			console.log(camioneta.x);
+			camioneta.velocidad = CAMIONETA.VELOCIDAD_INICIAL + Trencito.OFFSET_VELOCIDAD_FILA * fila;
 		});
+	}
+	
+	retirarCamionetas() {
+		this.getChildren().forEach((camioneta) => {camioneta.enRetirada = true});
+	}
+	
+	ingresarCamionetas() {
+		this.distribuirCamionetas(this.y, this.direccion * -1); // Alterna this.direccion
+		this.getChildren().forEach((camioneta) => {camioneta.enRetirada = false});
 	}
 	
 	update(time, delta, playerX){
