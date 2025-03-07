@@ -131,14 +131,14 @@ export default class Camioneta extends Phaser.GameObjects.Container
 		this.animarVentanilla(direccion);
 	}
 	
-	update (time, delta, playerX, cellWidth, direccion)
+	update (time, delta, velocidad, playerX, cellWidth, direccion)
 	{
 		const deltaSeconds = delta / 1000;
 		const playerWidth = this.scene.jugador.displayWidth;
 		const haSalidoIzquierda = this.x + this.width < 0;
 		const haSalidoDerecha = this.x - this.width > this.scene.cameras.main.width;
 
-		this.x -= this.velocidad * deltaSeconds * direccion;
+		this.x -= velocidad * deltaSeconds * direccion;
 		
 		// Verificar si la camioneta está dentro del rango de colisión con el jugador
 		//if(this.x > playerX - playerWidth / 2 && this.x < playerX + playerWidth / 2 && this.buscandoObjetivo) {

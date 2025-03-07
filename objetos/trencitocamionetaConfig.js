@@ -1,7 +1,6 @@
 export default {
 	// General
 	ESCALA: 0.31,
-	VELOCIDAD_INICIAL: 80,
 	
 	EXPLOSION: {
 		ESCALA: 1,

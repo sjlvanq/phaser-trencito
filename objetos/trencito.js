@@ -9,6 +9,7 @@ export default class Trencito extends Phaser.GameObjects.Group
 	static OFFSET_X_FILA = 110;
 	static OFFSET_VELOCIDAD_FILA = 20;
 	static INTERVALO_ORDEN_DISPAROS = 2800;
+	static VELOCIDAD_INICIAL = 80;
 	
 	constructor(scene, x, y, shadows = false) {
 		super(scene);
@@ -25,6 +26,7 @@ export default class Trencito extends Phaser.GameObjects.Group
 		
 		this.shuffle();
 		this.distribuirCamionetas(y, this.direccion);
+		this.velocidad = Trencito.VELOCIDAD_INICIAL;
 	}
 
 	voltearCamionetas(direccion){
@@ -69,7 +71,7 @@ export default class Trencito extends Phaser.GameObjects.Group
 	
 	update(time, delta, playerX){
 		this.getChildren().forEach((camioneta)=>{
-			camioneta.update(time, delta, playerX, Trencito.CELL_WIDTH, this.direccion);
+			camioneta.update(time, delta, this.velocidad, playerX, Trencito.CELL_WIDTH, this.direccion);
 			if(camioneta.isDisparando){
 				camioneta.isDisparando = false; //break
 				this.scene.sound.play('disparo_snd');
