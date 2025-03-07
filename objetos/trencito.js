@@ -10,6 +10,7 @@ export default class Trencito extends Phaser.GameObjects.Group
 	static OFFSET_VELOCIDAD_FILA = 20;
 	static INTERVALO_ORDEN_DISPAROS = 2800;
 	static VELOCIDAD_INICIAL = 80;
+	static VELOCIDAD_INCREMENTO = 20;
 	
 	constructor(scene, x, y, shadows = false) {
 		super(scene);
@@ -67,6 +68,11 @@ export default class Trencito extends Phaser.GameObjects.Group
 	ingresarCamionetas() {
 		this.distribuirCamionetas(this.y, this.direccion * -1); // Alterna this.direccion
 		this.getChildren().forEach((camioneta) => {camioneta.enRetirada = false});
+		this.incrementarVelocidad();
+	}
+	
+	incrementarVelocidad() {
+		this.velocidad += Trencito.VELOCIDAD_INCREMENTO;
 	}
 	
 	update(time, delta, playerX){
