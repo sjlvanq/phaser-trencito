@@ -51,7 +51,7 @@ export default class MainScene extends Phaser.Scene {
 		
 		this.trencito = new Trencito(this, 420, 140);
 		
-		this.controles = new Controles(this, 410);
+		this.controles = new Controles(this, 430);
 		this.controles.alpha = 0.7;
 		
 		this.jugador = new Jugador(this, 160, 320, 'jugador').setDepth(3);
