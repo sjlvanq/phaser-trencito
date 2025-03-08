@@ -9,6 +9,7 @@ import Barrera 		from '../objetos/barrera.js';
 import Botella 		from '../objetos/botella.js';
 import Camioneta 	from '../objetos/trencitocamioneta.js';
 import Trencito 	from '../objetos/trencito.js';
+import MensajeNivel	from '../objetos/mensajenivel.js';
 
 // Helpers
 import createTilemap from '../tilemaps.js';
@@ -40,11 +41,7 @@ export default class MainScene extends Phaser.Scene {
 			duration: 300
 		});
 		
-		this.nivelTexto = this.add.text(this.cameras.main.width / 2,this.cameras.main.height / 3, "Nivel "+this.nivel, {color: "#fff",fontSize: "50px", fontFamily: "monaco", strokeThickness: 1})
-			.setOrigin(0.5,0.5)
-			.setScale(0.1)
-			.setAlpha(0)
-			.setDepth(10);
+		this.mensajeNivel = new MensajeNivel(this, this.cameras.main.width / 2, this.cameras.main.height / 3)
 		
 		this.botella = new Botella(this,330,'botella');
 		this.botella.setScale(0.55);
@@ -76,7 +73,7 @@ export default class MainScene extends Phaser.Scene {
 			if(this.vidas<=0) {
 				this.controles.visible = false;						
 				if(this.botella.recogerTween.isPlaying()){this.botella.setVisible(false);}
-				this.nivelTexto.setVisible(false);
+				this.mensajeNivel.ocultar();
 				
 				this.sound.play('gameover_snd');
 				this.scene.pause();
@@ -118,22 +115,14 @@ export default class MainScene extends Phaser.Scene {
 			
 			// Avanza nivel
 			if(!(this.puntaje % this.gameOptions.botellasxnivel)){
+				
 				this.nivel += 1;
+				this.mensajeNivel.mostrar(this.nivel);
 				this.statusBar.putNivel(this.nivel);
-				this.nivelTexto.setText("Nivel "+this.nivel);
-				this.tweens.add({
-					targets: this.nivelTexto,
-					props: {
-						scale: {value: 2, duration: 1200, ease: 'Power1.in'},
-						alpha: {value: 1, yoyo: true, ease: 'Expo.out', duration: 700}
-					},
-					onComplete: ()=> {
-						this.nivelTexto.setAlpha(0);
-						this.nivelTexto.setScale(0);
-					},
-				});
+
 				this.barrera.setRestituible(false);
 				this.barrera.repararColumnas();
+				
 				this.trencito.retirarCamionetas();
 				this.time.delayedCall(4000, ()=>{
 					this.trencito.ingresarCamionetas();
