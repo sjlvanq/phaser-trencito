@@ -21,8 +21,8 @@ export default class MensajeNivel extends Phaser.GameObjects.Text {
 		this.scene.tweens.add({
 			targets: this,
 			props: {
-				scale: {value: 2, duration: 1200, ease: 'Power1.in'},
-				alpha: {value: 1, yoyo: true, ease: 'Expo.out', duration: 700}
+				scale: {value: 2, duration: 1200, ease: 'Cubic.easeIn'},
+				alpha: {value: 1, yoyo: true, ease: 'Expo.easeOut', duration: 850}
 			},
 			onComplete: ()=> {
 				this.setAlpha(0);
