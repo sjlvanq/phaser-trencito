@@ -62,6 +62,8 @@ export default class GameOver extends Phaser.Scene {
 		this.add.image(this.cameras.main.width / 2,this.cameras.main.height / 2,'gameover').setScale(1);
 		
 		const camioneta = new Camioneta(this, this.cameras.main.width/2, 310-15).setScale(0.4);
+		// Ha sido sacada la llamada a animarVentanilla del constructor de Camioneta
+		camioneta.animarVentanilla(1);
 		camioneta.postFX.addShadow(0,1,0.03,2);
 		
 		this.botonVolverAlMenu = new RowAnimatedSprite(this, this.cameras.main.width/2, 170, 'flechas', 0).setOrigin(0.5,0);
