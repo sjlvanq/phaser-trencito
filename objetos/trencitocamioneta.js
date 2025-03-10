@@ -11,6 +11,7 @@ export default class Camioneta extends Phaser.GameObjects.Container
 		this.isDisparando = false;
 		this.buscandoObjetivo = false;
 		this.enRetirada = false;
+		this.fila = 0;
 		
 		this.velocidad = CAMIONETA.VELOCIDAD_INICIAL;
 		this.ventanillaTweenDelay = ventanillaTweenDelay;
@@ -163,7 +164,7 @@ export default class Camioneta extends Phaser.GameObjects.Container
 		this.enRetirada = false;
 	}
 	
-	update (time, delta, velocidad, playerX, cellWidth, direccion)
+	update (time, delta, velocidad, playerX, direccion)
 	{
 		const deltaSeconds = delta / 1000;
 		const playerWidth = this.scene.jugador.displayWidth;
@@ -181,12 +182,7 @@ export default class Camioneta extends Phaser.GameObjects.Container
 		const haSalido = direccion > 0 ? haSalidoIzquierda : haSalidoDerecha;
 		// Obtiene x de la camioneta más a la deracha o más a la izquierda según dirección
 		if (haSalido && !this.enRetirada) {
-			const ultimaCamioneta = this.scene.trencito.camionetas
-				.reduce((max, c) => (
-					(direccion > 0 ? c.x > max.x : c.x < max.x) && c.y == this.y ? c : max
-				), this);
-			
-			this.x = ultimaCamioneta.x + cellWidth * direccion;
+			this.scene.events.emit('camionetaHaSalido', this);
 		}
 	}
 }

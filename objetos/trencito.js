@@ -17,6 +17,7 @@ export default class Trencito extends Phaser.GameObjects.Group
 		this.scene = scene;
 		this.y = y;
 		this.direccion = 1; //1 o -1
+		this.ultimaEnFila = [];
 		for (let i = 0; i < Trencito.CANTIDAD_CAMIONETAS; i++) {
 			const camioneta = new Camioneta(this.scene, 0, 0, i*Trencito.INTERVALO_ORDEN_DISPAROS, this.direccion);
 			if(shadows){ // Pasar de gameOptions
@@ -28,7 +29,11 @@ export default class Trencito extends Phaser.GameObjects.Group
 		// Retorno de getChildren(), evita invocarlo cada vez
 		this.camionetas = this.getChildren();
 		this.distribuirCamionetas(y, this.direccion);
+		
 		this.velocidad = Trencito.VELOCIDAD_INICIAL;
+		this.scene.events.on('camionetaHaSalido',(camioneta)=>{
+			this.reubicarCamioneta(camioneta);
+		});
 	}
 
 	voltearCamionetas(direccion){
@@ -54,12 +59,27 @@ export default class Trencito extends Phaser.GameObjects.Group
 			y: y
 		});
 		
-		// Offset de camioneta.x en fila y velocidad
+		// Offset de camioneta.x en fila y velocidad, asignación de camioneta.fila y ultimaEnFila
 		this.camionetas.forEach((camioneta, index) => {
 			let fila = Math.ceil((index+1) / Math.floor(Trencito.CANTIDAD_CAMIONETAS / Trencito.FILAS));
 			camioneta.x += (Trencito.OFFSET_X_FILA * fila) * direccion;
 			camioneta.velocidad = CAMIONETA.VELOCIDAD_INICIAL + Trencito.OFFSET_VELOCIDAD_FILA * fila;
+			camioneta.fila = fila;
+			if(direccion>0){
+				if ((index + 1) % Math.floor(Trencito.CANTIDAD_CAMIONETAS / Trencito.FILAS) === 0 || index === this.camionetas.length - 1) {
+					this.ultimaEnFila[fila-1] = camioneta;
+				}
+			} else {
+				if (index % (Trencito.CANTIDAD_CAMIONETAS/Trencito.FILAS) === 0){
+					this.ultimaEnFila[fila-1] = camioneta;
+				}
+			}
 		});
+	}
+	
+	reubicarCamioneta(camioneta) {
+		camioneta.setX(this.ultimaEnFila[camioneta.fila-1].x + Trencito.CELL_WIDTH * this.direccion);
+		this.ultimaEnFila[camioneta.fila-1] = camioneta;
 	}
 	
 	retirarCamionetas() {
@@ -78,7 +98,7 @@ export default class Trencito extends Phaser.GameObjects.Group
 	
 	update(time, delta, playerX){
 		this.camionetas.forEach((camioneta)=>{
-			camioneta.update(time, delta, this.velocidad, playerX, Trencito.CELL_WIDTH, this.direccion);
+			camioneta.update(time, delta, this.velocidad, playerX, this.direccion);
 			if(camioneta.isDisparando){
 				camioneta.isDisparando = false; //break
 				this.scene.sound.play('disparo_snd');
