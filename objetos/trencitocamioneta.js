@@ -10,11 +10,14 @@ export default class Camioneta extends Phaser.GameObjects.Container
 		
 		this.isDisparando = false;
 		this.buscandoObjetivo = false;
-		this.velocidad = CAMIONETA.VELOCIDAD_INICIAL;
 		this.enRetirada = false;
+		
+		this.velocidad = CAMIONETA.VELOCIDAD_INICIAL;
 		this.ventanillaTweenDelay = ventanillaTweenDelay;
 				
 		this.chasis = scene.add.sprite(0, 0, 'camioneta').setDepth(1);
+		this.animarChasis();
+		
 		this.vidrios = [
 			scene.add.rectangle(CAMIONETA.VIDRIOS.OFFSETS_X[0], CAMIONETA.VIDRIOS.OFFSET_Y, CAMIONETA.VIDRIOS.ANCHO, CAMIONETA.VIDRIOS.ALTO, CAMIONETA.VIDRIOS.COLOR),
 			scene.add.rectangle(CAMIONETA.VIDRIOS.OFFSETS_X[1], CAMIONETA.VIDRIOS.OFFSET_Y, CAMIONETA.VIDRIOS.ANCHO, CAMIONETA.VIDRIOS.ALTO, CAMIONETA.VIDRIOS.COLOR),
@@ -38,18 +41,9 @@ export default class Camioneta extends Phaser.GameObjects.Container
 		this.add([...this.vidrios, this.chasis, ...this.ruedas, this.cabeza, this.explosion]);
 		this.setScale(CAMIONETA.ESCALA);
 		
-		this.crearTweens(ventanillaTweenDelay, direccion);
-		
 		this.width = this.getBounds().width;
 	}
-	
-	crearTweens(direccion)
-	{
-		this.animarChasis();
-		this.animarVentanilla(direccion);
-
-	}
-	
+		
 	animarChasis()
 	{
 		this.scene.tweens.add({
@@ -63,27 +57,48 @@ export default class Camioneta extends Phaser.GameObjects.Container
 	
 	animarVentanilla(direccion)
 	{
-		this.vidrios.forEach((vidrio, index) => {vidrio.setY(CAMIONETA.VIDRIOS.OFFSET_Y);});
-		if(this.ventanillaTween){this.ventanillaTween.remove();}
+		let faseYoyo = false;
 		this.ventanillaTween = this.scene.tweens.add({
 			targets: this.vidrios[direccion<0?0:1],
 			delay: this.ventanillaTweenDelay,
-			y: CAMIONETA.TWEENS.VENTANILLA.PROP_Y,
+			// Uso de 'start-to' para evitar desfasajes al matar el tween
+			y: {start: CAMIONETA.VIDRIOS.OFFSET_Y, to: CAMIONETA.TWEENS.VENTANILLA.PROP_Y},
 			duration: CAMIONETA.TWEENS.VENTANILLA.DURACION,
+			ease: Phaser.Math.Easing.Expo.In,
 			repeat: -1,
 			yoyo: true,
-			ease: Phaser.Math.Easing.Expo.In,
-			onYoyo: () => {this.mostrarCabeza();},
+			onYoyo: () => {
+				faseYoyo=true;
+				this.mostrarCabeza();},
+			onRepeat: () => {
+				faseYoyo=false;
+				if(this.enRetirada){
+					this.ventanillaTween.remove();
+				}
+			},
+			onUpdate: () => {
+				// Si cambia el estado enRetirada antes de mostrarCabeza, da marcha atrás y finaliza el ciclo
+				if(this.enRetirada && this.ventanillaTween.isPlaying() && !faseYoyo){
+					const tiempoTranscurrido = this.ventanillaTween.elapsed % CAMIONETA.TWEENS.VENTANILLA.DURACION;
+					this.scene.tweens.add({
+						targets: this.ventanillaTween.targets,
+						y: CAMIONETA.VIDRIOS.OFFSET_Y,
+						duration: tiempoTranscurrido,
+					});
+					this.ventanillaTween.remove();
+				}
+			},
 		});
 	}
 	
 	mostrarCabeza()
 	{
-		if(this.cabezaTween){this.cabezaTween.remove();}
+		if(this.enRetirada){return};
 		this.cabezaTween = this.scene.tweens.add({
 			targets: this.cabeza,
-			scale: CAMIONETA.TWEENS.CABEZA.PROP_SCALE,
-			y: CAMIONETA.TWEENS.CABEZA.PROP_Y,
+			// Uso de 'start-to' para evitar desfasajes al matar el tween
+			scale: {start: CAMIONETA.CABEZA.ESCALA, to: CAMIONETA.TWEENS.CABEZA.PROP_SCALE},
+			y: {start: CAMIONETA.CABEZA.OFFSET_Y, to: CAMIONETA.TWEENS.CABEZA.PROP_Y},
 			duration: CAMIONETA.TWEENS.CABEZA.DURACION,
 			onStart: () => {
 				this.ventanillaTween.pause();
@@ -96,7 +111,6 @@ export default class Camioneta extends Phaser.GameObjects.Container
 			},
 			onComplete: () => {
 				this.ocultarCabeza();
-				this.cabezaTween.remove();
 			},
 		});
 	}
@@ -104,11 +118,15 @@ export default class Camioneta extends Phaser.GameObjects.Container
 	iniciarBusquedaObjetivo(){
 		this.buscandoObjetivo = true;
 		this.scene.time.delayedCall(CAMIONETA.TWEENS.CABEZA.ESPERA, () => {
-			this.buscandoObjetivo = false;
-			this.explosion.setVisible(false);
-			this.isDisparando = false;
-			this.cabezaTween.resume();
+			this.finalizarBusquedaObjetivo();
 		});
+	}
+	
+	finalizarBusquedaObjetivo(){
+		this.buscandoObjetivo = false;
+		this.explosion.setVisible(false);
+		this.isDisparando = false;
+		this.cabezaTween.resume();
 	}
 	
 	ocultarCabeza(){
@@ -118,6 +136,7 @@ export default class Camioneta extends Phaser.GameObjects.Container
 	
 	disparar () 
 	{
+		if(this.enRetirada){return}
 		this.isDisparando = true;
 		this.buscandoObjetivo = false;
 		this.explosion.setVisible(true);
@@ -126,9 +145,22 @@ export default class Camioneta extends Phaser.GameObjects.Container
 	voltear (direccion) {
 		this.cabeza.setX(CAMIONETA.CABEZA.OFFSETS_X[direccion<0?0:1]);
 		this.explosion.setX(CAMIONETA.EXPLOSION.OFFSETS_X[direccion<0?0:1]);
-		this.scaleX = Math.abs(this.scaleX) * direccion;
 		//this.scaleX *= -1; // alterna valor
+		this.scaleX = Math.abs(this.scaleX) * direccion;
+		
+		this.scene.tweens.killTweensOf(this); 		// Mata los tweens asociados
 		this.animarVentanilla(direccion);
+	}
+	
+	retirar(){
+		this.enRetirada = true;
+		if(this.buscandoObjetivo){
+			this.finalizarBusquedaObjetivo();
+		}
+	}
+	
+	ingresar(){
+		this.enRetirada = false;
 	}
 	
 	update (time, delta, velocidad, playerX, cellWidth, direccion)
@@ -139,7 +171,7 @@ export default class Camioneta extends Phaser.GameObjects.Container
 		const haSalidoDerecha = this.x - this.width > this.scene.cameras.main.width;
 
 		this.x -= velocidad * deltaSeconds * direccion;
-		
+				
 		// Verificar si la camioneta está dentro del rango de colisión con el jugador
 		//if(this.x > playerX - playerWidth / 2 && this.x < playerX + playerWidth / 2 && this.buscandoObjetivo) {
 		if (Math.abs(this.x - playerX) < playerWidth / 2 && this.buscandoObjetivo) {
@@ -149,7 +181,7 @@ export default class Camioneta extends Phaser.GameObjects.Container
 		const haSalido = direccion > 0 ? haSalidoIzquierda : haSalidoDerecha;
 		// Obtiene x de la camioneta más a la deracha o más a la izquierda según dirección
 		if (haSalido && !this.enRetirada) {
-			const ultimaCamioneta = this.scene.trencito.getChildren()
+			const ultimaCamioneta = this.scene.trencito.camionetas
 				.reduce((max, c) => (
 					(direccion > 0 ? c.x > max.x : c.x < max.x) && c.y == this.y ? c : max
 				), this);
