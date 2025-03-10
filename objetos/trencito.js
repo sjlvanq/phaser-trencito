@@ -24,8 +24,9 @@ export default class Trencito extends Phaser.GameObjects.Group
 			}
 			this.add(camioneta);
 		}
-		
 		this.shuffle();
+		// Retorno de getChildren(), evita invocarlo cada vez
+		this.camionetas = this.getChildren();
 		this.distribuirCamionetas(y, this.direccion);
 		this.velocidad = Trencito.VELOCIDAD_INICIAL;
 	}
@@ -45,7 +46,7 @@ export default class Trencito extends Phaser.GameObjects.Group
 			-(Trencito.CANTIDAD_CAMIONETAS / Trencito.FILAS * Trencito.CELL_WIDTH) :
 			this.scene.cameras.main.width;
 		
-		Phaser.Actions.GridAlign(this.getChildren(), {
+		Phaser.Actions.GridAlign(this.camionetas, {
 			width: Math.floor(Trencito.CANTIDAD_CAMIONETAS / Trencito.FILAS),
 			cellWidth: Trencito.CELL_WIDTH, 
 			cellHeight: Trencito.CELL_HEIGHT,
@@ -54,7 +55,7 @@ export default class Trencito extends Phaser.GameObjects.Group
 		});
 		
 		// Offset de camioneta.x en fila y velocidad
-		this.getChildren().forEach((camioneta, index) => {
+		this.camionetas.forEach((camioneta, index) => {
 			let fila = Math.ceil((index+1) / Math.floor(Trencito.CANTIDAD_CAMIONETAS / Trencito.FILAS));
 			camioneta.x += (Trencito.OFFSET_X_FILA * fila) * direccion;
 			camioneta.velocidad = CAMIONETA.VELOCIDAD_INICIAL + Trencito.OFFSET_VELOCIDAD_FILA * fila;
@@ -62,12 +63,12 @@ export default class Trencito extends Phaser.GameObjects.Group
 	}
 	
 	retirarCamionetas() {
-		this.getChildren().forEach((camioneta) => {camioneta.enRetirada = true});
+		this.camionetas.forEach((camioneta) => {camioneta.retirar(); /*Setter de Camioneta.enRetirada*/});
 	}
 	
 	ingresarCamionetas() {
 		this.distribuirCamionetas(this.y, this.direccion * -1); // Alterna this.direccion
-		this.getChildren().forEach((camioneta) => {camioneta.enRetirada = false});
+		this.camionetas.forEach((camioneta) => {camioneta.ingresar(); /*Setter de Camioneta.enRetirada*/});
 		this.incrementarVelocidad();
 	}
 	
@@ -76,7 +77,7 @@ export default class Trencito extends Phaser.GameObjects.Group
 	}
 	
 	update(time, delta, playerX){
-		this.getChildren().forEach((camioneta)=>{
+		this.camionetas.forEach((camioneta)=>{
 			camioneta.update(time, delta, this.velocidad, playerX, Trencito.CELL_WIDTH, this.direccion);
 			if(camioneta.isDisparando){
 				camioneta.isDisparando = false; //break
