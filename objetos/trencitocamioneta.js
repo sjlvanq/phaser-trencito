@@ -168,8 +168,8 @@ export default class Camioneta extends Phaser.GameObjects.Container
 	{
 		const deltaSeconds = delta / 1000;
 		const playerWidth = this.scene.jugador.displayWidth;
-		const haSalidoIzquierda = this.x + this.width < 0;
-		const haSalidoDerecha = this.x - this.width > this.scene.cameras.main.width;
+		const haSalidoIzquierda = this.x + this.width / 2 < 0;
+		const haSalidoDerecha = this.x - this.width / 2 > this.scene.cameras.main.width;
 
 		this.x -= velocidad * deltaSeconds * direccion;
 				
