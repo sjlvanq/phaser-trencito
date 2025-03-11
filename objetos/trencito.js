@@ -89,7 +89,24 @@ export default class Trencito extends Phaser.GameObjects.Group
 	}
 	
 	reubicarCamioneta(camioneta) {
-		camioneta.setX(this.ultimaCamionetaEnFila[camioneta.fila-1].x + Trencito.CELL_WIDTH * this.direccion);
+		let ultimaPosicionX = this.ultimaCamionetaEnFila[camioneta.fila-1].x;
+		let nuevaPosicionX = ultimaPosicionX;
+		
+		// Si la nueva posición queda dentro de la pantalla
+		// ...yendo a la izquierda
+		if(this.direccion === 1 && 
+			ultimaPosicionX + Trencito.CELL_WIDTH < this.scene.cameras.main.width) {
+			
+			nuevaPosicionX = this.scene.cameras.main.width;
+		// ...yendo a la derecha
+		} else if (this.direccion === -1 && 
+			ultimaPosicionX - Trencito.CELL_WIDTH > 0) {
+			
+			nuevaPosicionX = 0;
+		}
+		nuevaPosicionX += Trencito.CELL_WIDTH * this.direccion
+		
+		camioneta.setX(nuevaPosicionX);
 		this.ultimaCamionetaEnFila[camioneta.fila-1] = camioneta;
 		this.ultimaCamionetaEnTrencito = camioneta;
 	}
