@@ -180,7 +180,6 @@ export default class Camioneta extends Phaser.GameObjects.Container
 		}
 		
 		const haSalido = direccion > 0 ? haSalidoIzquierda : haSalidoDerecha;
-		// Obtiene x de la camioneta más a la deracha o más a la izquierda según dirección
 		if (haSalido && !this.enRetirada) {
 			this.scene.events.emit('camionetaHaSalido', this);
 		}
