@@ -17,7 +17,10 @@ export default class Trencito extends Phaser.GameObjects.Group
 		this.scene = scene;
 		this.y = y;
 		this.direccion = 1; //1 o -1
+		this.velocidad = Trencito.VELOCIDAD_INICIAL;
 		this.ultimaCamionetaEnFila = [];
+		this.enRetirada = false;
+		
 		for (let i = 0; i < Trencito.CANTIDAD_CAMIONETAS; i++) {
 			const camioneta = new Camioneta(this.scene, 0, 0, i*Trencito.INTERVALO_ORDEN_DISPAROS, this.direccion);
 			if(shadows){ // Pasar de gameOptions
@@ -30,9 +33,15 @@ export default class Trencito extends Phaser.GameObjects.Group
 		this.camionetas = this.getChildren();
 		this.distribuirCamionetas(y, this.direccion);
 		
-		this.velocidad = Trencito.VELOCIDAD_INICIAL;
 		this.scene.events.on('camionetaHaSalido',(camioneta)=>{
-			this.reubicarCamioneta(camioneta);
+			if(this.enRetirada){
+				if(camioneta === this.ultimaCamionetaEnTrencito){
+					//Ultima camioneta ha salido
+					this.ingresarCamionetas();
+				}
+			} else {
+				this.reubicarCamioneta(camioneta);
+			}
 		});
 	}
 
@@ -45,6 +54,7 @@ export default class Trencito extends Phaser.GameObjects.Group
 	
 	distribuirCamionetas(y, direccion){	
 		this.direccion = direccion;
+		this.enRetirada = false;
 		this.voltearCamionetas(direccion);
 		
 		const gridX = direccion === -1 ?
@@ -75,14 +85,17 @@ export default class Trencito extends Phaser.GameObjects.Group
 				}
 			}
 		});
+		this.ultimaCamionetaEnTrencito = this.camionetas[this.direccion>0?this.camionetas.length-1:0];
 	}
 	
 	reubicarCamioneta(camioneta) {
 		camioneta.setX(this.ultimaCamionetaEnFila[camioneta.fila-1].x + Trencito.CELL_WIDTH * this.direccion);
 		this.ultimaCamionetaEnFila[camioneta.fila-1] = camioneta;
+		this.ultimaCamionetaEnTrencito = camioneta;
 	}
-	
+		
 	retirarCamionetas() {
+		this.enRetirada = true;
 		this.camionetas.forEach((camioneta) => {camioneta.retirar(); /*Setter de Camioneta.enRetirada*/});
 	}
 	

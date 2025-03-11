@@ -180,7 +180,7 @@ export default class Camioneta extends Phaser.GameObjects.Container
 		}
 		
 		const haSalido = direccion > 0 ? haSalidoIzquierda : haSalidoDerecha;
-		if (haSalido && !this.enRetirada) {
+		if (haSalido) {
 			this.scene.events.emit('camionetaHaSalido', this);
 		}
 	}
