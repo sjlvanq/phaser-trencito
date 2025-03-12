@@ -19,7 +19,7 @@ export default class Trencito extends Phaser.GameObjects.Group
 		this.direccion = 1; //1 o -1
 		this.velocidad = Trencito.VELOCIDAD_INICIAL;
 		this.ultimaCamionetaEnFila = [];
-		this.enRetirada = false;
+		//this.enRetirada = false;
 		
 		for (let i = 0; i < Trencito.CANTIDAD_CAMIONETAS; i++) {
 			const camioneta = new Camioneta(this.scene, 0, 0, i*Trencito.INTERVALO_ORDEN_DISPAROS, this.direccion, Trencito.VELOCIDAD_INICIAL);
@@ -34,7 +34,7 @@ export default class Trencito extends Phaser.GameObjects.Group
 		this.distribuirCamionetas(y, this.direccion);
 		
 		this.scene.events.on('camionetaHaSalido',(camioneta)=>{
-			if(this.enRetirada){
+			if(camioneta.enRetirada){
 				if(camioneta === this.ultimaCamionetaEnTrencito){
 					//Ultima camioneta ha salido
 					this.ingresarCamionetas();
@@ -54,7 +54,7 @@ export default class Trencito extends Phaser.GameObjects.Group
 	
 	distribuirCamionetas(y, direccion){	
 		this.direccion = direccion;
-		this.enRetirada = false;
+		//this.enRetirada = false;
 		this.voltearCamionetas(direccion);
 		
 		const gridX = direccion === -1 ?
@@ -112,7 +112,7 @@ export default class Trencito extends Phaser.GameObjects.Group
 	}
 		
 	retirarCamionetas() {
-		this.enRetirada = true;
+		//this.enRetirada = true;
 		this.camionetas.forEach((camioneta) => {camioneta.retirar(); /*Setter de Camioneta.enRetirada*/});
 	}
 	
