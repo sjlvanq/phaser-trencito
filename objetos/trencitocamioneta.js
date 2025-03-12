@@ -3,7 +3,7 @@ import FullAnimatedSprite from '../clases/fullanimatedsprite.js';
 
 export default class Camioneta extends Phaser.GameObjects.Container
 {
-	constructor (scene, x, y, ventanillaTweenDelay=0, direccion=1)
+	constructor (scene, x, y, ventanillaTweenDelay=0, direccion=1, velocidad)
 	{
 		super(scene, x, y);
 		scene.add.existing(this);
@@ -13,7 +13,7 @@ export default class Camioneta extends Phaser.GameObjects.Container
 		this.enRetirada = false;
 		this.fila = 0;
 		
-		this.velocidad = CAMIONETA.VELOCIDAD_INICIAL;
+		this.velocidad = velocidad;
 		this.ventanillaTweenDelay = ventanillaTweenDelay;
 				
 		this.chasis = scene.add.sprite(0, 0, 'camioneta').setDepth(1);
@@ -178,14 +178,14 @@ export default class Camioneta extends Phaser.GameObjects.Container
 		this.enRetirada = false;
 	}
 	
-	update (time, delta, velocidad, playerX, direccion)
+	update (time, delta, playerX, direccion)
 	{
 		const deltaSeconds = delta / 1000;
 		const playerWidth = this.scene.jugador.displayWidth;
 		const haSalidoIzquierda = this.x + this.width / 2 < 0;
 		const haSalidoDerecha = this.x - this.width / 2 > this.scene.cameras.main.width;
-
-		this.x -= velocidad * deltaSeconds * direccion;
+		
+		this.x -= this.velocidad * deltaSeconds * direccion;
 				
 		// Verificar si la camioneta está dentro del rango de colisión con el jugador
 		//if(this.x > playerX - playerWidth / 2 && this.x < playerX + playerWidth / 2 && this.buscandoObjetivo) {

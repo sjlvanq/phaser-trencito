@@ -22,7 +22,7 @@ export default class Trencito extends Phaser.GameObjects.Group
 		this.enRetirada = false;
 		
 		for (let i = 0; i < Trencito.CANTIDAD_CAMIONETAS; i++) {
-			const camioneta = new Camioneta(this.scene, 0, 0, i*Trencito.INTERVALO_ORDEN_DISPAROS, this.direccion);
+			const camioneta = new Camioneta(this.scene, 0, 0, i*Trencito.INTERVALO_ORDEN_DISPAROS, this.direccion, Trencito.VELOCIDAD_INICIAL);
 			if(shadows){ // Pasar de gameOptions
 				camioneta.postFX.addShadow(0,1,0.03,2);
 			}
@@ -73,7 +73,7 @@ export default class Trencito extends Phaser.GameObjects.Group
 		this.camionetas.forEach((camioneta, index) => {
 			let fila = Math.ceil((index+1) / Math.floor(Trencito.CANTIDAD_CAMIONETAS / Trencito.FILAS));
 			camioneta.x += (Trencito.OFFSET_X_FILA * fila) * direccion;
-			camioneta.velocidad = CAMIONETA.VELOCIDAD_INICIAL + Trencito.OFFSET_VELOCIDAD_FILA * fila;
+			camioneta.velocidad = this.velocidad + Trencito.OFFSET_VELOCIDAD_FILA * fila;
 			camioneta.fila = fila;
 			if(direccion>0){
 				if ((index + 1) % Math.floor(Trencito.CANTIDAD_CAMIONETAS / Trencito.FILAS) === 0 || index === this.camionetas.length - 1) {
@@ -128,7 +128,7 @@ export default class Trencito extends Phaser.GameObjects.Group
 	
 	update(time, delta, playerX){
 		this.camionetas.forEach((camioneta)=>{
-			camioneta.update(time, delta, this.velocidad, playerX, this.direccion);
+			camioneta.update(time, delta, playerX, this.direccion);
 		});
 	}
 }
