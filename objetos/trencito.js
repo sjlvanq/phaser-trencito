@@ -129,11 +129,6 @@ export default class Trencito extends Phaser.GameObjects.Group
 	update(time, delta, playerX){
 		this.camionetas.forEach((camioneta)=>{
 			camioneta.update(time, delta, this.velocidad, playerX, this.direccion);
-			if(camioneta.isDisparando){
-				camioneta.isDisparando = false; //break
-				this.scene.sound.play('disparo_snd');
-				this.scene.events.emit('camionetaDispara', camioneta.x);
-			}
 		});
 	}
 }

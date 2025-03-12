@@ -6,6 +6,7 @@ export default {
 		ESCALA: 1,
 		OFFSETS_X: [-20,-10],
 		OFFSET_Y: -15,
+		TIEMPO_VISIBLE: 500,
 	},
 	
 	CABEZA: {

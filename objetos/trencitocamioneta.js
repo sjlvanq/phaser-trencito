@@ -8,7 +8,7 @@ export default class Camioneta extends Phaser.GameObjects.Container
 		super(scene, x, y);
 		scene.add.existing(this);
 		
-		this.isDisparando = false;
+		this.disparando = false;
 		this.buscandoObjetivo = false;
 		this.enRetirada = false;
 		this.fila = 0;
@@ -58,94 +58,105 @@ export default class Camioneta extends Phaser.GameObjects.Container
 	
 	animarVentanilla(direccion)
 	{
-		let faseYoyo = false;
-		this.ventanillaTween = this.scene.tweens.add({
-			targets: this.vidrios[direccion<0?0:1],
+		if(this.ventanillaTween){this.ventanillaTween.destroy();}
+		this.ventanillaTween = this.scene.tweens.chain({
 			delay: this.ventanillaTweenDelay,
-			// Uso de 'start-to' para evitar desfasajes al matar el tween
-			y: {start: CAMIONETA.VIDRIOS.OFFSET_Y, to: CAMIONETA.TWEENS.VENTANILLA.PROP_Y},
-			duration: CAMIONETA.TWEENS.VENTANILLA.DURACION,
-			ease: Phaser.Math.Easing.Expo.In,
-			repeat: -1,
-			yoyo: true,
-			onYoyo: () => {
-				faseYoyo=true;
-				this.mostrarCabeza();},
-			onRepeat: () => {
-				faseYoyo=false;
-				if(this.enRetirada){
-					this.ventanillaTween.remove();
-				}
+			onStart: ()=>{
+
 			},
-			onUpdate: () => {
-				// Si cambia el estado enRetirada antes de mostrarCabeza, da marcha atrás y finaliza el ciclo
-				if(this.enRetirada && this.ventanillaTween.isPlaying() && !faseYoyo){
-					const tiempoTranscurrido = this.ventanillaTween.elapsed % CAMIONETA.TWEENS.VENTANILLA.DURACION;
-					this.scene.tweens.add({
-						targets: this.ventanillaTween.targets,
-						y: CAMIONETA.VIDRIOS.OFFSET_Y,
-						duration: tiempoTranscurrido,
-					});
-					this.ventanillaTween.remove();
-				}
-			},
+			tweens: [
+				{
+					targets: this.vidrios[direccion<0?0:1],
+					y: {start: CAMIONETA.VIDRIOS.OFFSET_Y, to: CAMIONETA.TWEENS.VENTANILLA.PROP_Y},
+					duration: CAMIONETA.TWEENS.VENTANILLA.DURACION,
+					ease: Phaser.Math.Easing.Expo.In,
+					onStart: () => {
+						if(this.enRetirada) {
+							this.ventanillaTween.stop();
+						}
+					}
+				},
+				{
+					targets: this.cabeza,
+					scale: {start: CAMIONETA.CABEZA.ESCALA, to: CAMIONETA.TWEENS.CABEZA.PROP_SCALE},
+					y: {start: CAMIONETA.CABEZA.OFFSET_Y, to: CAMIONETA.TWEENS.CABEZA.PROP_Y},
+					duration: CAMIONETA.TWEENS.CABEZA.DURACION,
+					yoyo: true,
+					hold: 1500,
+					onStart: () => {
+						//console.log("onStart");
+						if(this.enRetirada) {
+							this.ventanillaTween.nextTween();
+						} else {
+							this.cabeza.setVisible(true);
+						}
+					},
+					onYoyo: () => {
+						//console.log("onYoyo");
+						if(this.buscandoObjetivo){
+							this.finalizarBusquedaObjetivo();
+						} else if(this.disparando){
+							this.finalizarDisparo();
+						}
+					},
+					onHold: () => {
+						//console.log("onHold");
+						if(!this.enRetirada){
+							this.buscandoObjetivo = true;
+						}
+					},
+					onComplete: () => {
+						//console.log("onComplete");
+						this.cabeza.setVisible(false);
+					},
+				},
+				{
+					targets: this.vidrios[direccion<0?0:1],
+					y: CAMIONETA.VIDRIOS.OFFSET_Y,
+					duration: CAMIONETA.TWEENS.VENTANILLA.DURACION,
+					ease: Phaser.Math.Easing.Expo.Out,
+				},
+			],
+			loop: -1,
 		});
 	}
-	
-	mostrarCabeza()
-	{
-		if(this.enRetirada){return};
-		this.cabezaTween = this.scene.tweens.add({
-			targets: this.cabeza,
-			// Uso de 'start-to' para evitar desfasajes al matar el tween
-			scale: {start: CAMIONETA.CABEZA.ESCALA, to: CAMIONETA.TWEENS.CABEZA.PROP_SCALE},
-			y: {start: CAMIONETA.CABEZA.OFFSET_Y, to: CAMIONETA.TWEENS.CABEZA.PROP_Y},
-			duration: CAMIONETA.TWEENS.CABEZA.DURACION,
-			onStart: () => {
-				this.ventanillaTween.pause();
-				this.cabeza.setVisible(true);
-			},
-			yoyo: true,
-			onYoyo: () => {
-				this.cabezaTween.pause();
-				this.iniciarBusquedaObjetivo();
-			},
-			onComplete: () => {
-				this.ocultarCabeza();
-			},
-		});
-	}
-	
+		
 	iniciarBusquedaObjetivo(){
 		this.buscandoObjetivo = true;
 		this.scene.time.delayedCall(CAMIONETA.TWEENS.CABEZA.ESPERA, () => {
 			this.finalizarBusquedaObjetivo();
 		});
 	}
+
+	disparar () 
+	{
+		//if(this.enRetirada){return}
+		this.buscandoObjetivo = false;
+		this.disparando = true;
+		this.mostrarExplosion();
+		this.scene.sound.play('disparo_snd');
+		this.scene.events.emit('camionetaDispara', this.x);
+	}
+	
+	mostrarExplosion(){
+		this.explosion.setVisible(true)
+		this.scene.time.delayedCall(CAMIONETA.EXPLOSION.TIEMPO_VISIBLE, () => {
+			this.explosion.setVisible(false)
+		});
+	}
 	
 	finalizarBusquedaObjetivo(){
 		this.buscandoObjetivo = false;
-		this.explosion.setVisible(false);
-		this.isDisparando = false;
-		this.cabezaTween.resume();
 	}
-	
-	ocultarCabeza(){
-		this.cabeza.setVisible(false);
-		this.ventanillaTween.resume();
-	}
-	
-	disparar () 
-	{
-		if(this.enRetirada){return}
-		this.isDisparando = true;
-		this.buscandoObjetivo = false;
-		this.explosion.setVisible(true);
+
+	finalizarDisparo(){
+		this.disparando = false;
 	}
 	
 	voltear (direccion) {
 		this.cabeza.setX(CAMIONETA.CABEZA.OFFSETS_X[direccion<0?0:1]);
 		this.explosion.setX(CAMIONETA.EXPLOSION.OFFSETS_X[direccion<0?0:1]);
+		
 		//this.scaleX *= -1; // alterna valor
 		this.scaleX = Math.abs(this.scaleX) * direccion;
 		
@@ -161,6 +172,9 @@ export default class Camioneta extends Phaser.GameObjects.Container
 	}
 	
 	ingresar(){
+		this.cabeza.setVisible(false);
+		this.vidrios.forEach((vidrio)=>{vidrio.setY(CAMIONETA.VIDRIOS.OFFSET_Y)});
+		
 		this.enRetirada = false;
 	}
 	
