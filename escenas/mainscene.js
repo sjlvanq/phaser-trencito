@@ -58,6 +58,10 @@ export default class MainScene extends Phaser.Scene {
 		this.jugador.scale = 0.85; //1.05; //0.90; //32
 		
 		this.events.on('camionetaDispara', (camionetaX)=>this.onCamionetaDispara(camionetaX));
+		this.events.on('botellaRecolectada', ()=>{
+			this.puntaje+=1;
+			this.statusBar.putPuntaje(this.puntaje);
+		});
 	}
 	
 	onCamionetaDispara(camionetaX) {

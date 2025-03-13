@@ -29,11 +29,9 @@ export default class Botella extends Phaser.GameObjects.Sprite {
 		if (!this.recogerTween.isPlaying() && !this.isCollected) {
 			this.isCollected = true; 
 			this.recogerTween.resume();
-			
-			// SACAR DE AQUÍ
-			this.scene.puntaje+=1;
-			this.scene.statusBar.putPuntaje(this.scene.puntaje);
 			this.scene.sound.play('botella_snd');
+			
+			this.scene.events.emit('botellaRecolectada');
 		}
 	}
 	
