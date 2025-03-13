@@ -15,7 +15,9 @@ import MensajeNivel	from '../objetos/mensajenivel.js';
 import createTilemap from '../tilemaps.js';
 
 export default class MainScene extends Phaser.Scene {
-	
+	constructor(){
+		super();
+	}
 	init(data){
 		this.data = data;
 		this.gameOptions = data.gameOptions;
@@ -62,6 +64,10 @@ export default class MainScene extends Phaser.Scene {
 			this.puntaje+=1;
 			this.statusBar.putPuntaje(this.puntaje);
 		});
+		this.events.once('shutdown', () => {
+			this.events.off('camionetaDispara');
+			this.events.off('botellaRecolectada');
+		}); 
 	}
 	
 	onCamionetaDispara(camionetaX) {
@@ -84,7 +90,6 @@ export default class MainScene extends Phaser.Scene {
 				
 				setTimeout(() => {
 					this.data.puntaje = this.puntaje;
-					this.events.off('camionetaDispara');
 					this.scene.start('GameOver', 
 						this.data);
 				}, 1000);
