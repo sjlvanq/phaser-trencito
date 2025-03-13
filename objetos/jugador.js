@@ -1,6 +1,6 @@
 export default class Jugador extends Phaser.GameObjects.Sprite 
 {	
-	static VELOCIDAD = 90;
+	static VELOCIDAD = 95;
 	
 	static TWEENS = {
 		HERIDO: {
@@ -11,7 +11,7 @@ export default class Jugador extends Phaser.GameObjects.Sprite
 	
 	static ANIMACIONES = {
 		CAMINAR: {
-			FRAMERATE: 10,
+			FRAMERATE: 15,
 		},
 	};
 	
