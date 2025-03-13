@@ -43,10 +43,6 @@ export default class MainScene extends Phaser.Scene {
 		
 		this.mensajeNivel = new MensajeNivel(this, this.cameras.main.width / 2, this.cameras.main.height / 3)
 		
-		this.botella = new Botella(this,330,'botella');
-		this.botella.setScale(0.55);
-		this.botella.setDepth(1);
-		
 		this.barrera = new Barrera(this, 0, 250, 4, this.gameOptions.shadows);
 		
 		this.trencito = new Trencito(this, 420, 140);
@@ -56,6 +52,10 @@ export default class MainScene extends Phaser.Scene {
 		
 		this.jugador = new Jugador(this, 160, 320, 'jugador').setDepth(3);
 		this.jugador.scale = 0.85; //1.05; //0.90; //32
+		
+		this.botella = new Botella(this, 330, 'botella', this.jugador.x);
+		this.botella.setScale(0.55);
+		this.botella.setDepth(1);
 		
 		this.events.on('camionetaDispara', (camionetaX)=>this.onCamionetaDispara(camionetaX));
 		this.events.on('botellaRecolectada', ()=>{
