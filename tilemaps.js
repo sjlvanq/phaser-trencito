@@ -20,8 +20,8 @@ MapData['MenuScene'] = [
 	Array(w).fill(0),
 	Array(w).fill(0),
 	Array(w).fill(0),
-	Array(w).fill([36,37]),
-	Array(w).fill([44,45]),
+	Array(w).fill(36),
+	Array(w).fill(44),
 
 	Array(w).fill(26),
 	Array(w).fill(26),
@@ -49,8 +49,8 @@ MapData['GameOver'] = [
 	Array(w).fill(0),
 	Array(w).fill(0),
 	Array(w).fill(0),
-	Array(w).fill([36,37]),
-	Array(w).fill([44,45]),
+	Array(w).fill(36),
+	Array(w).fill(44),
 
 	Array(w).fill(26),
 	Array(w).fill(26),
@@ -75,8 +75,8 @@ MapData['default'] = [
 	Array(w).fill(0),
 	Array(w).fill(0),
 	Array(w).fill(0),
-	Array(w).fill([36,37]),
-	Array(w).fill([44,45]),
+	Array(w).fill(36),
+	Array(w).fill(44),
 	
 	Array(w).fill(26),
 	Array(w).fill(26),
@@ -132,7 +132,7 @@ export function createAnimacionTilemap(scene, x, y) {
 	Array(bg_w).fill(8),
 	Array(bg_w).fill(16),
 	Array(bg_w).fill(48),
-	Array(bg_w).fill([44,45]),
+	Array(bg_w).fill(44),
 	Array(bg_w).fill(0),
 	Array(bg_w).fill(8*3+2),
 	];
