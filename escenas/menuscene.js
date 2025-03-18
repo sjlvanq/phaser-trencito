@@ -8,10 +8,6 @@ export default class MenuScene extends Phaser.Scene {
 	constructor() {
 		super('MenuScene');
 	}
-	init(data){
-		this.data = data;
-		this.gameOptions = data.gameOptions;
-	}
 
 	preload() {
 		this.load.image('titulo', 'assets/imagenes/titulo.png');
@@ -42,7 +38,7 @@ export default class MenuScene extends Phaser.Scene {
 			fontFamily: "monaco", color: "#000", fontSize:"38px"
 		});
 		this.menu.addItem("INICIAR JUEGO", ()=>{
-			this.scene.start('default', this.data);
+			this.scene.start('default');
 		});
 		this.menu.addItem("Historia", ()=>{
 			this.menu.setVisible(false);
@@ -66,7 +62,7 @@ export default class MenuScene extends Phaser.Scene {
 		});
 
 		// if !omitePresentacion para contemplar undefined
-		if(this.data.primeraPartida && !this.gameOptions.omitePresentacion){
+		if(this.registry.get('primeraPartida') && !this.registry.get('gameOptions').omitePresentacion){
 			this.menu.setVisible(false); // Evitar pulsaciones
 			this.animacion = new Animacion(this, 10, 220, ()=>{
 				this.menu.setVisible(true);

@@ -17,13 +17,16 @@ export default class Preload extends Phaser.Scene {
 		this.load.spritesheet('rueda', 	'assets/imagenes/enemigo/rueda.png', {frameWidth: 60, frameHeight: 63});
 
 		this.load.on('complete',()=>{
-			this.loadFonts().then(() => {
-				const gameOptions = this.cache.json.get("options");
-				this.scene.start("MenuScene", {
+			const gameOptions = this.cache.json.get("options");
+			this.registry.reset().merge({
 					gameOptions: gameOptions,
-					ranking: {anterior: 0, mejor: 0},
+					rankingAnterior: 0,
+					rankingmejor: 0,
 					primeraPartida: true
-				});
+				}
+			);
+			this.loadFonts().then(() => {
+				this.scene.start("MenuScene");
 			});
 		});
 	}

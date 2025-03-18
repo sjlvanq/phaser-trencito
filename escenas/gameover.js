@@ -8,10 +8,11 @@ export default class GameOver extends Phaser.Scene {
 	}
 	
 	init(data){
-		this.data = data;
 		this.isRecord = false;
-		if (!this.data.primeraPartida && this.data.puntaje > this.data.ranking.mejor) { 
-			this.data.ranking.mejor = this.data.puntaje;
+		const partidaPuntaje = this.registry.get('partidaPuntaje');
+		const rankingMejor = this.registry.get('rankingMejor');
+		if (!this.registry.get('primeraPartida') && partidaPuntaje > rankingMejor) {
+			this.registry.set({ rankingMejor: partidaPuntaje});
 			this.isRecord = true;
 		}
 	}
@@ -27,15 +28,16 @@ export default class GameOver extends Phaser.Scene {
 		this.add.rectangle(0,0,this.cameras.main.width,40,0xFFFFFF).setOrigin(0).setAlpha(0.60);
 		
 		const dotBotella = this.add.image(this.cameras.main.width / 2 - 25, 130,'botella');
-		this.add.text(this.cameras.main.width / 2, 130,'x '+this.data.puntaje, {color:"#fff", fontSize:24}).setOrigin(0);
+		this.add.text(this.cameras.main.width / 2, 130,`x ${this.registry.get('partidaPuntaje')}`, {color:"#fff", fontSize:24}).setOrigin(0);
 		dotBotella.setScale(1);
 		dotBotella.setRotation(0.2);
 		
 		const statusTextOptions = {color: "#000", fontSize:"15px", fontFamily: "sans-serif"};
+		const primeraPartida = this.registry.get('primeraPartida');
 		this.add.text(this.cameras.main.width / 5, 25,
-			'Anterior: '+(this.data.primeraPartida ? '--':this.data.ranking.anterior), statusTextOptions).setOrigin(0.5);
+			'Anterior: '+(primeraPartida ? '--':this.registry.get('rankingAnterior')), statusTextOptions).setOrigin(0.5);
 		this.add.text(this.cameras.main.width / 5 * 4, 25,
-			'Mejor: '+(this.data.primeraPartida ? '--':this.data.ranking.mejor), statusTextOptions).setOrigin(0.5);
+			'Mejor: '+(primeraPartida ? '--':this.registry.get('rankingMejor')), statusTextOptions).setOrigin(0.5);
 		
 		if (this.isRecord) {
 			const record = this.add.text(this.cameras.main.width, this.cameras.main.height / 4, "Record ! ! !", {color: "#fff",fontSize: "50px", fontFamily: "monaco", strokeThickness: 1})
@@ -63,7 +65,7 @@ export default class GameOver extends Phaser.Scene {
 			},
 		})
 		
-		this.add.image(this.cameras.main.width / 2,this.cameras.main.height / 2,'gameover').setScale(1);
+		this.add.image(this.cameras.main.width / 2,this.cameras.main.height / 2,'gameover');
 		
 		const camioneta = new Camioneta(this, this.cameras.main.width/2, 310-15).setScale(0.4);
 		// Ha sido sacada la llamada a animarVentanilla del constructor de Camioneta
@@ -76,16 +78,19 @@ export default class GameOver extends Phaser.Scene {
 		this.botonVolverAlMenu.setInteractive()
 		this.botonVolverAlMenu.on('pointerdown', () => {
 			this.actualizarData();
-			this.scene.start('MenuScene', this.data);
+			this.scene.start('MenuScene');
 		});
 	}
 	
 	actualizarData(){
-		this.data.ranking.anterior = this.data.puntaje;
-		if(this.isRecord || this.data.primeraPartida){
-			this.data.primeraPartida = false;
-			this.data.ranking.mejor = this.data.puntaje;
+		const primeraPartida = this.registry.get('primeraPartida');
+		const partidaPuntaje = this.registry.get('partidaPuntaje');
+		this.registry.set({ rankingAnterior: partidaPuntaje });
+		if(this.isRecord || primeraPartida ){
+			this.registry.set({ rankingMejor: partidaPuntaje });
 		}
-		
+		if(primeraPartida){
+			this.registry.toggle('primeraPartida');
+		}
 	}
 }

@@ -18,11 +18,6 @@ export default class MainScene extends Phaser.Scene {
 	constructor(){
 		super();
 	}
-	init(data){
-		this.data = data;
-		this.gameOptions = data.gameOptions;
-		this.ranking = data.ranking;
-	}
 	
 	preload() {
 		this.load.image('boton', 'assets/imagenes/controles/boton.png');
@@ -37,13 +32,15 @@ export default class MainScene extends Phaser.Scene {
 	}
 
 	create() {
+		this.registry.set({partidaPuntaje: 0});
+
 		const layer = createTilemap(this);
 		layer.y -= 16;
 		layer.setScale(0.5);
 		
 		this.nivel = 1;
 		this.puntaje = 0;
-		this.vidas = this.gameOptions.vidas?this.gameOptions.vidas:1;
+		this.vidas = this.registry.get('gameOptions').vidas ?? 1;
 		this.restituible = false;
 		this.balaParada = false;
 		
@@ -57,7 +54,7 @@ export default class MainScene extends Phaser.Scene {
 		
 		this.mensajeNivel = new MensajeNivel(this, this.cameras.main.width / 2, this.cameras.main.height / 3)
 		
-		this.barrera = new Barrera(this, 0, 250, 4, this.gameOptions.shadows);
+		this.barrera = new Barrera(this, 0, 250, 4, this.registry.get('gameOptions').shadows);
 		
 		this.trencito = new Trencito(this, 420, 140);
 		
@@ -75,6 +72,7 @@ export default class MainScene extends Phaser.Scene {
 		this.events.on('botellaRecolectada', ()=>{
 			this.puntaje+=1;
 			this.statusBar.putPuntaje(this.puntaje);
+			this.registry.inc('partidaPuntaje',1);
 		});
 		this.events.once('shutdown', () => {
 			this.events.off('camionetaDispara');
@@ -99,11 +97,11 @@ export default class MainScene extends Phaser.Scene {
 				
 				this.sound.play('gameover_snd');
 				this.scene.pause();
+
+				this.registry.set({partidaPuntaje: this.puntaje});
 				
 				setTimeout(() => {
-					this.data.puntaje = this.puntaje;
-					this.scene.start('GameOver', 
-						this.data);
+					this.scene.start('GameOver');
 				}, 1000);
 				
 			};
@@ -132,10 +130,13 @@ export default class MainScene extends Phaser.Scene {
 		// Recoge botellas
 		if(Phaser.Geom.Intersects.RectangleToRectangle(this.botella.getBounds(), this.jugador.getBounds())
 			&& !this.botella.isCollected){
+
 			this.botella.recoger();
 			
+			const botellasxnivel = this.registry.get('gameOptions').botellasxnivel || 9999;
+			const botellasxneumatico = this.registry.get('gameOptions').botellasxneumatico || 9999;
 			// Avanza nivel
-			if(!(this.puntaje % this.gameOptions.botellasxnivel)){
+			if(!(this.puntaje % botellasxnivel)){
 				
 				this.nivel += 1;
 				this.mensajeNivel.mostrar(this.nivel);
@@ -147,7 +148,7 @@ export default class MainScene extends Phaser.Scene {
 				this.trencito.retirarCamionetas();
 			}
 			// Puede restituir un neumático a la barrera
-			else if(!(this.puntaje % this.gameOptions.botellasxneumatico)){
+			else if(!(this.puntaje % botellasxneumatico)){
 				this.barrera.setRestituible(true);
 				this.barrera.glowColumnas();
 				//this.statusBar.showGomas();
