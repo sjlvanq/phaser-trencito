@@ -7,11 +7,28 @@ import createTilemap from '../tilemaps.js';
 export default class MenuScene extends Phaser.Scene {
 	constructor() {
 		super('MenuScene');
-	 }
-	 init(data){
+	}
+	init(data){
 		this.data = data;
 		this.gameOptions = data.gameOptions;
-	 }
+	}
+
+	preload() {
+		this.load.image('titulo', 'assets/imagenes/titulo.png');
+		this.load.image('titulo_banda', 'assets/imagenes/titulo_banda.png');
+		this.load.spritesheet('flechas','assets/imagenes/flechasluminosas.png',{frameWidth: 64,frameHeight: 32 });
+		this.load.spritesheet('dotmenu', 'assets/imagenes/dotmenu.png', {frameWidth: 32, frameHeight:32});
+		this.load.image('dotayuda', 'assets/imagenes/dotayuda.png');
+		
+		this.load.image('carrito','assets/imagenes/historia/carrito.png');
+		this.load.spritesheet('movil', 'assets/imagenes/historia/px_movil.png', {frameWidth:64, frameHeight:32});
+		this.load.image('marcoAnimacion', 'assets/imagenes/historia/tarjeta3.png');
+
+		this.load.image('marcoHistoria', 'assets/imagenes/historia/tarjeta2.png');
+		
+		this.load.audio('menu_snd', 'assets/sonidos/653382__krokulator__select.wav');
+	}
+	
 	create() {
 		const layer = createTilemap(this);
 		layer.setScale(0.5);

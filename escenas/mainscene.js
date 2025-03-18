@@ -24,6 +24,18 @@ export default class MainScene extends Phaser.Scene {
 		this.ranking = data.ranking;
 	}
 	
+	preload() {
+		this.load.image('boton', 'assets/imagenes/controles/boton.png');
+		this.load.spritesheet('barrera', 'assets/imagenes/neumaticos.png', {frameWidth: 70, frameHeight: 90});
+		this.load.spritesheet('icons', 'assets/imagenes/statusbaricons.png', {frameWidth: 24});
+ 		
+		// Sonidos
+		 this.load.audio('disparo_snd', 'assets/sonidos/368732__leszek_szary__shoot-3.wav');
+		 this.load.audio('botella_snd', 'assets/sonidos/160420__relenzo2__icespell.wav');
+		 this.load.audio('gameover_snd', 'assets/sonidos/38469__marvman__sliding-note-2.wav');
+		 this.load.audio('herido_snd', 'assets/sonidos/432875__xtrgamr__lfs_vox8.wav');
+	}
+
 	create() {
 		const layer = createTilemap(this);
 		layer.y -= 16;

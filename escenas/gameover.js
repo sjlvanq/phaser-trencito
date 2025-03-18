@@ -5,17 +5,21 @@ import createTilemap from '../tilemaps.js';
 export default class GameOver extends Phaser.Scene {
 	constructor() {
 		super('GameOver');
-	 }
-	 
-	 init(data){
+	}
+	
+	init(data){
 		this.data = data;
 		this.isRecord = false;
 		if (!this.data.primeraPartida && this.data.puntaje > this.data.ranking.mejor) { 
 			this.data.ranking.mejor = this.data.puntaje;
 			this.isRecord = true;
 		}
-	 }
+	}
 
+	preload() {
+		this.load.image('gameover', 'assets/imagenes/gameover.png');
+	}
+	
 	create() {
 		const layer = createTilemap(this);
 		layer.setScale(0.5);
