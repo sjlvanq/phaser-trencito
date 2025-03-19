@@ -38,7 +38,7 @@ export default class MenuScene extends Phaser.Scene {
 			fontFamily: "monaco", color: "#000", fontSize:"38px"
 		});
 		this.menu.addItem("INICIAR JUEGO", ()=>{
-			this.scene.start('default');
+			this.scene.start('MainScene');
 		});
 		this.menu.addItem("Historia", ()=>{
 			this.menu.setVisible(false);

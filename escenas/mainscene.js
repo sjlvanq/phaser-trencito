@@ -4,10 +4,8 @@ import FullAnimatedSprite from '../clases/fullanimatedsprite.js';
 // Clases específicas
 import Jugador 		from '../objetos/jugador.js';
 import Controles 	from '../objetos/controles.js';
-import StatusBar	from '../objetos/statusbar.js';
 import Barrera 		from '../objetos/barrera.js';
 import Botella 		from '../objetos/botella.js';
-import Camioneta 	from '../objetos/trencitocamioneta.js';
 import Trencito 	from '../objetos/trencito.js';
 import MensajeNivel	from '../objetos/mensajenivel.js';
 
@@ -16,13 +14,12 @@ import createTilemap from '../tilemaps.js';
 
 export default class MainScene extends Phaser.Scene {
 	constructor(){
-		super();
+		super({ key: 'MainScene' });
 	}
 	
 	preload() {
 		this.load.image('boton', 'assets/imagenes/controles/boton.png');
 		this.load.spritesheet('barrera', 'assets/imagenes/neumaticos.png', {frameWidth: 70, frameHeight: 90});
-		this.load.spritesheet('icons', 'assets/imagenes/statusbaricons.png', {frameWidth: 24});
  		
 		// Sonidos
 		 this.load.audio('disparo_snd', 'assets/sonidos/368732__leszek_szary__shoot-3.wav');
@@ -33,6 +30,7 @@ export default class MainScene extends Phaser.Scene {
 
 	create() {
 		this.registry.set({partidaPuntaje: 0});
+		this.scene.launch('HudScene');
 
 		const layer = createTilemap(this);
 		layer.y -= 16;
@@ -43,14 +41,6 @@ export default class MainScene extends Phaser.Scene {
 		this.vidas = this.registry.get('gameOptions').vidas ?? 1;
 		this.restituible = false;
 		this.balaParada = false;
-		
-		this.statusBar = new StatusBar(this, this.nivel, this.puntaje, this.vidas);
-		this.statusBar.setAlpha(0.5);
-		this.add.tween({
-			targets: this.statusBar,
-			alpha: 1,
-			duration: 300
-		});
 		
 		this.mensajeNivel = new MensajeNivel(this, this.cameras.main.width / 2, this.cameras.main.height / 3)
 		
@@ -71,12 +61,13 @@ export default class MainScene extends Phaser.Scene {
 		this.events.on('camionetaDispara', (camionetaX)=>this.onCamionetaDispara(camionetaX));
 		this.events.on('botellaRecolectada', ()=>{
 			this.puntaje+=1;
-			this.statusBar.putPuntaje(this.puntaje);
+			this.events.emit('actualizarHudInfo', 'puntaje', this.puntaje);
 			this.registry.inc('partidaPuntaje',1);
 		});
 		this.events.once('shutdown', () => {
 			this.events.off('camionetaDispara');
 			this.events.off('botellaRecolectada');
+			this.scene.stop('HudScene');
 		}); 
 	}
 	
@@ -105,8 +96,8 @@ export default class MainScene extends Phaser.Scene {
 				}, 1000);
 				
 			};
-			
-			this.statusBar.putVidas(this.vidas);
+
+			this.events.emit('actualizarHudInfo', 'vidas', this.vidas);
 			this.jugador.heridoTween.play();
 		}
 	}
@@ -140,7 +131,7 @@ export default class MainScene extends Phaser.Scene {
 				
 				this.nivel += 1;
 				this.mensajeNivel.mostrar(this.nivel);
-				this.statusBar.putNivel(this.nivel);
+				this.events.emit('actualizarHudInfo', 'nivel', this.nivel);
 
 				this.barrera.setRestituible(false);
 				this.barrera.repararColumnas();

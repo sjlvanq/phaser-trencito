@@ -59,7 +59,7 @@ MapData['GameOver'] = [
 	Array(w).fill(26),
 ];
 
-MapData['default'] = [
+MapData['MainScene'] = [
 	Array(w).fill(0),
 	Array(w).fill(0),
 	Array(w).fill(0),
@@ -99,24 +99,24 @@ MapData['GameOver'][6].splice(9,4,1,2,2,3);
 MapData['GameOver'][7].splice(9,4,9,10,10,11);
 
 // Líneas calle
-MapData['default'][7].splice(2,4,1,2,2,3);
-MapData['default'][8].splice(2,4,9,10,10,11);
-MapData['default'][7].splice(10,4,1,2,2,3);
-MapData['default'][8].splice(10,4,9,10,10,11);
+MapData['MainScene'][7].splice(2,4,1,2,2,3);
+MapData['MainScene'][8].splice(2,4,9,10,10,11);
+MapData['MainScene'][7].splice(10,4,1,2,2,3);
+MapData['MainScene'][8].splice(10,4,9,10,10,11);
 		
 // Bancos
-MapData['default'][2].splice(2,3,49,50,51);
-MapData['default'][3].splice(2,3,57,58,59);
-MapData['default'][2].splice(7,3,49,50,51);
-MapData['default'][3].splice(7,3,57,58,59);
+MapData['MainScene'][2].splice(2,3,49,50,51);
+MapData['MainScene'][3].splice(2,3,57,58,59);
+MapData['MainScene'][2].splice(7,3,49,50,51);
+MapData['MainScene'][3].splice(7,3,57,58,59);
 		
 // Macetas
-MapData['default'][2].splice(0,2,33,34);
-MapData['default'][3].splice(0,2,41,42);
-MapData['default'][2].splice(5,2,33,34);
-MapData['default'][3].splice(5,2,41,42);
-MapData['default'][2].splice(10,2,33,34);
-MapData['default'][3].splice(10,2,41,42);
+MapData['MainScene'][2].splice(0,2,33,34);
+MapData['MainScene'][3].splice(0,2,41,42);
+MapData['MainScene'][2].splice(5,2,33,34);
+MapData['MainScene'][3].splice(5,2,41,42);
+MapData['MainScene'][2].splice(10,2,33,34);
+MapData['MainScene'][3].splice(10,2,41,42);
 
 
 export default function createTilemap(scene) {
