@@ -2,7 +2,8 @@ import Menu from '../clases/menu.js';
 import Libro from '../objetos/libro.js';
 import Animacion from '../objetos/animacion.js';
 import paginas from '../data/historia.js';
-import createTilemap from '../tilemaps.js';
+
+import MapManager from '../clases/mapmanager.js';
 
 export default class MenuScene extends Phaser.Scene {
 	constructor() {
@@ -26,12 +27,12 @@ export default class MenuScene extends Phaser.Scene {
 	}
 	
 	create() {
-		const layer = createTilemap(this);
-		layer.setScale(0.5);
+		this.map = new MapManager(this, 'estatico');
+		this.map.layer.setScale(0.5);
 
 		this.titulo = this.add.image(this.cameras.main.width / 2, this.cameras.main.height / 4, 'titulo');		
 		this.tituloBanda = this.add.image(this.cameras.main.width / 2, this.cameras.main.height / 2, 'titulo_banda');
-		this.tituloBandaText = this.add.text(190,240,"Versión ALPHA-0.3", {color: "#000", fontSize:"9px", fontFamily: "monospace", align:'right'});
+		this.tituloBandaText = this.add.text(190,240,"Versión ALPHA-0.4", {color: "#000", fontSize:"9px", fontFamily: "monospace", align:'right'});
 		this.tituloBandaText.setAlpha(0.5);
 		
 		this.menu = new Menu(this, 65, 300, 'dotmenu', {

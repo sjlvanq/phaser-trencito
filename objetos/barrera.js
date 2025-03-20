@@ -54,6 +54,10 @@ export default class Barrera extends Phaser.GameObjects.Group
 		this.children.iterate((columna) => {columna.reparar(true);});
 	}
 	
+	minimizar(){
+		this.children.iterate((columna) => {columna.decrecer(true);});
+	}
+
 	setRestituible(value){this.restituible = value;}
 	
 	update(miraX) {

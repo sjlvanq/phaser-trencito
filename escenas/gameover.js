@@ -1,6 +1,7 @@
 import Camioneta from '../objetos/trencitocamioneta.js';
 import RowAnimatedSprite from '../clases/rowanimatedsprite.js';
-import createTilemap from '../tilemaps.js';
+
+import MapManager from '../clases/mapmanager.js';
 
 export default class GameOver extends Phaser.Scene {
 	constructor() {
@@ -22,8 +23,8 @@ export default class GameOver extends Phaser.Scene {
 	}
 	
 	create() {
-		const layer = createTilemap(this);
-		layer.setScale(0.5);
+		this.map = new MapManager(this, 'estatico');
+		this.map.layer.setScale(0.5);
 
 		this.add.rectangle(0,0,this.cameras.main.width,40,0xFFFFFF).setOrigin(0).setAlpha(0.60);
 		

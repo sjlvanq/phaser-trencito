@@ -27,4 +27,9 @@ export default class Controles extends Phaser.GameObjects.Container
 		});
 		return boton;
 	}
+
+	limpiar() {
+		this.rightIsPressed = false;
+		this.leftIsPressed = false;
+	}
 }

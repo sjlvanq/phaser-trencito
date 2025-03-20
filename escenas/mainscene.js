@@ -1,7 +1,3 @@
-// Clases genéricas
-import FullAnimatedSprite from '../clases/fullanimatedsprite.js';
-
-// Clases específicas
 import Jugador 		from '../objetos/jugador.js';
 import Controles 	from '../objetos/controles.js';
 import Barrera 		from '../objetos/barrera.js';
@@ -9,8 +5,7 @@ import Botella 		from '../objetos/botella.js';
 import Trencito 	from '../objetos/trencito.js';
 import MensajeNivel	from '../objetos/mensajenivel.js';
 
-// Helpers
-import createTilemap from '../tilemaps.js';
+import EscenariosManager from '../clases/escenariosmanager.js';
 
 export default class MainScene extends Phaser.Scene {
 	constructor(){
@@ -32,15 +27,17 @@ export default class MainScene extends Phaser.Scene {
 		this.registry.set({partidaPuntaje: 0});
 		this.scene.launch('HudScene');
 
-		const layer = createTilemap(this);
-		layer.y -= 16;
-		layer.setScale(0.5);
-		
 		this.nivel = 1;
+		this.enTransicionNivel = false;
 		this.puntaje = 0;
 		this.vidas = this.registry.get('gameOptions').vidas ?? 1;
 		this.restituible = false;
 		this.balaParada = false;
+
+		this.escenarios = new EscenariosManager(this);
+		this.escenarios.cargarEscenario(this.nivel);
+		this.escenarios.layer.y -= 16;
+		this.escenarios.layer.setScale(0.5);
 		
 		this.mensajeNivel = new MensajeNivel(this, this.cameras.main.width / 2, this.cameras.main.height / 3)
 		
@@ -53,6 +50,7 @@ export default class MainScene extends Phaser.Scene {
 		
 		this.jugador = new Jugador(this, 160, 320, 'jugador').setDepth(3);
 		this.jugador.scale = 0.85; //1.05; //0.90; //32
+		this.jugador.setScrollFactor(0); 
 		
 		this.botella = new Botella(this, 330, 'botella', this.jugador.x);
 		this.botella.setScale(0.55);
@@ -63,6 +61,40 @@ export default class MainScene extends Phaser.Scene {
 			this.puntaje+=1;
 			this.events.emit('actualizarHudInfo', 'puntaje', this.puntaje);
 			this.registry.inc('partidaPuntaje',1);
+		});
+		this.events.on('ultimaCamionetaHaSalido', ()=>{
+			if (this.enTransicionNivel) return;
+			this.botella.setVisible(false);
+			this.barrera.minimizar(true);
+		});
+		//TODO: Mejorar organización de eventos
+		this.events.on('barreraMinimizada', ()=>{
+			this.barrera.setVisible(false);
+			this.enTransicionNivel = true;
+			this.transicionNivel = this.tweens.add({
+				targets: this.cameras.main,
+				scrollX: this.escenarios.layer.displayWidth/2, //this.escenarios.mapa.widthInPixels / 2,
+				duration: 5000,
+				onStart: () => {
+					this.jugador.setFlipX(false);
+					this.jugador.anims.play('walk');
+					this.controles.setVisible(false);
+					this.events.emit('transicionNivelStart');
+				},
+				onComplete: () => {
+					this.escenarios.cargarEscenario(this.nivel);
+					this.cameras.main.scrollX = 0;
+					this.enTransicionNivel = false;
+					this.events.emit('transicionNivelEnd');
+				}
+			});
+		});
+		this.events.on('transicionNivelEnd', ()=>{
+			this.controles.limpiar();
+			this.jugador.detenerse();
+			this.botella.setVisible(true);
+			this.controles.setVisible(true);
+			this.trencito.ingresarCamionetas();
 		});
 		this.events.once('shutdown', () => {
 			this.events.off('camionetaDispara');
@@ -107,17 +139,18 @@ export default class MainScene extends Phaser.Scene {
 		this.trencito.update(time, delta, this.jugador.x);
 		
 		// Movimiento del jugador
-		
-		if (this.controles.rightIsPressed) {
-			this.jugador.avanzar(time, delta, 'derecha');
+		if (!this.transicionNivel || !this.transicionNivel.isPlaying()){
+			if (this.controles.rightIsPressed) {
+				this.jugador.avanzar(time, delta, 'derecha');
+			}
+			else if (this.controles.leftIsPressed) {
+				this.jugador.avanzar(time, delta, 'izquierda');
+			} 
+			else {
+				this.jugador.detenerse();
+			}
 		}
-		else if (this.controles.leftIsPressed) {
-			this.jugador.avanzar(time, delta, 'izquierda');
-		} 
-		else {
-			this.jugador.detenerse();
-		}
-		
+
 		// Recoge botellas
 		if(Phaser.Geom.Intersects.RectangleToRectangle(this.botella.getBounds(), this.jugador.getBounds())
 			&& !this.botella.isCollected){
@@ -134,7 +167,7 @@ export default class MainScene extends Phaser.Scene {
 				this.events.emit('actualizarHudInfo', 'nivel', this.nivel);
 
 				this.barrera.setRestituible(false);
-				this.barrera.repararColumnas();
+				//this.barrera.repararColumnas();
 				
 				this.trencito.retirarCamionetas();
 			}

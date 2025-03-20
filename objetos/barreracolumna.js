@@ -3,6 +3,7 @@ export default class BarreraColumna extends Phaser.GameObjects.Sprite {
 		super(scene, x, y, texture);
 		this.scene = scene;
 		this.scene.add.existing(this);
+		this.esMinima = false;
 		this.on('pointerdown', () => {
 			this.reparar(false, onPointerDown);
 		});
@@ -25,7 +26,7 @@ export default class BarreraColumna extends Phaser.GameObjects.Sprite {
 		}
 	}
 	
-	reparar(recursive, callback=()=>{})
+	reparar(recursive=false, callback=()=>{})
 	{
 		const frameBase = this.frame.name % 3;
 		if(frameBase>0){
@@ -47,8 +48,45 @@ export default class BarreraColumna extends Phaser.GameObjects.Sprite {
 				});
 			}
 		}
+		this.esMinima = false;
 	}
-	
+
+	decrecer(recursive=false)
+	{
+		const frameBase = this.frame.name % 3;
+		if(frameBase<2){
+			this.stop();
+			this.setFrame(frameBase+1);
+			this.scene.tweens.add({
+				targets: this,
+				displayHeight: '+=2',
+				displayWidth: '+=2',
+				yoyo: true,
+				ease: 'Power1.easeIn',
+				duration: 100,
+				onComplete: ()=>{
+					if(recursive){
+						this.decrecer(true);
+					}
+				}
+			});
+		} else {
+			this.esMinima = true;
+		}
+		/*
+		this.setFrame((this.frame.name + 1) % 3);
+		this.scene.tweens.add({
+			targets: this,
+			displayHeight: '+=2',
+			displayWidth: '+=2',
+			yoyo: true,
+			ease: 'Power1.easeIn',
+			duration: 100
+		});
+		this.esMinima = true;
+		*/
+	}
+
 	update(miraX, restituible)
 	{
 		if(miraX > this.x - this.displayWidth/2 && 
@@ -56,15 +94,7 @@ export default class BarreraColumna extends Phaser.GameObjects.Sprite {
 			this.frame.name % 3 < 2) // En Frame 3 ya no detiene balas
 		{
 			
-			this.setFrame((this.frame.name + 1) % 3); // Reduce columna
-			this.scene.tweens.add({
-				targets: this,
-				displayHeight: '+=2',
-				displayWidth: '+=2',
-				yoyo: true,
-				ease: 'Power1.easeIn',
-				duration: 100
-			});
+			this.decrecer();
 			if(restituible){this.glow();}
 			this.scene.balaParada = true;
 		}
