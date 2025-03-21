@@ -92,6 +92,8 @@ export default class MainScene extends Phaser.Scene {
 		this.events.on('transicionNivelEnd', ()=>{
 			this.controles.limpiar();
 			this.jugador.detenerse();
+			this.barrera.repararColumnas();
+			this.barrera.setVisible(true);
 			this.botella.setVisible(true);
 			this.controles.setVisible(true);
 			this.trencito.ingresarCamionetas();
@@ -138,6 +140,15 @@ export default class MainScene extends Phaser.Scene {
 		
 		this.trencito.update(time, delta, this.jugador.x);
 		
+		// Provisoriamente por aquí
+		if(this.barrera.minimizando){
+			console.log(this.barrera.children)
+			if(this.barrera.children.entries.every((barrera)=>{return barrera.esMinima})){
+				this.barrera.minimizando = false;
+				this.events.emit('barreraMinimizada');
+			}
+		}
+
 		// Movimiento del jugador
 		if (!this.transicionNivel || !this.transicionNivel.isPlaying()){
 			if (this.controles.rightIsPressed) {

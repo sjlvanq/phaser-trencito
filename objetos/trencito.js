@@ -128,6 +128,7 @@ export default class Trencito extends Phaser.GameObjects.Group
 	
 	incrementarVelocidad() {
 		this.velocidad += Trencito.VELOCIDAD_INCREMENTO;
+		console.log("incrementar velocidad");
 	}
 	
 	update(time, delta, playerX){

@@ -6,6 +6,7 @@ export default class Barrera extends Phaser.GameObjects.Group
 		this.scene = scene;
 
 		this.restituible = false; // Estado de restitución de neumáticos en columnas
+		this.minimizando = false; // Estado de minimización de columnas
 
 		for(let i = 0; i<numeroColumnas; i++){
 			const barrera = new BarreraColumna(this.scene, 0, 0, 'barrera', ()=>{
@@ -56,11 +57,14 @@ export default class Barrera extends Phaser.GameObjects.Group
 	
 	minimizar(){
 		this.children.iterate((columna) => {columna.decrecer(true);});
+		this.minimizando = true;
 	}
 
 	setRestituible(value){this.restituible = value;}
 	
+	//FIXME: Revisar. Se invoca cuando camioneta dispara
 	update(miraX) {
+		console.log("barrera update");
 		this.children.iterate(columna => {
 			columna.update(miraX, this.restituible);
 		});
