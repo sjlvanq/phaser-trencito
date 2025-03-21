@@ -1,6 +1,6 @@
 import Camioneta from '../objetos/trencitocamioneta.js';
 import RowAnimatedSprite from '../clases/rowanimatedsprite.js';
-import createTilemap from '../tilemaps.js';
+import { crearFondoEstatico } from "../utils/fondos.js";
 
 export default class GameOver extends Phaser.Scene {
 	constructor() {
@@ -22,7 +22,7 @@ export default class GameOver extends Phaser.Scene {
 	}
 	
 	create() {
-		const layer = createTilemap(this);
+		const layer = crearFondoEstatico(this);
 		layer.setScale(0.5);
 
 		this.add.rectangle(0,0,this.cameras.main.width,40,0xFFFFFF).setOrigin(0).setAlpha(0.60);

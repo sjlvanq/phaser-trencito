@@ -2,7 +2,7 @@ import Menu from '../clases/menu.js';
 import Libro from '../objetos/libro.js';
 import Animacion from '../objetos/animacion.js';
 import paginas from '../data/historia.js';
-import createTilemap from '../tilemaps.js';
+import { crearFondoEstatico } from "../utils/fondos.js";
 
 export default class MenuScene extends Phaser.Scene {
 	constructor() {
@@ -26,7 +26,7 @@ export default class MenuScene extends Phaser.Scene {
 	}
 	
 	create() {
-		const layer = createTilemap(this);
+		const layer = crearFondoEstatico(this);
 		layer.setScale(0.5);
 
 		this.titulo = this.add.image(this.cameras.main.width / 2, this.cameras.main.height / 4, 'titulo');		

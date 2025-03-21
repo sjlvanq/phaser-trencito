@@ -1,7 +1,7 @@
 import FullAnimatedSprite from '../clases/fullanimatedsprite.js';
 import Galera from '../clases/galera.js';
 import Jugador from '../objetos/jugador.js';
-import {createAnimacionTilemap} from '../tilemaps.js';
+import {crearFondo} from '../utils/fondos.js';
 
 export default class AnimacionEscena extends Phaser.GameObjects.Container {
 	constructor(scene, offsetX, offsetY, marcoBounds, onFin) {
@@ -23,12 +23,12 @@ export default class AnimacionEscena extends Phaser.GameObjects.Container {
 		mascara.invertAlpha = true;
 		const mascaraX1 = marcoBounds.x + marcoBounds.width - offsetX*2;
 		
-		this.layer = createAnimacionTilemap(this.scene, marcoBounds.x + offsetX, marcoBounds.y + offsetY);
+		this.layer = crearFondo(this.scene, marcoBounds.x + offsetX, marcoBounds.y + offsetY, 'introduccion');
 		this.layer.setScale(0.3);
 		this.layer.setMask(mascara);
 		
 		this.add(this.layer);
-				
+
 		const carrito = this.scene.add.image(255, 75, 'carrito').setDepth(2);
 		carrito.setScale(0.8);
 			

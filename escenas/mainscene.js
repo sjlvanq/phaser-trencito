@@ -1,7 +1,4 @@
-// Clases genéricas
-import FullAnimatedSprite from '../clases/fullanimatedsprite.js';
-
-// Clases específicas
+// Clases de objetos
 import Jugador 		from '../objetos/jugador.js';
 import Controles 	from '../objetos/controles.js';
 import Barrera 		from '../objetos/barrera.js';
@@ -9,8 +6,8 @@ import Botella 		from '../objetos/botella.js';
 import Trencito 	from '../objetos/trencito.js';
 import MensajeNivel	from '../objetos/mensajenivel.js';
 
-// Helpers
-import createTilemap from '../tilemaps.js';
+// Clases de utilidades
+import EscenariosManager from '../clases/escenariosmanager.js';
 
 export default class MainScene extends Phaser.Scene {
 	constructor(){
@@ -32,16 +29,17 @@ export default class MainScene extends Phaser.Scene {
 		this.registry.set({partidaPuntaje: 0});
 		this.scene.launch('HudScene');
 
-		const layer = createTilemap(this);
-		layer.y -= 16;
-		layer.setScale(0.5);
-		
 		this.nivel = 1;
 		this.puntaje = 0;
 		this.vidas = this.registry.get('gameOptions').vidas ?? 1;
 		this.restituible = false;
 		this.balaParada = false;
 		
+		this.escenarios = new EscenariosManager(this);
+		this.escenarios.cargarEscenario(this.nivel);
+		this.escenarios.layer.y -= 16;
+		this.escenarios.layer.setScale(0.5);
+
 		this.mensajeNivel = new MensajeNivel(this, this.cameras.main.width / 2, this.cameras.main.height / 3)
 		
 		this.barrera = new Barrera(this, 0, 250, 4, this.registry.get('gameOptions').shadows);
