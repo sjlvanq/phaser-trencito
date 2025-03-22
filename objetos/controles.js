@@ -9,10 +9,25 @@ export default class Controles extends Phaser.GameObjects.Container
 		
 		const buttonLeft = this._crearBoton(-45, 'boton','left');
 		const buttonRight = this._crearBoton(45, 'boton', 'right', true);
-			
+
 		this.add(buttonLeft);
 		this.add(buttonRight);
 		
+		if(scene.registry.get('gameOptions').soporteTeclado) {
+			scene.input.keyboard.on('keydown-LEFT', function() {
+				buttonLeft.emit('pointerdown');
+			});
+			scene.input.keyboard.on('keyup-LEFT', function() {
+				buttonLeft.emit('pointerup');
+			});
+			scene.input.keyboard.on('keydown-RIGHT', function() {
+				buttonRight.emit('pointerdown');
+			});
+			scene.input.keyboard.on('keyup-RIGHT', function() {
+				buttonRight.emit('pointerup');
+			});
+		}
+
 	}
 	_crearBoton(x, textura, direccion, flipX = false) {
 		const boton = this.scene.add.image(x, 0, textura).setInteractive().setFlipX(flipX);
