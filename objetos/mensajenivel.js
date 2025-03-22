@@ -16,8 +16,8 @@ export default class MensajeNivel extends Phaser.GameObjects.Text {
 		this.setDepth(10);
 		this.scene.add.existing(this);
 	}
-	mostrar(nivel) {
-		this.setText("Nivel "+nivel)
+	mostrar() {
+		this.setText(`Nivel ${this.scene.data.get('nivel')}`);
 		this.scene.tweens.add({
 			targets: this,
 			props: {

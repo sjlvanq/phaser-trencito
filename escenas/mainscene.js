@@ -29,14 +29,15 @@ export default class MainScene extends Phaser.Scene {
 		this.registry.set({partidaPuntaje: 0});
 		this.scene.launch('HudScene');
 
-		this.nivel = 1;
-		this.puntaje = 0;
-		this.vidas = this.registry.get('gameOptions').vidas ?? 1;
+		this.data.set('nivel', 1);
+		this.data.set('puntaje', 0);
+		this.data.set('vidas', this.registry.get('gameOptions').vidas ?? 1);
+
 		this.restituible = false;
 		this.balaParada = false;
-		
+
 		this.escenarios = new EscenariosManager(this);
-		this.escenarios.cargarEscenario(this.nivel);
+		this.escenarios.cargarEscenario();
 		this.escenarios.layer.y -= 16;
 		this.escenarios.layer.setScale(0.5);
 
@@ -58,8 +59,7 @@ export default class MainScene extends Phaser.Scene {
 		
 		this.events.on('camionetaDispara', (camionetaX)=>this.onCamionetaDispara(camionetaX));
 		this.events.on('botellaRecolectada', ()=>{
-			this.puntaje+=1;
-			this.events.emit('actualizarHudInfo', 'puntaje', this.puntaje);
+			this.data.inc('puntaje', 1);
 			this.registry.inc('partidaPuntaje',1);
 		});
 		this.events.once('shutdown', () => {
@@ -76,10 +76,10 @@ export default class MainScene extends Phaser.Scene {
 		//Herir al jugador
 		if (!this.balaParada && !this.jugador.isHerido) {
 			this.sound.play('herido_snd');
-			this.vidas -= 1;
+			this.data.inc('vidas', -1);
 			
 			//Matar al jugador
-			if(this.vidas<=0) {
+			if(this.data.get('vidas')<=0) {
 				this.controles.visible = false;						
 				if(this.botella.recogerTween.isPlaying()){this.botella.setVisible(false);}
 				this.mensajeNivel.ocultar();
@@ -87,15 +87,14 @@ export default class MainScene extends Phaser.Scene {
 				this.sound.play('gameover_snd');
 				this.scene.pause();
 
-				this.registry.set({partidaPuntaje: this.puntaje});
+				this.registry.set({partidaPuntaje: this.data.get('puntaje')});
 				
 				setTimeout(() => {
-					this.scene.start('GameOver');
+					this.scene.start('GameOver', {puntaje: this.data.get('puntaje')});
 				}, 1000);
 				
 			};
 
-			this.events.emit('actualizarHudInfo', 'vidas', this.vidas);
 			this.jugador.heridoTween.play();
 		}
 	}
@@ -125,11 +124,10 @@ export default class MainScene extends Phaser.Scene {
 			const botellasxnivel = this.registry.get('gameOptions').botellasxnivel || 9999;
 			const botellasxneumatico = this.registry.get('gameOptions').botellasxneumatico || 9999;
 			// Avanza nivel
-			if(!(this.puntaje % botellasxnivel)){
+			if(!(this.data.get('puntaje') % botellasxnivel)){
 				
-				this.nivel += 1;
-				this.mensajeNivel.mostrar(this.nivel);
-				this.events.emit('actualizarHudInfo', 'nivel', this.nivel);
+				this.data.inc('nivel', 1);
+				this.mensajeNivel.mostrar();
 
 				this.barrera.setRestituible(false);
 				this.barrera.repararColumnas();
@@ -137,10 +135,9 @@ export default class MainScene extends Phaser.Scene {
 				this.trencito.retirarCamionetas();
 			}
 			// Puede restituir un neumático a la barrera
-			else if(!(this.puntaje % botellasxneumatico)){
+			else if(!(this.data.get('puntaje') % botellasxneumatico)){
 				this.barrera.setRestituible(true);
 				this.barrera.glowColumnas();
-				//this.statusBar.showGomas();
 			}
 		}
 	}

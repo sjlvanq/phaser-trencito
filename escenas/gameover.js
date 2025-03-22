@@ -9,7 +9,7 @@ export default class GameOver extends Phaser.Scene {
 	
 	init(data){
 		this.isRecord = false;
-		const partidaPuntaje = this.registry.get('partidaPuntaje');
+		const partidaPuntaje = data.puntaje;
 		const rankingMejor = this.registry.get('rankingMejor');
 		if (!this.registry.get('primeraPartida') && partidaPuntaje > rankingMejor) {
 			this.registry.set({ rankingMejor: partidaPuntaje});

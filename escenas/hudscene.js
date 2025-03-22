@@ -25,30 +25,48 @@ export default class HudScene extends Phaser.Scene {
 		this.statusNivelText = this.add.text(15, 8, "Nivel 1", statusTextOptions);
 		//this.statusGomasIco = this.add.sprite(100, 18, 'icons',1);
 
-        this.scene.get('MainScene').events.on('actualizarHudInfo', (tipo, valor) => {
-            switch (tipo) {
-                case 'vidas':
-                    this.putVidas(valor);
-                    break;
-                case 'puntaje':
-                    this.putPuntaje(valor);
-                    break;
-                case 'nivel':
-                    this.putNivel(valor);
-                    break;
-                case 'gomas':
-                    valor ? this.showGomas() : this.hideGomas();
-                    break;
-            }
-        });
+        this.actualizarHud = (parent, key, value) => {
+	        switch (key) {
+	            case 'vidas':
+		            this.putVidas(value);
+		            break;
+	            case 'puntaje':
+		            this.putPuntaje(value);
+		            break;
+	            case 'nivel':
+		            this.putNivel(value);
+		            break;
+	            /*
+	            case 'gomas':
+		            value ? this.showGomas() : this.hideGomas();
+		            break;
+	            */
+		    }
+	    };
+
+        const mainScene = this.scene.get('MainScene');
+        if (mainScene) {
+            mainScene.events.off('changedata', this.actualizarHud);
+            mainScene.events.on('changedata', this.actualizarHud);
+        }
+
+        this.scene.get('MainScene').events.on('changedata', this.actualizarHud);
+
+        this.scene.get('MainScene').events.once('shutdown', this.shutdown, this);
+
 	}
 
+    shutdown()
+    {
+        this.scene.get('MainScene').events.off('changedata', this.actualizarHud);
+    }
+
 	putVidas(vidas){
-		this.statusVidasText.setText("x "+vidas);
+		this.statusVidasText.setText(`x ${vidas}`);
 	}
 	
     putNivel(nivel){
-		this.statusNivelText.setText("Nivel "+nivel);
+		this.statusNivelText.setText(`Nivel ${nivel}`);
 	}
 	
     putPuntaje(puntos){

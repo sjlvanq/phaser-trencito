@@ -15,8 +15,8 @@ export default class EscenariosManager {
         this.layer = this.mapa.createBlankLayer('layer1', tileset);
     }
     
-    cargarEscenario(nivel){
-        if(!nivel){console.error("EscenariosManager no ha recibido un argumento válido"); return;}
+    cargarEscenario(){
+        const nivel = this.scene.data.get('nivel');
         const escenariosLength = mapsData.main.escenarios.length;
         this.mapa.putTilesAt(mapsData.main.escenarios[(nivel - 1) % escenariosLength].data, 0, 0);
         this.mapa.putTilesAt(mapsData.main.escenarios[ nivel % escenariosLength].data, this.mapaMitadWidth, 0);
