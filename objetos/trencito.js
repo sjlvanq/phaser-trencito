@@ -1,5 +1,4 @@
 import Camioneta from '../objetos/trencitocamioneta.js';
-import CAMIONETA from '../objetos/trencitocamionetaConfig.js';
 export default class Trencito extends Phaser.GameObjects.Group
 {
 	static CANTIDAD_CAMIONETAS = 6;
@@ -34,7 +33,7 @@ export default class Trencito extends Phaser.GameObjects.Group
 		this.distribuirCamionetas(y, this.direccion);
 		
 		this.scene.events.on('camionetaHaSalido',(camioneta)=>{
-			if(camioneta.enRetirada){
+			if(camioneta.estado === Camioneta.ESTADOS.EN_RETIRADA){
 				if(camioneta === this.ultimaCamionetaEnTrencito){
 					//Ultima camioneta ha salido
 					this.ingresarCamionetas();
@@ -54,7 +53,6 @@ export default class Trencito extends Phaser.GameObjects.Group
 	
 	distribuirCamionetas(y, direccion){	
 		this.direccion = direccion;
-		//this.enRetirada = false;
 		this.voltearCamionetas(direccion);
 		
 		const gridX = direccion === -1 ?
@@ -112,7 +110,6 @@ export default class Trencito extends Phaser.GameObjects.Group
 	}
 		
 	retirarCamionetas() {
-		//this.enRetirada = true;
 		this.camionetas.forEach((camioneta) => {camioneta.retirar(); /*Setter de Camioneta.enRetirada*/});
 	}
 	

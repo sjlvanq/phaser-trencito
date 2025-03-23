@@ -3,14 +3,20 @@ import FullAnimatedSprite from '../clases/fullanimatedsprite.js';
 
 export default class Camioneta extends Phaser.GameObjects.Container
 {
+	static ESTADOS = {
+		PATRULLANDO: 0,
+		BUSCANDO_OBJETIVO: 1,
+		INICIA_DISPARO: 2,
+		DISPARANDO: 3,
+		EN_RETIRADA: 4,
+	};
+
 	constructor (scene, x, y, ventanillaTweenDelay=0, direccion=1, velocidad)
 	{
 		super(scene, x, y);
 		scene.add.existing(this);
 		
-		this.disparando = false;
-		this.buscandoObjetivo = false;
-		this.enRetirada = false;
+		this.estado = Camioneta.ESTADOS.INACTIVA; 
 		this.fila = 0;
 		
 		this.velocidad = velocidad;
@@ -44,7 +50,14 @@ export default class Camioneta extends Phaser.GameObjects.Container
 		
 		this.width = this.getBounds().width;
 	}
-		
+
+	setState(nuevoEstado, force=false){
+		if(nuevoEstado===this.estado){return}
+		if(this.estado !== Camioneta.ESTADOS.EN_RETIRADA || force){
+			this.estado = nuevoEstado;
+		}
+	}
+
 	animarChasis()
 	{
 		this.scene.tweens.add({
@@ -61,21 +74,21 @@ export default class Camioneta extends Phaser.GameObjects.Container
 		if(this.ventanillaTween){this.ventanillaTween.destroy();}
 		this.ventanillaTween = this.scene.tweens.chain({
 			delay: this.ventanillaTweenDelay,
-			onStart: ()=>{
-
-			},
 			tweens: [
+				// Baja la ventanilla
 				{
 					targets: this.vidrios[direccion<0?0:1],
 					y: {start: CAMIONETA.VIDRIOS.OFFSET_Y, to: CAMIONETA.TWEENS.VENTANILLA.PROP_Y},
 					duration: CAMIONETA.TWEENS.VENTANILLA.DURACION,
 					ease: Phaser.Math.Easing.Expo.In,
 					onStart: () => {
-						if(this.enRetirada) {
+						if(this.estado === Camioneta.ESTADOS.EN_RETIRADA){
+							// Corta ciclo de animación
 							this.ventanillaTween.stop();
 						}
 					}
 				},
+				// Asoma la cabeza
 				{
 					targets: this.cabeza,
 					scale: {start: CAMIONETA.CABEZA.ESCALA, to: CAMIONETA.TWEENS.CABEZA.PROP_SCALE},
@@ -84,32 +97,24 @@ export default class Camioneta extends Phaser.GameObjects.Container
 					yoyo: true,
 					hold: 1500,
 					onStart: () => {
-						//console.log("onStart");
-						if(this.enRetirada) {
+						if(this.estado === Camioneta.ESTADOS.EN_RETIRADA){
+							// NO asoma la cabeza, sube la ventanila
 							this.ventanillaTween.nextTween();
-						} else {
-							this.cabeza.setVisible(true);
+							return;
 						}
-					},
-					onYoyo: () => {
-						//console.log("onYoyo");
-						if(this.buscandoObjetivo){
-							this.finalizarBusquedaObjetivo();
-						} else if(this.disparando){
-							this.finalizarDisparo();
-						}
+						this.cabeza.setVisible(true);
 					},
 					onHold: () => {
-						//console.log("onHold");
-						if(!this.enRetirada){
-							this.buscandoObjetivo = true;
-						}
+						this.setState(Camioneta.ESTADOS.BUSCANDO_OBJETIVO);
+					},
+					onYoyo: () => {
+						this.setState(Camioneta.ESTADOS.PATRULLANDO);
 					},
 					onComplete: () => {
-						//console.log("onComplete");
 						this.cabeza.setVisible(false);
 					},
 				},
+				// Sube la ventanilla
 				{
 					targets: this.vidrios[direccion<0?0:1],
 					y: CAMIONETA.VIDRIOS.OFFSET_Y,
@@ -120,19 +125,9 @@ export default class Camioneta extends Phaser.GameObjects.Container
 			loop: -1,
 		});
 	}
-		
-	iniciarBusquedaObjetivo(){
-		this.buscandoObjetivo = true;
-		this.scene.time.delayedCall(CAMIONETA.TWEENS.CABEZA.ESPERA, () => {
-			this.finalizarBusquedaObjetivo();
-		});
-	}
 
 	disparar () 
 	{
-		//if(this.enRetirada){return}
-		this.buscandoObjetivo = false;
-		this.disparando = true;
 		this.mostrarExplosion();
 		this.scene.sound.play('disparo_snd');
 		this.scene.events.emit('camionetaDispara', this.x);
@@ -143,14 +138,6 @@ export default class Camioneta extends Phaser.GameObjects.Container
 		this.scene.time.delayedCall(CAMIONETA.EXPLOSION.TIEMPO_VISIBLE, () => {
 			this.explosion.setVisible(false)
 		});
-	}
-	
-	finalizarBusquedaObjetivo(){
-		this.buscandoObjetivo = false;
-	}
-
-	finalizarDisparo(){
-		this.disparando = false;
 	}
 	
 	voltear (direccion) {
@@ -165,34 +152,36 @@ export default class Camioneta extends Phaser.GameObjects.Container
 	}
 	
 	retirar(){
-		this.enRetirada = true;
-		if(this.buscandoObjetivo){
-			this.finalizarBusquedaObjetivo();
-		}
+		this.setState(Camioneta.ESTADOS.EN_RETIRADA);
 	}
 	
 	ingresar(){
 		this.cabeza.setVisible(false);
 		this.vidrios.forEach((vidrio)=>{vidrio.setY(CAMIONETA.VIDRIOS.OFFSET_Y)});
-		
-		this.enRetirada = false;
+		this.setState(Camioneta.ESTADOS.PATRULLANDO, true);
 	}
 	
 	update (time, delta, playerX, direccion)
 	{
 		const deltaSeconds = delta / 1000;
-		const playerWidth = this.scene.jugador.displayWidth;
 		const haSalidoIzquierda = this.x + this.width / 2 < 0;
 		const haSalidoDerecha = this.x - this.width / 2 > this.scene.cameras.main.width;
 		
 		this.x -= this.velocidad * deltaSeconds * direccion;
-				
-		// Verificar si la camioneta está dentro del rango de colisión con el jugador
-		//if(this.x > playerX - playerWidth / 2 && this.x < playerX + playerWidth / 2 && this.buscandoObjetivo) {
-		if (Math.abs(this.x - playerX) < playerWidth / 2 && this.buscandoObjetivo) {
-			this.disparar();
-		}
 		
+		switch(this.estado){
+			case Camioneta.ESTADOS.BUSCANDO_OBJETIVO:
+				const playerWidth = this.scene.jugador.displayWidth;
+				if (Math.abs(this.x - playerX) < playerWidth / 2) {
+					this.setState(Camioneta.ESTADOS.INICIA_DISPARO);
+				}
+				break;
+			case Camioneta.ESTADOS.INICIA_DISPARO:
+				this.disparar();
+				this.setState(Camioneta.ESTADOS.DISPARANDO);
+				break;
+		}
+
 		const haSalido = direccion > 0 ? haSalidoIzquierda : haSalidoDerecha;
 		if (haSalido) {
 			this.scene.events.emit('camionetaHaSalido', this);
