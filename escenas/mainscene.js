@@ -70,11 +70,10 @@ export default class MainScene extends Phaser.Scene {
 	}
 	
 	onCamionetaDispara(camionetaX) {
-		this.balaParada = false; //Retorno de barrera.update
 		this.barrera.update(camionetaX);
 		
 		//Herir al jugador
-		if (!this.balaParada && !this.jugador.isHerido) {
+		if (!this.barrera.protegioAlJugador && !this.jugador.isHerido) {
 			this.sound.play('herido_snd');
 			this.data.inc('vidas', -1);
 			

@@ -5,6 +5,7 @@ export default class Barrera extends Phaser.GameObjects.Group
 		super(scene);
 		this.scene = scene;
 
+		this.protegioAlJugador = false; // Alguna columna detuvo un disparo
 		this.restituible = false; // Estado de restitución de neumáticos en columnas
 		const keyCodes = ['ONE', 'TWO', 'THREE', 'FOUR'];
 		for(let i = 0; i<numeroColumnas; i++){
@@ -58,8 +59,12 @@ export default class Barrera extends Phaser.GameObjects.Group
 	setRestituible(value){this.restituible = value;}
 	
 	update(miraX) {
+		this.protegioAlJugador = false;
 		this.children.iterate(columna => {
 			columna.update(miraX, this.restituible);
+			if(columna.detuvoDisparo){
+				this.protegioAlJugador = true;
+			}
 		});
 	}
 }

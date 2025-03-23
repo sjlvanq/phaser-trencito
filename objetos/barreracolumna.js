@@ -3,6 +3,7 @@ export default class BarreraColumna extends Phaser.GameObjects.Sprite {
 		super(scene, x, y, texture);
 		this.scene = scene;
 		this.scene.add.existing(this);
+		this.detuvoDisparo = false;
 		this.on('pointerdown', () => {
 			this.reparar(false, onPointerDown);
 		});
@@ -59,11 +60,12 @@ export default class BarreraColumna extends Phaser.GameObjects.Sprite {
 	
 	update(miraX, restituible)
 	{
+		this.detuvoDisparo = false;
 		if(miraX > this.x - this.displayWidth/2 && 
 			miraX < this.x + this.displayWidth/2 &&
 			this.frame.name % 3 < 2) // En Frame 3 ya no detiene balas
 		{
-			
+			this.detuvoDisparo = true;
 			this.setFrame((this.frame.name + 1) % 3); // Reduce columna
 			this.scene.tweens.add({
 				targets: this,
@@ -74,7 +76,6 @@ export default class BarreraColumna extends Phaser.GameObjects.Sprite {
 				duration: 100
 			});
 			if(restituible){this.glow();}
-			this.scene.balaParada = true;
 		}
 	}
 }
