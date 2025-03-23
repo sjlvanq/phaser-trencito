@@ -44,16 +44,8 @@ export default class HudScene extends Phaser.Scene {
 		    }
 	    };
 
-        const mainScene = this.scene.get('MainScene');
-        if (mainScene) {
-            mainScene.events.off('changedata', this.actualizarHud);
-            mainScene.events.on('changedata', this.actualizarHud);
-        }
-
         this.scene.get('MainScene').events.on('changedata', this.actualizarHud);
-
         this.scene.get('MainScene').events.once('shutdown', this.shutdown, this);
-
 	}
 
     shutdown()
