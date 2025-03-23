@@ -1,6 +1,7 @@
 import Camioneta from '../objetos/trencitocamioneta.js';
 import RowAnimatedSprite from '../clases/rowanimatedsprite.js';
 import { crearFondoEstatico } from "../utils/fondos.js";
+import { establecerBotonPorDefecto } from '../utils/teclado.js';
 
 export default class GameOver extends Phaser.Scene {
 	constructor() {
@@ -80,6 +81,10 @@ export default class GameOver extends Phaser.Scene {
 			this.actualizarData();
 			this.scene.start('MenuScene');
 		});
+
+		if(this.registry.get('gameOptions').soporteTeclado){
+			establecerBotonPorDefecto(this, this.botonVolverAlMenu);
+		}
 	}
 	
 	actualizarData(){

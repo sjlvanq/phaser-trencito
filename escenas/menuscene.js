@@ -3,6 +3,7 @@ import Libro from '../objetos/libro.js';
 import Animacion from '../objetos/animacion.js';
 import paginas from '../data/historia.js';
 import { crearFondoEstatico } from "../utils/fondos.js";
+import { establecerBotonPorDefecto } from '../utils/teclado.js';
 
 export default class MenuScene extends Phaser.Scene {
 	constructor() {
@@ -14,7 +15,7 @@ export default class MenuScene extends Phaser.Scene {
 		this.load.image('titulo_banda', 'assets/imagenes/titulo_banda.png');
 		this.load.spritesheet('flechas','assets/imagenes/flechasluminosas.png',{frameWidth: 64,frameHeight: 32 });
 		this.load.spritesheet('dotmenu', 'assets/imagenes/dotmenu.png', {frameWidth: 32, frameHeight:32});
-		this.load.image('dotayuda', 'assets/imagenes/dotayuda.png');
+		//this.load.image('dotayuda', 'assets/imagenes/dotayuda.png');
 		
 		this.load.image('carrito','assets/imagenes/historia/carrito.png');
 		this.load.spritesheet('movil', 'assets/imagenes/historia/px_movil.png', {frameWidth:64, frameHeight:32});
@@ -42,8 +43,6 @@ export default class MenuScene extends Phaser.Scene {
 		});
 		this.menu.addItem("Historia", ()=>{
 			this.menu.setVisible(false);
-			this.botonAyuda.setVisible(false);
-			
 			this.tituloBanda.setAlpha(0.5);
 			this.tituloBandaText.setAlpha(0);
 			
@@ -60,6 +59,11 @@ export default class MenuScene extends Phaser.Scene {
 			});
 			
 		});
+
+		//TODO: considerar implementación dentro de la clase Menu
+		if(this.registry.get('gameOptions').soporteTeclado){
+			establecerBotonPorDefecto(this, this.menu.getFirst().getAt(2));
+		}
 
 		// if !omitePresentacion para contemplar undefined
 		if(this.registry.get('primeraPartida') && !this.registry.get('gameOptions').omitePresentacion){
