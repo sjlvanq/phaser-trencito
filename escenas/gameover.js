@@ -10,10 +10,10 @@ export default class GameOver extends Phaser.Scene {
 	
 	init(data){
 		this.isRecord = false;
-		const partidaPuntaje = data.puntaje;
+		this.partidaPuntaje = data.puntaje;
 		const rankingMejor = this.registry.get('rankingMejor');
-		if (!this.registry.get('primeraPartida') && partidaPuntaje > rankingMejor) {
-			this.registry.set({ rankingMejor: partidaPuntaje});
+		if (!this.registry.get('primeraPartida') && this.partidaPuntaje > rankingMejor) {
+			this.registry.set({ rankingMejor: this.partidaPuntaje});
 			this.isRecord = true;
 		}
 	}
@@ -29,7 +29,7 @@ export default class GameOver extends Phaser.Scene {
 		this.add.rectangle(0,0,this.cameras.main.width,40,0xFFFFFF).setOrigin(0).setAlpha(0.60);
 		
 		const dotBotella = this.add.image(this.cameras.main.width / 2 - 25, 130,'botella');
-		this.add.text(this.cameras.main.width / 2, 130,`x ${this.registry.get('partidaPuntaje')}`, {color:"#fff", fontSize:24}).setOrigin(0);
+		this.add.text(this.cameras.main.width / 2, 130,`x ${this.partidaPuntaje}`, {color:"#fff", fontSize:24}).setOrigin(0);
 		dotBotella.setScale(1);
 		dotBotella.setRotation(0.2);
 		
@@ -89,10 +89,9 @@ export default class GameOver extends Phaser.Scene {
 	
 	actualizarData(){
 		const primeraPartida = this.registry.get('primeraPartida');
-		const partidaPuntaje = this.registry.get('partidaPuntaje');
-		this.registry.set({ rankingAnterior: partidaPuntaje });
+		this.registry.set({ rankingAnterior: this.partidaPuntaje });
 		if(this.isRecord || primeraPartida ){
-			this.registry.set({ rankingMejor: partidaPuntaje });
+			this.registry.set({ rankingMejor: this.partidaPuntaje });
 		}
 		if(primeraPartida){
 			this.registry.toggle('primeraPartida');

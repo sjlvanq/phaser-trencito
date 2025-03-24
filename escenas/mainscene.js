@@ -26,7 +26,6 @@ export default class MainScene extends Phaser.Scene {
 	}
 
 	create() {
-		this.registry.set({partidaPuntaje: 0});
 		this.scene.launch('HudScene');
 
 		this.data.set('nivel', 1);
@@ -60,7 +59,6 @@ export default class MainScene extends Phaser.Scene {
 		this.events.on('camionetaDispara', (camionetaX)=>this.onCamionetaDispara(camionetaX));
 		this.events.on('botellaRecolectada', ()=>{
 			this.data.inc('puntaje', 1);
-			this.registry.inc('partidaPuntaje',1);
 		});
 		this.events.once('shutdown', () => {
 			this.events.off('camionetaDispara');
@@ -86,8 +84,6 @@ export default class MainScene extends Phaser.Scene {
 				this.sound.play('gameover_snd');
 				this.scene.pause();
 
-				this.registry.set({partidaPuntaje: this.data.get('puntaje')});
-				
 				setTimeout(() => {
 					this.scene.start('GameOver', {puntaje: this.data.get('puntaje')});
 				}, 1000);
