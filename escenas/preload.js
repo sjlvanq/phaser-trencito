@@ -5,6 +5,7 @@ export default class Preload extends Phaser.Scene {
 
 	preload() {
 		this.load.json('options','options.json');
+		this.load.json('version','version.json');
 
 		this.load.spritesheet('bgtiles', 'assets/imagenes/tiles.png', {frameWidth:48,frameHeight:48});
 
@@ -18,7 +19,9 @@ export default class Preload extends Phaser.Scene {
 
 		this.load.on('complete',()=>{
 			const gameOptions = this.cache.json.get("options");
+			const version = this.cache.json.get("version");
 			this.registry.reset().merge({
+					version: version.version,
 					gameOptions: gameOptions,
 					rankingAnterior: 0,
 					rankingmejor: 0,

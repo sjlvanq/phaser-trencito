@@ -32,7 +32,7 @@ export default class MenuScene extends Phaser.Scene {
 
 		this.titulo = this.add.image(this.cameras.main.width / 2, this.cameras.main.height / 4, 'titulo');		
 		this.tituloBanda = this.add.image(this.cameras.main.width / 2, this.cameras.main.height / 2, 'titulo_banda');
-		this.tituloBandaText = this.add.text(190,240,"Versión ALPHA-0.3", {color: "#000", fontSize:"9px", fontFamily: "monospace", align:'right'});
+		this.tituloBandaText = this.add.text(190,240,`Versión ${this.registry.get('version')}`, {color: "#000", fontSize:"9px", fontFamily: "monospace", align:'right'});
 		this.tituloBandaText.setAlpha(0.5);
 		
 		this.menu = new Menu(this, 65, 300, 'dotmenu', {
