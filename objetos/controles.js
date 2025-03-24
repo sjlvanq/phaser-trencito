@@ -4,6 +4,7 @@ export default class Controles extends Phaser.GameObjects.Container
 		super(scene, scene.scale.width / 2, y);
 		scene.add.existing(this);
 		
+		this.enabled = true;
 		this.rightIsPressed = false;
 		this.leftIsPressed = false;
 		
@@ -15,16 +16,16 @@ export default class Controles extends Phaser.GameObjects.Container
 		
 		if(scene.registry.get('gameOptions').soporteTeclado) {
 			scene.input.keyboard.on('keydown-LEFT', function() {
-				buttonLeft.emit('pointerdown');
+				if (buttonLeft.input?.enabled) { buttonLeft.emit('pointerdown'); }
 			});
 			scene.input.keyboard.on('keyup-LEFT', function() {
-				buttonLeft.emit('pointerup');
+				if (buttonLeft.input?.enabled) { buttonLeft.emit('pointerup'); }
 			});
 			scene.input.keyboard.on('keydown-RIGHT', function() {
-				buttonRight.emit('pointerdown');
+				if (buttonRight.input?.enabled) { buttonRight.emit('pointerdown'); }
 			});
 			scene.input.keyboard.on('keyup-RIGHT', function() {
-				buttonRight.emit('pointerup');
+				if (buttonRight.input?.enabled) { buttonRight.emit('pointerup'); }
 			});
 		}
 
@@ -41,5 +42,25 @@ export default class Controles extends Phaser.GameObjects.Container
 			boton.setFlipY(false);
 		});
 		return boton;
+	}
+
+	limpiar() {
+		this.rightIsPressed = false;
+		this.leftIsPressed = false;
+	}
+
+	enable() {
+		this.enabled = true;
+		this.list.forEach(boton => {
+			boton.setInteractive();
+		});
+	}
+
+	disable() {
+		this.limpiar();
+		this.enabled = false;
+		this.list.forEach(boton => {
+			boton.disableInteractive();
+		});
 	}
 }
