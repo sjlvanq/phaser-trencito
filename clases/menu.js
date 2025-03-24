@@ -52,6 +52,15 @@ export default class Menu extends Phaser.GameObjects.Container {
 		
 		this.nextY += Math.max(dot.height, txt.height) + this.vSpacing;
 	}
+
+	disable() {
+		this.enabled = false;
+	}
+
+	enable() {
+		this.enabled = true;
+	}
+
 	async animate(dot, callback) {
 		this.scene.sound.play('menu_snd');
 		dot.play('parpadea');

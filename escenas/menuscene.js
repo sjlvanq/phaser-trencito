@@ -67,9 +67,9 @@ export default class MenuScene extends Phaser.Scene {
 
 		// if !omitePresentacion para contemplar undefined
 		if(this.registry.get('primeraPartida') && !this.registry.get('gameOptions').omitePresentacion){
-			this.menu.setVisible(false); // Evitar pulsaciones
+			this.menu.disable(); // Evitar pulsaciones
 			this.animacion = new Animacion(this, 10, 220, ()=>{
-				this.menu.setVisible(true);
+				this.menu.enable();
 			});
 		}
 		
