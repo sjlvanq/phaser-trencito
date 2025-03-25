@@ -13,7 +13,7 @@ export default class Barrera extends Phaser.GameObjects.Group
 			const barrera = new BarreraColumna(this.scene, 0, 0, 'barrera', ()=>{
 					// Callback de pointerdown
 					this.restituible = false;
-					this.children.iterate( columna => {columna.stop();});
+					this.children.iterate( columna => {columna.stop();}); // Quitar glow
 				}, teclaAsociada
 			);
 			barrera.scale = 0.6
@@ -53,9 +53,23 @@ export default class Barrera extends Phaser.GameObjects.Group
 	}
 	
 	repararColumnas() {
-		this.children.iterate((columna) => {columna.reparar(true);});
+		this.setVisible(true);
+		this.scene.time.delayedCall(100, ()=>{
+			this.children.iterate((columna) => {columna.reparar(true);});
+		});
 	}
 	
+	reducirColumnas() {
+		this.children.iterate((columna) => {
+			columna.reducir(true, () => {
+				this.scene.time.delayedCall(100, ()=>{columna.setVisible(false)});
+				if(this.children.entries.every((columna)=>columna.minima)){
+					this.scene.events.emit('barreraReducida');
+				}
+			});
+		})
+	}
+
 	setRestituible(value){this.restituible = value;}
 	
 	update(miraX) {
