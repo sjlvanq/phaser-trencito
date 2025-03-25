@@ -38,7 +38,8 @@ export default class Jugador extends Phaser.GameObjects.Sprite
 				this.setAlpha(1);
 			}
 		});
-		
+
+		this.setScrollFactor(0);
 		this.animatePlayer();
 	}
 	animatePlayer() {
