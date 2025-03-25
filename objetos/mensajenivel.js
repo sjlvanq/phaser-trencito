@@ -8,13 +8,14 @@ export default class MensajeNivel extends Phaser.GameObjects.Text {
 		}
 		
 		super(scene, x, y, '', estilo);
+		scene.add.existing(this);
 		this.scene = scene;
 
 		this.setOrigin(0.5);
 		this.setScale(0.1);
 		this.setAlpha(0);
 		this.setDepth(10);
-		this.scene.add.existing(this);
+		this.setScrollFactor(0);
 	}
 	mostrar() {
 		this.setText(`Nivel ${this.scene.data.get('nivel')}`);
@@ -24,6 +25,7 @@ export default class MensajeNivel extends Phaser.GameObjects.Text {
 				scale: {value: 2, duration: 1200, ease: 'Cubic.easeIn'},
 				alpha: {value: 1, yoyo: true, ease: 'Expo.easeOut', duration: 850}
 			},
+			hold: 3000,
 			onComplete: ()=> {
 				this.setAlpha(0);
 				this.setScale(0);

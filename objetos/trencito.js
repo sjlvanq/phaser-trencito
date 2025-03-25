@@ -36,7 +36,8 @@ export default class Trencito extends Phaser.GameObjects.Group
 			if(camioneta.estado === Camioneta.ESTADOS.EN_RETIRADA){
 				if(camioneta === this.ultimaCamionetaEnTrencito){
 					//Ultima camioneta ha salido
-					this.ingresarCamionetas();
+					this.scene.events.emit('ultimaCamionetaHaSalido');
+					this.ultimaCamionetaEnTrencito = null;
 				}
 			} else {
 				this.reubicarCamioneta(camioneta);
@@ -110,12 +111,12 @@ export default class Trencito extends Phaser.GameObjects.Group
 	}
 		
 	retirarCamionetas() {
-		this.camionetas.forEach((camioneta) => {camioneta.retirar(); /*Setter de Camioneta.enRetirada*/});
+		this.camionetas.forEach((camioneta) => {camioneta.retirar();});
 	}
 	
 	ingresarCamionetas() {
 		this.distribuirCamionetas(this.y, this.direccion * -1); // Alterna this.direccion
-		this.camionetas.forEach((camioneta) => {camioneta.ingresar(); /*Setter de Camioneta.enRetirada*/});
+		this.camionetas.forEach((camioneta) => {camioneta.ingresar();});
 		this.incrementarVelocidad();
 	}
 	

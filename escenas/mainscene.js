@@ -57,11 +57,19 @@ export default class MainScene extends Phaser.Scene {
 		this.botella.setDepth(1);
 		
 		this.events.on('camionetaDispara', (camionetaX)=>this.onCamionetaDispara(camionetaX));
+
+		this.events.on('ultimaCamionetaHaSalido', ()=>this.onUltimaCamionetaHaSalido());
+
+		this.events.on('barreraReducida', ()=>this.onBarreraReducida());
+
 		this.events.on('botellaRecolectada', ()=>{
 			this.data.inc('puntaje', 1);
 		});
+
 		this.events.once('shutdown', () => {
 			this.events.off('camionetaDispara');
+			this.events.off('ultimaCamionetaHaSalido');
+			this.events.off('barreraReducida');
 			this.events.off('botellaRecolectada');
 			this.scene.stop('HudScene');
 		}); 
@@ -93,21 +101,53 @@ export default class MainScene extends Phaser.Scene {
 			this.jugador.heridoTween.play();
 		}
 	}
-	
+
+	onUltimaCamionetaHaSalido(){
+		this.barrera.reducirColumnas();
+	}
+
+	onBarreraReducida(){
+		this.moverEscenario = this.tweens.add({
+			targets: this.cameras.main,
+			scrollX: this.escenarios.layer.displayWidth/2,
+			duration: 5000,
+			ease: 'Linear',
+			onStart: () => {
+				this.controles.disable();
+				this.controles.setVisible(false);
+				this.jugador.setFlipX(false);
+				this.jugador.anims.play('walk');
+				this.mensajeNivel.mostrar();
+			},
+			onComplete: () => {
+				this.controles.setVisible(true);
+				this.controles.enable();
+
+				this.escenarios.cargarEscenario();
+				this.cameras.main.scrollX = 0;
+
+				this.barrera.repararColumnas();
+				this.trencito.ingresarCamionetas();
+				this.botella.setVisible(true);
+			}
+		});
+	}
+
 	update(time, delta) {
 		
 		this.trencito.update(time, delta, this.jugador.x);
 		
 		// Movimiento del jugador
-		
-		if (this.controles.rightIsPressed) {
-			this.jugador.avanzar(time, delta, 'derecha');
-		}
-		else if (this.controles.leftIsPressed) {
-			this.jugador.avanzar(time, delta, 'izquierda');
-		} 
-		else {
-			this.jugador.detenerse();
+		if (this.controles.enabled) {
+			if (this.controles.rightIsPressed) {
+				this.jugador.avanzar(time, delta, 'derecha');
+			}
+			else if (this.controles.leftIsPressed) {
+				this.jugador.avanzar(time, delta, 'izquierda');
+			} 
+			else {
+				this.jugador.detenerse();
+			}
 		}
 		
 		// Recoge botellas
@@ -120,12 +160,10 @@ export default class MainScene extends Phaser.Scene {
 			const botellasxneumatico = this.registry.get('gameOptions').botellasxneumatico || 9999;
 			// Avanza nivel
 			if(!(this.data.get('puntaje') % botellasxnivel)){
+				this.botella.setVisible(false);
+				this.barrera.setRestituible(false);
 				
 				this.data.inc('nivel', 1);
-				this.mensajeNivel.mostrar();
-
-				this.barrera.setRestituible(false);
-				this.barrera.repararColumnas();
 				
 				this.trencito.retirarCamionetas();
 			}
