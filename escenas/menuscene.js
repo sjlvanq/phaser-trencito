@@ -34,14 +34,17 @@ export default class MenuScene extends Phaser.Scene {
 		this.tituloBanda = this.add.image(this.cameras.main.width / 2, this.cameras.main.height / 2, 'titulo_banda');
 		this.tituloBandaText = this.add.text(190,240,`Versión ${this.registry.get('version')}`, {color: "#000", fontSize:"9px", fontFamily: "monospace", align:'right'});
 		this.tituloBandaText.setAlpha(0.5);
-		
+
 		this.menu = new Menu(this, 65, 300, 'dotmenu', {
 			fontFamily: "monaco", color: "#000", fontSize:"38px"
-		});
+		}, 10, this.registry.get('gameOptions').soporteTeclado);
+
 		this.menu.addItem("INICIAR JUEGO", ()=>{
 			this.scene.start('MainScene');
-		});
+		}, true);
+
 		this.menu.addItem("Historia", ()=>{
+			this.menu.disable();
 			this.menu.setVisible(false);
 			this.tituloBanda.setAlpha(0.5);
 			this.tituloBandaText.setAlpha(0);
@@ -56,19 +59,17 @@ export default class MenuScene extends Phaser.Scene {
 					onComplete: ()=>{this.bandaTextTween.restart();}
 				});
 				this.menu.setVisible(true);
+				this.menu.enable();
 			});
 			
 		});
 
-		//TODO: considerar implementación dentro de la clase Menu
-		if(this.registry.get('gameOptions').soporteTeclado){
-			establecerBotonPorDefecto(this, this.menu.getFirst().getAt(2));
-		}
-
 		// if !omitePresentacion para contemplar undefined
 		if(this.registry.get('primeraPartida') && !this.registry.get('gameOptions').omitePresentacion){
 			this.menu.disable(); // Evitar pulsaciones
+			this.menu.setVisible(false);
 			this.animacion = new Animacion(this, 10, 220, ()=>{
+				this.menu.setVisible(true);
 				this.menu.enable();
 			});
 		}

@@ -1,5 +1,6 @@
 export default class Menu extends Phaser.GameObjects.Container {
-	constructor(scene, x, y, dotTexture, itemStyle, vSpacing = 10) {
+	static keyCodes = ["ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX", "SEVEN", "EIGHT", "NINE", "ZERO"];
+	constructor(scene, x, y, dotTexture, itemStyle, vSpacing, soporteTeclado) {
 		super(scene, x, y);
 		this.scene = scene;
 		this.scene.add.existing(this);
@@ -7,19 +8,23 @@ export default class Menu extends Phaser.GameObjects.Container {
 		this.itemStyle = itemStyle;
 		this.nextY = 0;
 		this.vSpacing = vSpacing;
+		this.soporteTeclado = soporteTeclado;
+
 		const anim = {
 			key: 'parpadea',
 			frames: this.dotTexture,
 			frameRate: 10,
 			repeat: 3,
 		}
+
 		if(!this.scene.anims.get(anim.key)) {
 			this.scene.anims.create(anim);
 		}
+
 		this.enabled = true;
 	}
 
-	addItem(texto, callback) {
+	addItem(texto, callback, defaultItem = false) {
 		const cont = new Phaser.GameObjects.Container(this.scene, 0, this.nextY);
 		
 		const dot = this.scene.add.sprite(0, 0, this.dotTexture);
@@ -39,13 +44,28 @@ export default class Menu extends Phaser.GameObjects.Container {
 		hitArea.setInteractive();
 		
 		hitArea.on('pointerdown', () => {
-			if(this.enabled){
-				this.enabled = false;
-				this.animate(dot, callback).then(() => {
-						this.enabled = true;
+			if(this.enabled && hitArea.input.enabled){
+				dot.play('parpadea')
+				this.scene.sound.play('menu_snd');
+				dot.once('animationcomplete', async () => {
+					dot.setFrame(0);
+					await callback();
+					hitArea.setInteractive();
+
 				});
 			}
 		});
+
+		if(this.soporteTeclado){
+			this.scene.input.keyboard.on(`keydown-${Menu.keyCodes[this.length]}`, () => {
+				hitArea.emit('pointerdown');
+			});
+			if(defaultItem){
+				this.scene.input.keyboard.on('keydown-SPACE', () => {
+					if(this.enabled) hitArea.emit('pointerdown');
+				});
+			}
+		}
 		
 		cont.add([dot, txt, hitArea]);
 		this.add(cont);
@@ -59,17 +79,5 @@ export default class Menu extends Phaser.GameObjects.Container {
 
 	enable() {
 		this.enabled = true;
-	}
-
-	async animate(dot, callback) {
-		this.scene.sound.play('menu_snd');
-		dot.play('parpadea');
-		await new Promise(resolve => {
-			dot.once('animationcomplete', async () => {
-				dot.setFrame(0);
-				await callback();
-				resolve();
-			});
-		});
 	}
 }
