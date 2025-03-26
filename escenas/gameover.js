@@ -82,9 +82,7 @@ export default class GameOver extends Phaser.Scene {
 			this.scene.start('MenuScene');
 		});
 
-		if(this.registry.get('gameOptions').soporteTeclado){
-			establecerBotonPorDefecto(this, this.botonVolverAlMenu);
-		}
+		establecerBotonPorDefecto(this, this.botonVolverAlMenu);
 	}
 	
 	actualizarData(){

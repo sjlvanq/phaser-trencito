@@ -1,6 +1,6 @@
 export default class Menu extends Phaser.GameObjects.Container {
 	static keyCodes = ["ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX", "SEVEN", "EIGHT", "NINE", "ZERO"];
-	constructor(scene, x, y, dotTexture, itemStyle, vSpacing, soporteTeclado) {
+	constructor(scene, x, y, dotTexture, itemStyle, vSpacing) {
 		super(scene, x, y);
 		this.scene = scene;
 		this.scene.add.existing(this);
@@ -8,7 +8,6 @@ export default class Menu extends Phaser.GameObjects.Container {
 		this.itemStyle = itemStyle;
 		this.nextY = 0;
 		this.vSpacing = vSpacing;
-		this.soporteTeclado = soporteTeclado;
 
 		const anim = {
 			key: 'parpadea',
@@ -56,15 +55,13 @@ export default class Menu extends Phaser.GameObjects.Container {
 			}
 		});
 
-		if(this.soporteTeclado){
-			this.scene.input.keyboard.on(`keydown-${Menu.keyCodes[this.length]}`, () => {
-				hitArea.emit('pointerdown');
+		this.scene.input.keyboard?.on(`keydown-${Menu.keyCodes[this.length]}`, () => {
+			hitArea.emit('pointerdown');
+		});
+		if(defaultItem){
+			this.scene.input.keyboard?.on('keydown-SPACE', () => {
+				if(this.enabled) hitArea.emit('pointerdown');
 			});
-			if(defaultItem){
-				this.scene.input.keyboard.on('keydown-SPACE', () => {
-					if(this.enabled) hitArea.emit('pointerdown');
-				});
-			}
 		}
 		
 		cont.add([dot, txt, hitArea]);

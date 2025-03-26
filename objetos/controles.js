@@ -14,20 +14,18 @@ export default class Controles extends Phaser.GameObjects.Container
 		this.add(buttonLeft);
 		this.add(buttonRight);
 		
-		if(scene.registry.get('gameOptions').soporteTeclado) {
-			scene.input.keyboard.on('keydown-LEFT', function() {
-				if (buttonLeft.input?.enabled) { buttonLeft.emit('pointerdown'); }
-			});
-			scene.input.keyboard.on('keyup-LEFT', function() {
-				if (buttonLeft.input?.enabled) { buttonLeft.emit('pointerup'); }
-			});
-			scene.input.keyboard.on('keydown-RIGHT', function() {
-				if (buttonRight.input?.enabled) { buttonRight.emit('pointerdown'); }
-			});
-			scene.input.keyboard.on('keyup-RIGHT', function() {
-				if (buttonRight.input?.enabled) { buttonRight.emit('pointerup'); }
-			});
-		}
+		scene.input.keyboard?.on('keydown-LEFT', function() {
+			if (buttonLeft.input?.enabled) { buttonLeft.emit('pointerdown'); }
+		});
+		scene.input.keyboard?.on('keyup-LEFT', function() {
+			if (buttonLeft.input?.enabled) { buttonLeft.emit('pointerup'); }
+		});
+		scene.input.keyboard?.on('keydown-RIGHT', function() {
+			if (buttonRight.input?.enabled) { buttonRight.emit('pointerdown'); }
+		});
+		scene.input.keyboard?.on('keyup-RIGHT', function() {
+			if (buttonRight.input?.enabled) { buttonRight.emit('pointerup'); }
+		});
 
 	}
 	_crearBoton(x, textura, direccion, flipX = false) {

@@ -9,7 +9,7 @@ export default class Barrera extends Phaser.GameObjects.Group
 		this.restituible = false; // Estado de restitución de neumáticos en columnas
 		const keyCodes = ['ONE', 'TWO', 'THREE', 'FOUR'];
 		for(let i = 0; i<numeroColumnas; i++){
-			const teclaAsociada = this.scene.registry.get('gameOptions').soporteTeclado ? keyCodes[i] : false;
+			const teclaAsociada = keyCodes[i];
 			const barrera = new BarreraColumna(this.scene, 0, 0, 'barrera', ()=>{
 					// Callback de pointerdown
 					this.restituible = false;
