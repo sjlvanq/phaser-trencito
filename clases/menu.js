@@ -58,9 +58,12 @@ export default class Menu extends Phaser.GameObjects.Container {
 		this.scene.input.keyboard?.on(`keydown-${Menu.keyCodes[this.length]}`, () => {
 			hitArea.emit('pointerdown');
 		});
+
 		if(defaultItem){
-			this.scene.input.keyboard?.on('keydown-SPACE', () => {
-				if(this.enabled) hitArea.emit('pointerdown');
+			this.scene.input.keyboard?.on('keydown', (event) => {
+				if(event.code === 'Space' || event.code === 'Enter') {
+					if(this.enabled) hitArea.emit('pointerdown');
+				}
 			});
 		}
 		
