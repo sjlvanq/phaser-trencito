@@ -37,6 +37,15 @@ export default class Libro extends Phaser.GameObjects.Container
 		this.siguiente.setScale(Libro.SIGUIENTE.ESCALA);
 		this.siguiente.setInteractive();
 		this.siguiente.on('pointerdown', ()=> {this.siguientePagina()});
+
+		this.scene.input.keyboard?.on('keydown', (event) => {
+			if(event.code === 'ArrowRight' || event.code === 'Space'){
+				if (this.siguiente.input?.enabled){
+					this.siguiente.emit('pointerdown');
+				}
+			}
+		});
+
 		this.siguiente.play();
 		this.add(this.siguiente);
 		this.fadeIn();
