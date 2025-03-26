@@ -2,6 +2,11 @@ export default class Botella extends Phaser.GameObjects.Sprite {
 	static NUEVA_UBICACION_DISTANCIA_MINIMA = 50;
 	static TWEEN_DURACION = 1000;
 	static TWEEN_PROP_Y = '-=100';
+	static ESTADOS = {
+		RECOLECTABLE: 0,
+		RECOLECTADA: 1,
+		OCULTA: 2
+	};
 	
 	constructor (scene, y, texture, jugadorX) {
 		super(scene, -100, y, texture);
@@ -23,7 +28,6 @@ export default class Botella extends Phaser.GameObjects.Sprite {
 				this.onRecogerComplete();
 				this.recogerTween.seek(0);
 				this.recogerTween.pause()
-				
 			},
 		});
 		
@@ -31,8 +35,8 @@ export default class Botella extends Phaser.GameObjects.Sprite {
 	}
 	
 	recoger() {
-		if (!this.recogerTween.isPlaying() && !this.isCollected) {
-			this.isCollected = true; 
+		if (!this.recogerTween.isPlaying() && this.state === Botella.ESTADOS.RECOLECTABLE) {
+			this.setState(Botella.ESTADOS.RECOLECTADA);
 			this.recogerTween.resume();
 			this.scene.sound.play('botella_snd');
 			
@@ -53,7 +57,9 @@ export default class Botella extends Phaser.GameObjects.Sprite {
 	onRecogerComplete() {
 		this.setPosition(this.nuevaPosicionX(this.x), this.initialY);
 		this.setFrame(Phaser.Math.Between(0, 2));
+		if(this.state != Botella.ESTADOS.OCULTA){
+			this.setState(Botella.ESTADOS.RECOLECTABLE);
+		}
 		this.setAlpha(1); 
-		this.isCollected = false;
 	}
 }	

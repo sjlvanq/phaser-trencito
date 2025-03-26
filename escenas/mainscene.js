@@ -130,6 +130,8 @@ export default class MainScene extends Phaser.Scene {
 
 				this.barrera.repararColumnas();
 				this.trencito.ingresarCamionetas();
+
+				this.botella.setState(Botella.ESTADOS.RECOLECTABLE);
 				this.botella.setVisible(true);
 			}
 		});
@@ -154,7 +156,7 @@ export default class MainScene extends Phaser.Scene {
 		
 		// Recoge botellas
 		if(Phaser.Geom.Intersects.RectangleToRectangle(this.botella.getBounds(), this.jugador.getBounds())
-			&& !this.botella.isCollected){
+			&& this.botella.state === Botella.ESTADOS.RECOLECTABLE){
 
 			this.botella.recoger();
 			
@@ -163,6 +165,7 @@ export default class MainScene extends Phaser.Scene {
 			// Avanza nivel
 			if(!(this.data.get('puntaje') % botellasxnivel)){
 				this.botella.setVisible(false);
+				this.botella.setState(Botella.ESTADOS.OCULTA);
 				this.barrera.setRestituible(false);
 				
 				this.data.inc('nivel', 1);
