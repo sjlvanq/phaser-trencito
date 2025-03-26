@@ -68,6 +68,7 @@ export default class MainScene extends Phaser.Scene {
 
 		this.events.once('shutdown', () => {
 			this.events.off('camionetaDispara');
+			this.events.off('camionetaHaSalido');
 			this.events.off('ultimaCamionetaHaSalido');
 			this.events.off('barreraReducida');
 			this.events.off('botellaRecolectada');
@@ -107,6 +108,7 @@ export default class MainScene extends Phaser.Scene {
 	}
 
 	onBarreraReducida(){
+		if(this.moverEscenario){this.moverEscenario.destroy();}
 		this.moverEscenario = this.tweens.add({
 			targets: this.cameras.main,
 			scrollX: this.escenarios.layer.displayWidth/2,
