@@ -1,5 +1,5 @@
 export default class BarreraColumna extends Phaser.GameObjects.Sprite {
-	constructor(scene, x, y, texture, onPointerDown, teclaAsociada=false) {
+	constructor(scene, x, y, texture, onPointerDown, teclaAsociada) {
 		super(scene, x, y, texture);
 		this.scene = scene;
 		this.scene.add.existing(this);
@@ -8,14 +8,14 @@ export default class BarreraColumna extends Phaser.GameObjects.Sprite {
 		this.on('pointerdown', () => {
 			this.reparar(false, onPointerDown);
 		});
-		if(teclaAsociada){
-			this.scene.input.keyboard.on(`keydown-${teclaAsociada}`, () => {
-				// this.emit salta estado de interactividad 
-				if (this.input?.enabled){ 
-					this.emit('pointerdown');
-				}
-			});
-		}
+
+		this.scene.input.keyboard?.on(`keydown-${teclaAsociada}`, () => {
+			// this.emit salta estado de interactividad 
+			if (this.input?.enabled){ 
+				this.emit('pointerdown');
+			}
+		});
+
 		this.setOrigin(0.5, 1); // Para tween en update
 		
 		this.tweenConfig = {

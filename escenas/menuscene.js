@@ -37,7 +37,7 @@ export default class MenuScene extends Phaser.Scene {
 
 		this.menu = new Menu(this, 65, 300, 'dotmenu', {
 			fontFamily: "monaco", color: "#000", fontSize:"38px"
-		}, 10, this.registry.get('gameOptions').soporteTeclado);
+		}, 10);
 
 		this.menu.addItem("INICIAR JUEGO", ()=>{
 			this.scene.start('MainScene');

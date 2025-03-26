@@ -13,10 +13,11 @@ const config = {
     scene: [Preload, MenuScene, MainScene, HudScene, GameOver],
     backgroundColor: '#94c364',
     scale: {
-		parent: 'gameCanvas',
-		mode: Phaser.Scale.FIT,
-		autoCenter: Phaser.Scale.CENTER_BOTH,
-	},
+      parent: 'gameCanvas',
+      mode: Phaser.Scale.FIT,
+      autoCenter: Phaser.Scale.CENTER_BOTH,
+  	},
+    input: {keyboard: true}
 };
 
 const game = new Phaser.Game(config);

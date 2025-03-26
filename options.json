@@ -3,6 +3,5 @@
 	"vidas": 3,
 	"botellasxnivel": 10,
 	"botellasxneumatico": 7,
-	"omitePresentacion": false,
-	"soporteTeclado": true
+	"omitePresentacion": false
 }
