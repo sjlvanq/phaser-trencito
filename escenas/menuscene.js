@@ -3,7 +3,6 @@ import Libro from '../objetos/libro.js';
 import Animacion from '../objetos/animacion.js';
 import paginas from '../data/historia.js';
 import { crearFondoEstatico } from "../utils/fondos.js";
-import { establecerBotonPorDefecto } from '../utils/teclado.js';
 
 export default class MenuScene extends Phaser.Scene {
 	constructor() {
