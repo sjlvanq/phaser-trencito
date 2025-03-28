@@ -1,3 +1,5 @@
+import { establecerBotonPorDefecto } from '../utils/teclado.js';
+
 export default class Menu extends Phaser.GameObjects.Container {
 	static keyCodes = ["ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX", "SEVEN", "EIGHT", "NINE", "ZERO"];
 	constructor(scene, x, y, dotTexture, itemStyle, vSpacing) {
@@ -60,11 +62,7 @@ export default class Menu extends Phaser.GameObjects.Container {
 		});
 
 		if(defaultItem){
-			this.scene.input.keyboard?.on('keydown', (event) => {
-				if(event.code === 'Space' || event.code === 'Enter') {
-					if(this.enabled) hitArea.emit('pointerdown');
-				}
-			});
+			establecerBotonPorDefecto(this.scene, hitArea);
 		}
 		
 		cont.add([dot, txt, hitArea]);
