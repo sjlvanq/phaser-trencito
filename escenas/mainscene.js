@@ -114,6 +114,9 @@ export default class MainScene extends Phaser.Scene {
 			scrollX: this.escenarios.layer.displayWidth/2,
 			duration: 5000,
 			ease: 'Linear',
+			onUpdate: () => {
+				this.cameras.main.scrollX = Math.floor(this.cameras.main.scrollX)
+			},
 			onStart: () => {
 				this.controles.disable();
 				this.controles.setVisible(false);
