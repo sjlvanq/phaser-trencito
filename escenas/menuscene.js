@@ -27,7 +27,6 @@ export default class MenuScene extends Phaser.Scene {
 	
 	create() {
 		const layer = crearFondoEstatico(this);
-		layer.setScale(0.5);
 
 		this.titulo = this.add.image(this.cameras.main.width / 2, this.cameras.main.height / 4, 'titulo');		
 		this.tituloBanda = this.add.image(this.cameras.main.width / 2, this.cameras.main.height / 2, 'titulo_banda');

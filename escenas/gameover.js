@@ -24,7 +24,6 @@ export default class GameOver extends Phaser.Scene {
 	
 	create() {
 		const layer = crearFondoEstatico(this);
-		layer.setScale(0.5);
 
 		this.add.rectangle(0,0,this.cameras.main.width,40,0xFFFFFF).setOrigin(0).setAlpha(0.60);
 		

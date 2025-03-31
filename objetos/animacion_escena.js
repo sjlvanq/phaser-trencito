@@ -24,7 +24,7 @@ export default class AnimacionEscena extends Phaser.GameObjects.Container {
 		const mascaraX1 = marcoBounds.x + marcoBounds.width - offsetX*2;
 		
 		this.layer = crearFondo(this.scene, marcoBounds.x + offsetX, marcoBounds.y + offsetY, 'introduccion');
-		this.layer.setScale(0.3);
+		this.layer.setScale(0.6);
 		this.layer.setMask(mascara);
 		
 		this.add(this.layer);

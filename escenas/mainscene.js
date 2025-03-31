@@ -38,7 +38,6 @@ export default class MainScene extends Phaser.Scene {
 		this.escenarios = new EscenariosManager(this);
 		this.escenarios.cargarEscenario();
 		this.escenarios.layer.y -= 16;
-		this.escenarios.layer.setScale(0.5);
 
 		this.mensajeNivel = new MensajeNivel(this, this.cameras.main.width / 2, this.cameras.main.height / 3)
 		

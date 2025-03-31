@@ -15,8 +15,8 @@ const escenarioBase1 = () => [
 ];
 
 const tileCofig = {
-    tileWidth: 48,
-    tileHeight: 48,
+    tileWidth: 24,
+    tileHeight: 24,
     tileSet: "bgtiles",
 };
 
