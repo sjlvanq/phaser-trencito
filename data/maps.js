@@ -1,4 +1,4 @@
-const w = 15;
+const w = 14;
 
 const escenarioBase1 = () => [
     ...Array(4).fill().map(() => Array(w).fill(0)),
