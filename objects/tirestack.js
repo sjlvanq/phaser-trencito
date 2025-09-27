@@ -1,12 +1,12 @@
-export default class BarreraColumna extends Phaser.GameObjects.Sprite {
+export default class TireStack extends Phaser.GameObjects.Sprite {
 	constructor(scene, x, y, texture, onPointerDown, teclaAsociada) {
 		super(scene, x, y, texture);
 		this.scene = scene;
 		this.scene.add.existing(this);
-		this.minima = false;
-		this.detuvoDisparo = false;
+		this.atMinimum = false;
+		this.blockedShot = false;
 		this.on('pointerdown', () => {
-			this.reparar(false, onPointerDown);
+			this.repair(false, onPointerDown);
 		});
 
 		this.scene.input.keyboard?.on(`keydown-${teclaAsociada}`, () => {
@@ -44,7 +44,7 @@ export default class BarreraColumna extends Phaser.GameObjects.Sprite {
 		}
 	}
 	
-	reducir(recursive=false, onMinima=()=>{})
+	reduce(recursive=false, atMinimum=()=>{})
 	{
 		const frameBase = this.frame.name % 3;
 		this.stop(); // Que animación no revierta el setFrame.
@@ -52,15 +52,15 @@ export default class BarreraColumna extends Phaser.GameObjects.Sprite {
 			this.setFrame((this.frame.name + 1) % 3); // Reduce columna
 			this.scene.tweens.add(this.tweenConfig)
 			.once('complete', () => {
-				if(recursive) this.reducir(true, onMinima);
+				if(recursive) this.reduce(true, atMinimum);
 			});
 		} else {
-			this.minima = true;
-			onMinima();
+			this.atMinimum = true;
+			atMinimum();
 		}
 	}
 
-	reparar(recursive=false, callback=()=>{})
+	repair(recursive=false, callback=()=>{})
 	{
 		const frameBase = this.frame.name % 3;
 		if(frameBase>0){
@@ -69,23 +69,23 @@ export default class BarreraColumna extends Phaser.GameObjects.Sprite {
 			callback();
 			this.scene.tweens.add(this.tweenConfig)
 			.once('complete', () => {
-				if(recursive) this.reparar(true);
+				if(recursive) this.repair(true);
 			});
-			this.minima = false;
+			this.atMinimum = false;
 		}
 	}
 
-	update(miraX, restituible)
+	update(miraX, isRestorable)
 	{
-		this.detuvoDisparo = false;
+		this.blockedShot = false;
 		if(miraX > this.x - this.displayWidth/2 && 
 			miraX < this.x + this.displayWidth/2 &&
 			this.frame.name % 3 < 2) // En Frame 3 ya no detiene balas
 		{
-			this.detuvoDisparo = true;
+			this.blockedShot = true;
 			
-			this.reducir();
-			if(restituible){this.glow();}
+			this.reduce();
+			if(isRestorable){this.glow();}
 		}
 	}
 }

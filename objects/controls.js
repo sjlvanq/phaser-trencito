@@ -1,4 +1,4 @@
-export default class Controles extends Phaser.GameObjects.Container 
+export default class Controls extends Phaser.GameObjects.Container 
 {
 	constructor(scene, y) {
 		super(scene, scene.scale.width / 2, y);
@@ -8,8 +8,8 @@ export default class Controles extends Phaser.GameObjects.Container
 		this.rightIsPressed = false;
 		this.leftIsPressed = false;
 		
-		const buttonLeft = this._crearBoton(-45, 'boton','left');
-		const buttonRight = this._crearBoton(45, 'boton', 'right', true);
+		const buttonLeft = this._createButton(-45, 'button','left');
+		const buttonRight = this._createButton(45, 'button', 'right', true);
 
 		this.add(buttonLeft);
 		this.add(buttonRight);
@@ -28,37 +28,37 @@ export default class Controles extends Phaser.GameObjects.Container
 		});
 
 	}
-	_crearBoton(x, textura, direccion, flipX = false) {
-		const boton = this.scene.add.image(x, 0, textura).setInteractive().setFlipX(flipX);
-		boton.on('pointerdown', () => {
+	_createButton(x, textura, direccion, flipX = false) {
+		const button = this.scene.add.image(x, 0, textura).setInteractive().setFlipX(flipX);
+		button.on('pointerdown', () => {
 			this[`${direccion}IsPressed`] = true;
-			boton.setFlipY(true);
+			button.setFlipY(true);
 		});
 		
-		boton.on('pointerup', () => {
+		button.on('pointerup', () => {
 			this[`${direccion}IsPressed`] = false;
-			boton.setFlipY(false);
+			button.setFlipY(false);
 		});
-		return boton;
+		return button;
 	}
 
-	limpiar() {
+	clear() {
 		this.rightIsPressed = false;
 		this.leftIsPressed = false;
 	}
 
 	enable() {
 		this.enabled = true;
-		this.list.forEach(boton => {
-			boton.setInteractive();
+		this.list.forEach(button => {
+			button.setInteractive();
 		});
 	}
 
 	disable() {
-		this.limpiar();
+		this.clear();
 		this.enabled = false;
-		this.list.forEach(boton => {
-			boton.disableInteractive();
+		this.list.forEach(button => {
+			button.disableInteractive();
 		});
 	}
 }

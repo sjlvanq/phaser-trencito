@@ -1,9 +1,9 @@
 // Escenas
-import Preload    from './escenas/preload.js';
-import MenuScene  from './escenas/menuscene.js';
-import MainScene  from './escenas/mainscene.js';
-import GameOver   from './escenas/gameover.js';
-import HudScene   from './escenas/hudscene.js';
+import Preload    from './scenes/preload.js';
+import MenuScene  from './scenes/menuscene.js';
+import MainScene  from './scenes/mainscene.js';
+import GameOver   from './scenes/gameover.js';
+import HudScene   from './scenes/hudscene.js';
 
 const config = {
     type: Phaser.AUTO,

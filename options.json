@@ -1,7 +1,7 @@
 {
 	"shadows": false,
-	"vidas": 3,
-	"botellasxnivel": 10,
-	"botellasxneumatico": 7,
-	"omitePresentacion": false
+	"lives": 3,
+	"bottlesPerLevel": 5,
+	"bottlesPerTire": 7,
+	"skipIntro": false
 }

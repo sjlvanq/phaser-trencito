@@ -1,4 +1,4 @@
-import { establecerBotonPorDefecto } from '../utils/teclado.js';
+import { setDefaultButton } from '../utils/keyboard.js';
 
 export default class Menu extends Phaser.GameObjects.Container {
 	static keyCodes = ["ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX", "SEVEN", "EIGHT", "NINE", "ZERO"];
@@ -12,7 +12,7 @@ export default class Menu extends Phaser.GameObjects.Container {
 		this.vSpacing = vSpacing;
 
 		const anim = {
-			key: 'parpadea',
+			key: 'blink',
 			frames: this.dotTexture,
 			frameRate: 10,
 			repeat: 3,
@@ -25,11 +25,11 @@ export default class Menu extends Phaser.GameObjects.Container {
 		this.enabled = true;
 	}
 
-	addItem(texto, callback, defaultItem = false) {
-		const cont = new Phaser.GameObjects.Container(this.scene, 0, this.nextY);
+	addItem(text, callback, defaultItem = false) {
+		const container = new Phaser.GameObjects.Container(this.scene, 0, this.nextY);
 		
 		const dot = this.scene.add.sprite(0, 0, this.dotTexture);
-		const txt = this.scene.add.text(dot.width + 10, 0, texto, this.itemStyle);
+		const txt = this.scene.add.text(dot.width + 10, 0, text, this.itemStyle);
 		
 		txt.setOrigin(0, 0.5);
 		txt.y = dot.y;
@@ -46,7 +46,7 @@ export default class Menu extends Phaser.GameObjects.Container {
 		
 		hitArea.on('pointerdown', () => {
 			if(this.enabled && hitArea.input.enabled){
-				dot.play('parpadea')
+				dot.play('blink')
 				this.scene.sound.play('menu_snd');
 				dot.once('animationcomplete', async () => {
 					dot.setFrame(0);
@@ -62,11 +62,11 @@ export default class Menu extends Phaser.GameObjects.Container {
 		});
 
 		if(defaultItem){
-			establecerBotonPorDefecto(this.scene, hitArea);
+			setDefaultButton(this.scene, hitArea);
 		}
 		
-		cont.add([dot, txt, hitArea]);
-		this.add(cont);
+		container.add([dot, txt, hitArea]);
+		this.add(container);
 		
 		this.nextY += Math.max(dot.height, txt.height) + this.vSpacing;
 	}

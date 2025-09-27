@@ -1,4 +1,4 @@
-export default class MensajeNivel extends Phaser.GameObjects.Text {
+export default class LevelBanner extends Phaser.GameObjects.Text {
 	constructor(scene, x, y) {
 		const estilo = {
 			color: "#fff",
@@ -17,8 +17,8 @@ export default class MensajeNivel extends Phaser.GameObjects.Text {
 		this.setDepth(10);
 		this.setScrollFactor(0);
 	}
-	mostrar() {
-		this.setText(`Nivel ${this.scene.data.get('nivel')}`);
+	show() {
+		this.setText(`Nivel ${this.scene.data.get('level')}`);
 		this.scene.tweens.add({
 			targets: this,
 			props: {
@@ -32,7 +32,7 @@ export default class MensajeNivel extends Phaser.GameObjects.Text {
 			},
 		});
 	}
-	ocultar() {
+	hide() {
 		this.setVisible(false);
 	}
 }

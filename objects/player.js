@@ -1,4 +1,4 @@
-export default class Jugador extends Phaser.GameObjects.Sprite 
+export default class Player extends Phaser.GameObjects.Sprite 
 {	
 	static VELOCIDAD = 95;
 	
@@ -19,16 +19,16 @@ export default class Jugador extends Phaser.GameObjects.Sprite
 		super(scene, x, y,texture);
 		this.scene = scene;
 		this.scene.add.existing(this);
-		this.velocidad = Jugador.VELOCIDAD;
+		this.velocidad = Player.VELOCIDAD;
 		this.isHerido = false; 
 		
 		this.heridoTween = scene.tweens.add({
 			targets: this,
 			paused: true,
 			alpha: 0.1,
-			duration: Jugador.TWEENS.HERIDO.DURACION,
+			duration: Player.TWEENS.HERIDO.DURACION,
 			yoyo: true,
-			repeat: Jugador.TWEENS.HERIDO.REPETICIONES,
+			repeat: Player.TWEENS.HERIDO.REPETICIONES,
 			persist: true,
 			onStart: ()=>{
 				this.isHerido = true;
@@ -46,8 +46,8 @@ export default class Jugador extends Phaser.GameObjects.Sprite
 		if(!this.scene.anims.exists('walk')) {
 			this.anims.create({
 				key: 'walk',
-				frames: this.anims.generateFrameNumbers('jugador', { start: 0, end: 3 }),
-				frameRate: Jugador.ANIMACIONES.CAMINAR.FRAMERATE,
+				frames: this.anims.generateFrameNumbers('player', { start: 0, end: 3 }),
+				frameRate: Player.ANIMACIONES.CAMINAR.FRAMERATE,
 				repeat: -1
 			});
 		}

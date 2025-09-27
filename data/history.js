@@ -1,4 +1,4 @@
-const paginas = [
+const pages = [
 	[
 	'El gobernador de Cutumán, ',
 	'reino de un país al sur del',
@@ -26,4 +26,4 @@ const paginas = [
 	'su camino.'
 	],
 ];
-export default paginas;
+export default pages;
