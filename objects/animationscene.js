@@ -8,7 +8,7 @@ export default class AnimationScene extends Phaser.GameObjects.Container {
 		super(scene, offsetX, offsetY);
 		this.scene = scene;
 		
-		this.disparando = false;
+		this.isShooting = false;
 		
 		// Máscara para margen izquierdo
 		const maskRect = this.scene.make.graphics();
@@ -85,9 +85,9 @@ export default class AnimationScene extends Phaser.GameObjects.Container {
 						repeat: -1,
 						repeatDelay: 300,
 						onStart: ()=>{
-							if(!this.disparando){
+							if(!this.isShooting){
 
-								this.disparando=true;
+								this.isShooting=true;
 
 								//Personaje huye
 								this.scene.tweens.add({

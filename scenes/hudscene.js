@@ -19,7 +19,7 @@ export default class HudScene extends Phaser.Scene {
 			.setAlpha(0.60);
 		
 		this.statusLivesIco = this.add.sprite(260, 18, 'icons', 2);
-		this.statusLivesText = this.add.text(280, 13, "x " + this.registry.get('gameOptions').vidas, statusTextOptions);
+		this.statusLivesText = this.add.text(280, 13, "x " + this.registry.get('gameOptions').lives, statusTextOptions);
 		this.statusScoreIco = this.add.sprite(200, 18, 'icons', 0);
 		this.statusScoreText = this.add.text(220, 13, '0', statusTextOptions);
 		this.statusLevelText = this.add.text(15, 8, "Nivel 1", statusTextOptions);

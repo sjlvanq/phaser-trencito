@@ -1,16 +1,16 @@
 export default class Player extends Phaser.GameObjects.Sprite 
 {	
-	static VELOCIDAD = 95;
+	static SPEED = 95;
 	
 	static TWEENS = {
-		HERIDO: {
-			DURACION: 100,
-			REPETICIONES: 3,
+		HURT: {
+			DURATION: 100,
+			REPEATS: 3,
 		},
 	};
 	
-	static ANIMACIONES = {
-		CAMINAR: {
+	static ANIMATIONS = {
+		WALK: {
 			FRAMERATE: 15,
 		},
 	};
@@ -19,22 +19,22 @@ export default class Player extends Phaser.GameObjects.Sprite
 		super(scene, x, y,texture);
 		this.scene = scene;
 		this.scene.add.existing(this);
-		this.velocidad = Player.VELOCIDAD;
-		this.isHerido = false; 
+		this.speed = Player.SPEED;
+		this.isHurt = false; 
 		
-		this.heridoTween = scene.tweens.add({
+		this.hurtTween = scene.tweens.add({
 			targets: this,
 			paused: true,
 			alpha: 0.1,
-			duration: Player.TWEENS.HERIDO.DURACION,
+			duration: Player.TWEENS.HURT.DURATION,
 			yoyo: true,
-			repeat: Player.TWEENS.HERIDO.REPETICIONES,
+			repeat: Player.TWEENS.HURT.REPEATS,
 			persist: true,
 			onStart: ()=>{
-				this.isHerido = true;
+				this.isHurt = true;
 			},
 			onComplete: ()=>{
-				this.isHerido = false;
+				this.isHurt = false;
 				this.setAlpha(1);
 			}
 		});
@@ -47,30 +47,30 @@ export default class Player extends Phaser.GameObjects.Sprite
 			this.anims.create({
 				key: 'walk',
 				frames: this.anims.generateFrameNumbers('player', { start: 0, end: 3 }),
-				frameRate: Player.ANIMACIONES.CAMINAR.FRAMERATE,
+				frameRate: Player.ANIMATIONS.WALK.FRAMERATE,
 				repeat: -1
 			});
 		}
 	}
-	avanzar(time, delta, direccion) {
+	move(time, delta, direction) {
 		const deltaSeconds = delta / 1000;
 		this.anims.play('walk', true);
-		switch(direccion) {
-			case 'derecha':
+		switch(direction) {
+			case 'right':
 				this.setFlipX(false);
 				if(this.x + this.displayWidth / 2 <= this.scene.cameras.main.width) {
-					this.x += this.velocidad * deltaSeconds;
+					this.x += this.speed * deltaSeconds;
 				}
 				break;
-			case 'izquierda':
+			case 'left':
 				this.setFlipX(true);
 				if(this.x - this.displayWidth / 2 >= 0) {
-					this.x -= this.velocidad * deltaSeconds;
+					this.x -= this.speed * deltaSeconds;
 				}
 				break;
 		}
 	}
-	detenerse() {
+	stop() {
 		this.anims.stop();
 		this.setFrame(4);
 	}

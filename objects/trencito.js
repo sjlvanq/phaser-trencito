@@ -70,17 +70,17 @@ export default class Trencito extends Phaser.GameObjects.Group
 		
 		// Offset de camioneta.x en fila y velocidad, asignación de camioneta.fila y ultimaCamionetaEnFila
 		this.patrolCars.forEach((patrolCar, index) => {
-			let fila = Math.ceil((index+1) / Math.floor(Trencito.NUM_PATROL_CARS / Trencito.ROWS));
-			patrolCar.x += (Trencito.ROW_OFFSET_X * fila) * direction;
-			patrolCar.velocidad = this.speed + Trencito.ROW_SPEED_OFFSET * fila;
-			patrolCar.fila = fila;
+			let row = Math.ceil((index+1) / Math.floor(Trencito.NUM_PATROL_CARS / Trencito.ROWS));
+			patrolCar.x += (Trencito.ROW_OFFSET_X * row) * direction;
+			patrolCar.speed = this.speed + Trencito.ROW_SPEED_OFFSET * row;
+			patrolCar.row = row;
 			if(direction>0){
 				if ((index + 1) % Math.floor(Trencito.NUM_PATROL_CARS / Trencito.ROWS) === 0 || index === this.patrolCars.length - 1) {
-					this.lastPatrolCarInRow[fila-1] = patrolCar;
+					this.lastPatrolCarInRow[row-1] = patrolCar;
 				}
 			} else {
 				if (index % (Trencito.NUM_PATROL_CARS/Trencito.ROWS) === 0){
-					this.lastPatrolCarInRow[fila-1] = patrolCar;
+					this.lastPatrolCarInRow[row-1] = patrolCar;
 				}
 			}
 		});
@@ -125,8 +125,8 @@ export default class Trencito extends Phaser.GameObjects.Group
 	}
 	
 	update(time, delta, playerX){
-		this.patrolCars.forEach((camioneta)=>{
-			camioneta.update(time, delta, playerX, this.direction);
+		this.patrolCars.forEach((patrolCar)=>{
+			patrolCar.update(time, delta, playerX, this.direction);
 		});
 	}
 }

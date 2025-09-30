@@ -31,10 +31,10 @@ export default class TireBarrier extends Phaser.GameObjects.Group
 			x: x, y: y
 		});
 
-		this.crearAnimaciones();
+		this.createAnimation();
 	}
 	
-	crearAnimaciones() {
+	createAnimation() {
 		// Número de cuadros alternables 3
 		for (let i = 0; i < 3; i++) {
 			if(!this.scene.anims.get(`glow_${i}`)){
@@ -48,18 +48,18 @@ export default class TireBarrier extends Phaser.GameObjects.Group
 		}
 	}
 	
-	glowColumnas() {
+	glow() {
 		this.children.iterate((tireStack) => {tireStack.glow();});
 	}
 	
-	repararColumnas() {
+	repair() {
 		this.setVisible(true);
 		this.scene.time.delayedCall(100, ()=>{
 			this.children.iterate((tireStack) => {tireStack.repair(true);});
 		});
 	}
 	
-	reducirColumnas() {
+	reduce() {
 		this.children.iterate((tireStack) => {
 			tireStack.reduce(true, () => {
 				console.log("tireStack.reduce");

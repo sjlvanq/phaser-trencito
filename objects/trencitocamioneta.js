@@ -44,7 +44,7 @@ export default class PatrolCar extends Phaser.GameObjects.Container
 			new FullAnimatedSprite(scene, PATROL_CAR.WHEELS.OFFSETS_X[0], PATROL_CAR.WHEELS.OFFSET_Y, 'wheel', PATROL_CAR.WHEELS.FRAMERATE).setScale(PATROL_CAR.WHEELS.SCALE),
 			new FullAnimatedSprite(scene, PATROL_CAR.WHEELS.OFFSETS_X[1], PATROL_CAR.WHEELS.OFFSET_Y, 'wheel', PATROL_CAR.WHEELS.FRAMERATE).setScale(PATROL_CAR.WHEELS.SCALE)
 		];
-		this.wheels.forEach(rueda => rueda.play());
+		this.wheels.forEach(wheel => wheel.play());
 
 		this.add([...this.windows, this.chassis, ...this.wheels, this.head, this.gunFlash]);
 		this.setScale(PATROL_CAR.SCALE);
@@ -70,7 +70,7 @@ export default class PatrolCar extends Phaser.GameObjects.Container
 		});
 	}
 	
-	animateWindow(direccion)
+	animateWindow(direction)
 	{
 		if(this.windowTween){this.windowTween.destroy();}
 		this.windowTween = this.scene.tweens.chain({
@@ -78,7 +78,7 @@ export default class PatrolCar extends Phaser.GameObjects.Container
 			tweens: [
 				// Baja la ventanilla
 				{
-					targets: this.windows[direccion<0?0:1],
+					targets: this.windows[direction<0?0:1],
 					y: {start: PATROL_CAR.WINDOWS.OFFSET_Y, to: PATROL_CAR.TWEENS.WINDOW.PROP_Y},
 					duration: PATROL_CAR.TWEENS.WINDOW.DURATION,
 					ease: Phaser.Math.Easing.Expo.In,
@@ -117,7 +117,7 @@ export default class PatrolCar extends Phaser.GameObjects.Container
 				},
 				// Sube la ventanilla
 				{
-					targets: this.windows[direccion<0?0:1],
+					targets: this.windows[direction<0?0:1],
 					y: PATROL_CAR.WINDOWS.OFFSET_Y,
 					duration: PATROL_CAR.TWEENS.WINDOW.DURATION,
 					ease: Phaser.Math.Easing.Expo.Out,
@@ -158,7 +158,7 @@ export default class PatrolCar extends Phaser.GameObjects.Container
 	
 	enter(){
 		this.head.setVisible(false);
-		this.windows.forEach((vidrio)=>{vidrio.setY(PATROL_CAR.WINDOWS.OFFSET_Y)});
+		this.windows.forEach((windowPane)=>{windowPane.setY(PATROL_CAR.WINDOWS.OFFSET_Y)});
 		this.setState(PatrolCar.STATES.PATROLLING, true);
 	}
 	

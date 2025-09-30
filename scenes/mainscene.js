@@ -33,7 +33,7 @@ export default class MainScene extends Phaser.Scene {
 		this.data.set('lives', this.registry.get('gameOptions').lives ?? 1);
 
 		this.isRestorable = false;
-		this.balaParada = false;
+		this.stoppedBullet = false;
 
 		this.stages = new StageManager(this);
 		this.stages.loadStage();
@@ -75,11 +75,11 @@ export default class MainScene extends Phaser.Scene {
 		}); 
 	}
 	
-	onPatrolCarShot(camionetaX) {
-		this.tireBarrier.update(camionetaX);
+	onPatrolCarShot(patrolCarX) {
+		this.tireBarrier.update(patrolCarX);
 		
-		//Herir al jugador
-		if (!this.tireBarrier.hasProtectedPlayer && !this.player.isHerido) {
+		//Herir al player
+		if (!this.tireBarrier.hasProtectedPlayer && !this.player.isHurt) {
 			this.sound.play('hurt_snd');
 			this.data.inc('lives', -1);
 			
@@ -98,18 +98,17 @@ export default class MainScene extends Phaser.Scene {
 				
 			};
 
-			this.player.heridoTween.play();
+			this.player.hurtTween.play();
 		}
 	}
 
 	onLastPatrolCarHasLeft(){
-		this.tireBarrier.reducirColumnas();
+		this.tireBarrier.reduce();
 	}
 
 	onBarreraReducida(){
-		console.log("barrera reducida");
-		if(this.moverEscenario){this.moverEscenario.destroy();}
-		this.moverEscenario = this.tweens.add({
+		if(this.moveStage){this.moveStage.destroy();}
+		this.moveStage = this.tweens.add({
 			targets: this.cameras.main,
 			scrollX: this.stages.layer.displayWidth/2,
 			duration: 5000,
@@ -132,7 +131,7 @@ export default class MainScene extends Phaser.Scene {
 				this.stages.loadStage();
 				this.cameras.main.scrollX = 0;
 
-				this.tireBarrier.repararColumnas();
+				this.tireBarrier.repair();
 				this.trencito.enterPatrolCars();
 
 				this.bottle.setState(Bottle.STATES.COLLECTIBLE);
@@ -148,13 +147,13 @@ export default class MainScene extends Phaser.Scene {
 		// Movimiento del jugador
 		if (this.controls.enabled) {
 			if (this.controls.rightIsPressed) {
-				this.player.avanzar(time, delta, 'derecha');
+				this.player.move(time, delta, 'right');
 			}
 			else if (this.controls.leftIsPressed) {
-				this.player.avanzar(time, delta, 'izquierda');
+				this.player.move(time, delta, 'left');
 			} 
 			else {
-				this.player.detenerse();
+				this.player.stop();
 			}
 		}
 		
@@ -166,7 +165,7 @@ export default class MainScene extends Phaser.Scene {
 			
 			const bottlesPerLevel = this.registry.get('gameOptions').bottlesPerLevel || 9999;
 			const bottlesPerTire = this.registry.get('gameOptions').bottlesPerTire || 9999;
-			// Avanza nivel
+			// Avanza level
 			if(!(this.data.get('score') % bottlesPerLevel)){
 				this.bottle.setVisible(false);
 				this.bottle.setState(Bottle.STATES.HIDDEN);
@@ -176,7 +175,7 @@ export default class MainScene extends Phaser.Scene {
 				
 				this.trencito.retreatPatrolCars();
 			}
-			// Puede restituir un neumático a la barrera
+			// Puede restituir un neumático a la barrier
 			else if(!(this.data.get('score') % bottlesPerTire)){
 				this.tireBarrier.setIsRestorable(true);
 				this.tireBarrier.glowColumnas();

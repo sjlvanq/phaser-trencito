@@ -1,5 +1,5 @@
 export default class TireStack extends Phaser.GameObjects.Sprite {
-	constructor(scene, x, y, texture, onPointerDown, teclaAsociada) {
+	constructor(scene, x, y, texture, onPointerDown, boundKey) {
 		super(scene, x, y, texture);
 		this.scene = scene;
 		this.scene.add.existing(this);
@@ -9,7 +9,7 @@ export default class TireStack extends Phaser.GameObjects.Sprite {
 			this.repair(false, onPointerDown);
 		});
 
-		this.scene.input.keyboard?.on(`keydown-${teclaAsociada}`, () => {
+		this.scene.input.keyboard?.on(`keydown-${boundKey}`, () => {
 			// this.emit salta estado de interactividad 
 			if (this.input?.enabled){ 
 				this.emit('pointerdown');
@@ -75,12 +75,12 @@ export default class TireStack extends Phaser.GameObjects.Sprite {
 		}
 	}
 
-	update(miraX, isRestorable)
+	update(targetX, isRestorable)
 	{
 		this.blockedShot = false;
-		if(miraX > this.x - this.displayWidth/2 && 
-			miraX < this.x + this.displayWidth/2 &&
-			this.frame.name % 3 < 2) // En Frame 3 ya no detiene balas
+		if(targetX > this.x - this.displayWidth/2 && 
+			targetX < this.x + this.displayWidth/2 &&
+			this.frame.name % 3 < 2) // Frame 3 cannot block shots anymore
 		{
 			this.blockedShot = true;
 			

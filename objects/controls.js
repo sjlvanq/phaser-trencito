@@ -28,15 +28,15 @@ export default class Controls extends Phaser.GameObjects.Container
 		});
 
 	}
-	_createButton(x, textura, direccion, flipX = false) {
-		const button = this.scene.add.image(x, 0, textura).setInteractive().setFlipX(flipX);
+	_createButton(x, texture, direction, flipX = false) {
+		const button = this.scene.add.image(x, 0, texture).setInteractive().setFlipX(flipX);
 		button.on('pointerdown', () => {
-			this[`${direccion}IsPressed`] = true;
+			this[`${direction}IsPressed`] = true;
 			button.setFlipY(true);
 		});
 		
 		button.on('pointerup', () => {
-			this[`${direccion}IsPressed`] = false;
+			this[`${direction}IsPressed`] = false;
 			button.setFlipY(false);
 		});
 		return button;
