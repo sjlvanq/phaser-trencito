@@ -88,7 +88,7 @@ export default class Trencito extends Phaser.GameObjects.Group
 	}
 	
 	repositionPatrolCar(patrolCar) {
-		let lastXPosition = this.lastPatrolCarInRow[patrolCar.fila-1].x;
+		let lastXPosition = this.lastPatrolCarInRow[patrolCar.row-1].x;
 		let newXPosition = lastXPosition;
 		
 		// Si la nueva posición queda dentro de la pantalla
@@ -106,7 +106,7 @@ export default class Trencito extends Phaser.GameObjects.Group
 		newXPosition += Trencito.CELL_WIDTH * this.direction
 		
 		patrolCar.setX(newXPosition);
-		this.lastPatrolCarInRow[patrolCar.fila-1] = patrolCar;
+		this.lastPatrolCarInRow[patrolCar.row-1] = patrolCar;
 		this.lastPatrolCarInConvoy = patrolCar;
 	}
 		
