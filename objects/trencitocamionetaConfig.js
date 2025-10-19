@@ -3,7 +3,7 @@ export default {
 	SCALE: 0.31,
 	
 	GUN_FLASH: {
-		SCALE: 1,
+		SCALE: 2,
 		OFFSETS_X: [-20,-10],
 		OFFSET_Y: -15,
 		VISIBLE_TIME: 500,

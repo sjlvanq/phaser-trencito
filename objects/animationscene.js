@@ -71,7 +71,8 @@ export default class AnimationScene extends Phaser.GameObjects.Container {
 								}
 				},
 				onComplete: ()=>{
-					const gunFlash = this.scene.add.image(patrolCar.x+patrolCar.displayWidth/2, patrolCar.y, 'gunFlash').setScale(0.2).setOrigin(0.7,0.5);
+					const gunFlash = this.scene.add.image(patrolCar.x+patrolCar.displayWidth/2, patrolCar.y, 'gunFlash')
+						.setScale(0.4).setOrigin(0.7,0.5);
 					this.add(gunFlash);
 					
 					//Disparos
