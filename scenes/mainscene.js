@@ -178,7 +178,7 @@ export default class MainScene extends Phaser.Scene {
 			// Puede restituir un neumático a la barrier
 			else if(!(this.data.get('score') % bottlesPerTire)){
 				this.tireBarrier.setIsRestorable(true);
-				this.tireBarrier.glowColumnas();
+				this.tireBarrier.glow();
 			}
 		}
 	}
