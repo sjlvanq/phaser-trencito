@@ -26,7 +26,7 @@ export default class Trencito extends Phaser.GameObjects.Group
 			}
 			this.add(patrolCar);
 		}
-		this.shuffle();
+
 		// Retorno de getChildren(), evita invocarlo cada vez
 		this.patrolCars = this.getChildren();
 		this.distributePatrolCars(y, this.direction);
@@ -56,6 +56,8 @@ export default class Trencito extends Phaser.GameObjects.Group
 		this.direction = direction;
 		this.flipPatrolCars(direction);
 		
+		this.shuffle();
+
 		const gridX = direction === -1 ?
 			-(Trencito.NUM_PATROL_CARS / Trencito.ROWS * Trencito.CELL_WIDTH) :
 			this.scene.cameras.main.width;
